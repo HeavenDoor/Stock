@@ -1,0 +1,11 @@
+E:\Users\shenghai\Desktop\stock\DataCollector\bin\Debug\DataCollector.exe
+E:\Users\shenghai\Desktop\stock\DataCollector\bin\Debug\DataCollector.pdb
+E:\Users\shenghai\Desktop\stock\DataCollector\obj\x86\Debug\ResolveAssemblyReference.cache
+E:\Users\shenghai\Desktop\stock\DataCollector\obj\x86\Debug\DataCollector.StockService.resources
+E:\Users\shenghai\Desktop\stock\DataCollector\obj\x86\Debug\GenerateResource.read.1.tlog
+E:\Users\shenghai\Desktop\stock\DataCollector\obj\x86\Debug\GenerateResource.write.1.tlog
+E:\Users\shenghai\Desktop\stock\DataCollector\obj\x86\Debug\DataCollector.exe
+E:\Users\shenghai\Desktop\stock\DataCollector\obj\x86\Debug\DataCollector.pdb
+E:\Users\shenghai\Desktop\stock\DataCollector\obj\x86\Debug\DataCollector.ProjectInstaller.resources
+E:\Users\shenghai\Desktop\stock\StockServiceUITest\bin\Debug\StockService\DataCollector.exe
+E:\Users\shenghai\Desktop\stock\StockServiceUITest\bin\Debug\StockService\DataCollector.pdb

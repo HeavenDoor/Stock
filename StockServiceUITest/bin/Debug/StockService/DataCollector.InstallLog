@@ -1,0 +1,13 @@
+﻿Installing assembly 'E:\Users\shenghai\Desktop\stock\StockServiceUITest\bin\Debug\StockService\DataCollector.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Users\shenghai\Desktop\stock\StockServiceUITest\bin\Debug\StockService\DataCollector.InstallLog
+   assemblypath = E:\Users\shenghai\Desktop\stock\StockServiceUITest\bin\Debug\StockService\DataCollector.exe
+Installing service StockService...
+Service StockService has been successfully installed.
+Creating EventLog source StockService in log Application...
+Committing assembly 'E:\Users\shenghai\Desktop\stock\StockServiceUITest\bin\Debug\StockService\DataCollector.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Users\shenghai\Desktop\stock\StockServiceUITest\bin\Debug\StockService\DataCollector.InstallLog
+   assemblypath = E:\Users\shenghai\Desktop\stock\StockServiceUITest\bin\Debug\StockService\DataCollector.exe
