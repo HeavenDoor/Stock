@@ -14,7 +14,11 @@ using System.Security.Cryptography.X509Certificates;
 using System.Net;
 using System.IO;
 using System.IO.Compression;
-using System.Text.RegularExpressions;  
+using System.Text.RegularExpressions;
+
+using System.Data.SqlClient;
+using System.Data.Sql;
+using MySql.Data.MySqlClient;
 
 namespace StockServiceUITest
 {
@@ -51,7 +55,7 @@ namespace StockServiceUITest
             string cookieString = response.Headers["Set-Cookie"];*/
             //---------------------------------------------------------------------------------
 
-            string userName = "15528358573";
+            /*string userName = "15528358573";
             string tagUrl = "http://www.sina.com/";// +userName + "/tags";
             CookieCollection cookies = new CookieCollection();//如何从response.Headers["Set-Cookie"];中获取并设置CookieCollection的代码略  
             HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(tagUrl, null, null, cookies);
@@ -59,7 +63,28 @@ namespace StockServiceUITest
            
             stream.ReadTimeout = 15 * 1000; //读取超时
             StreamReader sr = new StreamReader(stream, Encoding.GetEncoding("gb2312"));
-            string strWebData = sr.ReadToEnd();
+            string strWebData = sr.ReadToEnd();*/
+
+            //-----------------------------------------------------------------------------------------------
+
+            /*MySql.Data.MySqlClient.MySqlConnection conn;
+            MySql.Data.MySqlClient.MySqlCommand cmd;
+            conn = new MySql.Data.MySqlClient.MySqlConnection();
+            cmd = new MySql.Data.MySqlClient.MySqlCommand();
+            conn.ConnectionString = "server=localhost;uid=shenghai;" + "pwd=123465;database=stock;";
+            conn.Open();
+            cmd.Connection = conn;
+            DataSet dataSet1 = new DataSet();
+            MySql.Data.MySqlClient.MySqlDataAdapter dataAdapter = new MySqlDataAdapter("SELECT * FROM stockcode;", conn);//读数据库  
+            cmd.CommandText = "SELECT * FROM stockcode";
+            dataAdapter.SelectCommand = cmd;
+            DataSet ds = new DataSet();
+            dataAdapter.Fill(ds);
+            dataAdapter.FillSchema(dataSet1, SchemaType.Source, "identify");
+            dataAdapter.Fill(dataSet1, "IDENTIFY");//填充DataSet控件  
+            dataGridView1.DataSource = dataSet1.Tables["identify"];//注意，DataSet中的数据表依次为Table, Table1, Table2...  
+            dataGridView1.Update();*/
+            //----------------------------------------------------------------------------------------------
         }
     }
 }
