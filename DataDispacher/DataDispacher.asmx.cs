@@ -16,11 +16,12 @@ namespace DataDispacher
     // [System.Web.Script.Services.ScriptService]
     public class DataDispacher : System.Web.Services.WebService
     {
-
+        #region [WebMethod] TestConnection
         [WebMethod]
-        public string HelloWorld()
+        public string TestConnection()
         {
-            return "Hello World";
+            return "shenghai";
         }
+        #endregion
     }
 }

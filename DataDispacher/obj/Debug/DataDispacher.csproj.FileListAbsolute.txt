@@ -1,5 +1,0 @@
-E:\Users\shenghai\Desktop\stock\DataDispacher\bin\DataDispacher.dll
-E:\Users\shenghai\Desktop\stock\DataDispacher\bin\DataDispacher.pdb
-E:\Users\shenghai\Desktop\stock\DataDispacher\obj\Debug\ResolveAssemblyReference.cache
-E:\Users\shenghai\Desktop\stock\DataDispacher\obj\Debug\DataDispacher.dll
-E:\Users\shenghai\Desktop\stock\DataDispacher\obj\Debug\DataDispacher.pdb
