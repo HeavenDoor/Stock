@@ -10,9 +10,9 @@ using System.Security.Cryptography.X509Certificates;
 using System.Net;
 using System.IO;
 using System.IO.Compression;
-using System.Text.RegularExpressions;  
+using System.Text.RegularExpressions;
 
-namespace StockServiceUITest
+namespace StockCommon
 {
     /// <summary>  
     /// 有关HTTP请求的辅助类  

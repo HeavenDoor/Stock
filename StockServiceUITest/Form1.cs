@@ -18,7 +18,11 @@ using System.Text.RegularExpressions;
 
 using System.Data.SqlClient;
 using System.Data.Sql;
+
+using System.Data.Common;
 using MySql.Data.MySqlClient;
+using StockCommon;
+using StockServiceUITest.TestCode;
 
 namespace StockServiceUITest
 {
@@ -31,43 +35,8 @@ namespace StockServiceUITest
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //-----------------------------------------------------------------------------
-            //ServiceController controller = new ServiceController("StockService");
-            //controller.Stop();
-
-            //-----------------------------------------------------------------------------
-
-           /* string loginUrl = "https://passport.baidu.com/?login";
-            string userName = "15528358573";
-            string password = "123465";
-            string tagUrl = "http://cang.baidu.com/" + userName + "/tags";
-            Encoding encoding = Encoding.GetEncoding("gb2312");
-
-            IDictionary<string, string> parameters = new Dictionary<string, string>();
-            parameters.Add("tpl", "fa");
-            parameters.Add("tpl_reg", "fa");
-            parameters.Add("u", tagUrl);
-            parameters.Add("psp_tt", "0");
-            parameters.Add("username", userName);
-            parameters.Add("password", password);
-            parameters.Add("mem_pass", "1");
-            HttpWebResponse response = HttpWebResponseUtility.CreatePostHttpResponse(loginUrl, parameters, null, null, encoding, null);
-            string cookieString = response.Headers["Set-Cookie"];*/
-            //---------------------------------------------------------------------------------
-
-            /*string userName = "15528358573";
-            string tagUrl = "http://www.sina.com/";// +userName + "/tags";
-            CookieCollection cookies = new CookieCollection();//如何从response.Headers["Set-Cookie"];中获取并设置CookieCollection的代码略  
-            HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(tagUrl, null, null, cookies);
-            Stream stream = response.GetResponseStream();
-           
-            stream.ReadTimeout = 15 * 1000; //读取超时
-            StreamReader sr = new StreamReader(stream, Encoding.GetEncoding("gb2312"));
-            string strWebData = sr.ReadToEnd();*/
-
-            //-----------------------------------------------------------------------------------------------
-
-            /*MySql.Data.MySqlClient.MySqlConnection conn;
+            //---------------------------------------------------------------------------
+           /*MySql.Data.MySqlClient.MySqlConnection conn;
             MySql.Data.MySqlClient.MySqlCommand cmd;
             conn = new MySql.Data.MySqlClient.MySqlConnection();
             cmd = new MySql.Data.MySqlClient.MySqlCommand();
@@ -85,6 +54,31 @@ namespace StockServiceUITest
             dataGridView1.DataSource = dataSet1.Tables["identify"];//注意，DataSet中的数据表依次为Table, Table1, Table2...  
             dataGridView1.Update();*/
             //----------------------------------------------------------------------------------------------
+            // All Test
+            //---------------------------------------------------------------------------------------
+            //LogManagerTest.testLogManager();
+            //HttpTest.testHttpGet();
+            //DbUtilityTest.testSql();
+            //ServiceProcessTest.testServe();
+            //-------------------------------------------------------------------------------------------
+        }
+    }
+
+    public class stock
+    {
+        public stock(){}
+        private string name;
+        public string Name
+        {
+            get {return name;}
+            set { name = value; }
+        }
+
+        private string code;
+        public string Code
+        {
+            get { return code; }
+            set { code = value; }
         }
     }
 }

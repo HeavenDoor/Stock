@@ -7,3 +7,5 @@ E:\Users\shenghai\Desktop\stock\StockServiceUITest\obj\x86\Debug\GenerateResourc
 E:\Users\shenghai\Desktop\stock\StockServiceUITest\obj\x86\Debug\StockServiceUITest.exe
 E:\Users\shenghai\Desktop\stock\StockServiceUITest\obj\x86\Debug\StockServiceUITest.pdb
 E:\Users\shenghai\Desktop\stock\StockServiceUITest\obj\x86\Debug\StockServiceUITest.Form1.resources
+E:\Users\shenghai\Desktop\Stock\StockServiceUITest\bin\Debug\StockCommon.dll
+E:\Users\shenghai\Desktop\Stock\StockServiceUITest\bin\Debug\StockCommon.pdb

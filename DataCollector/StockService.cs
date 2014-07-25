@@ -7,14 +7,17 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 
+using StockCommon;
+
 namespace DataCollector
 {
     public partial class StockService : ServiceBase
     {
         public StockService()
         {
-            LogManager.LogPath = "E:\\Users\\shenghai\\Desktop\\hrer\\";
+            
             InitializeComponent();
+            LogManager.LogPath = "E:\\Users\\shenghai\\Desktop\\hrer\\";
         }
 
         protected override void OnStart(string[] args)

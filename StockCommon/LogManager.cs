@@ -3,9 +3,9 @@ using System.Collections.Generic;
 //using System.Linq;
 using System.Text;
 
-namespace DataCollector
+namespace StockCommon
 {
-    class LogManager
+    public class LogManager
     {
         private static string logPath = string.Empty;    
         public static string LogPath     
