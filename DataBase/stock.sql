@@ -13,3 +13,6 @@ INSERT INTO StockCode VALUES('通达股份','sz002560')；
 INSERT INTO StockCode VALUES('华电国际','sh600027')；
 INSERT INTO StockCode VALUES('国海证券','sz000750')
 SELECT * FROM StockCode
+SELECT * FROM USER
+
+INSERT INTO USER VALUES('test', 'test','test', 'test')
