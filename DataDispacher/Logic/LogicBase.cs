@@ -16,7 +16,7 @@ namespace DataDispacher
         {
             get
             {
-                return m_ErrorType;
+                return m_ErrorType; 
             }
             set
             {
