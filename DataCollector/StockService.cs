@@ -28,6 +28,7 @@ namespace DataCollector
 
         protected override void OnStop()
         {
+            string s = Configuration.SqlConnectStr;
             LogManager.WriteLog(LogManager.LogFile.Trace, "server end");
         }
     }

@@ -30,6 +30,10 @@ namespace StockServiceUITest
     {
         public Form1()
         {
+            var config = new Configuration();
+            string s = System.Windows.Forms.Application.StartupPath + "\\StockService\\Setting.config";
+            ConfigLoader.Load(s, config);
+
             InitializeComponent();
         }
 
@@ -61,6 +65,14 @@ namespace StockServiceUITest
             //DbUtilityTest.testSql();
             //ServiceProcessTest.testServe();
             //-------------------------------------------------------------------------------------------
+
+            //ConfigTest.testConfig();
+            //string ss = Configuration.StockList;
+
+            //HttpTest.testHttpGet();
+            //------------------------------------------------------------------------------------
+
+            Test.testlist();
         }
     }
 

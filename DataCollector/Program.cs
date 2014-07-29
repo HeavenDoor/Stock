@@ -4,6 +4,8 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 
+using StockCommon;
+
 namespace DataCollector
 {
     static class Program
@@ -13,6 +15,10 @@ namespace DataCollector
         /// </summary>
         static void Main()
         {
+            var config = new Configuration();
+            string s = System.Windows.Forms.Application.StartupPath + "\\Setting.config";
+            ConfigLoader.Load(s, config);
+
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[] 
 			{ 

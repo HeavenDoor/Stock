@@ -23,14 +23,17 @@ namespace DataDispacher
     // [System.Web.Script.Services.ScriptService]
     public class DataDispacher : System.Web.Services.WebService
     {
-        private static string connectString = "server=localhost;uid=shenghai;" + "pwd=123465;database=stock;";
-        private DbUtility util = new DbUtility(connectString, DbProviderType.MySql);
+        private static string connectString = "server=localhost;uid=shenghai;pwd=123465;database=stock;";
+        private DbUtility util = new DbUtility(delegate (string str) { return new string("123");}, DbProviderType.MySql);
+        private Configuration config = new Configuration();
         
+
         #region [WebMethod] TestConnection
         [WebMethod]
-        public string TestConnection()
+        public bool TestConnection()
         {
-            return "shenghai";
+            //ConfigLoader.Load(System.Windows.Forms.Application.StartupPath + "\\Setting.config", config);
+            return true;
         }
         #endregion
 
@@ -38,6 +41,31 @@ namespace DataDispacher
         [WebMethod]
         public string RegisterUser(string userName, string pwd, string email, string phone)
         {
+            //DbUtility uu = new DbUtility(delegate(string str) { return "ss"; }, DbProviderType.MySql);
+
+            List<string> list=new List<string>();
+            var numbers = new []{ "5", "4", "1", "3", "9", "8", "6", "7", "2", "0" };
+            list.AddRange(numbers);
+            list.Sort(delegate (string a, string b)
+                {
+                    ConfigLoader.Load("",config);
+                    /*return*/ a.CompareTo(b);
+                    ConfigLoader.Load("", config);
+                    b = a =  Configuration.SqlConnectStr;
+                    return a/*.CompareTo(b)*/;
+                }
+            );
+
+           // list.Sort((a,b)=>a.CompareTo(b));
+
+
+
+
+            if (!TestConnection())
+            {
+                return "";
+            }
+
             LogicBase response = new LogicBase();
             string identfySql = string.Format("select * from user where username='{0}'", userName);
             int userCounts = EntityReader.GetEntities<User>(util.ExecuteDataTable(identfySql, null)).Count;
