@@ -192,6 +192,7 @@ namespace StockServiceUITest.TestCode
             
             htmlDocument.LoadHtml(strWebData);//加载HTML字符串，如果是文件可以用htmlDocument.Load方法加载  
 
+
             HtmlNode nodes = htmlDocument.DocumentNode;
             HtmlNodeCollection collection = nodes.SelectNodes("//body/div/div/div/ul");
             foreach (HtmlNode node in collection)
@@ -201,8 +202,8 @@ namespace StockServiceUITest.TestCode
 
                 foreach(string item in line)
                 {
-                    item.Replace(")", "");
-                    string[] s = item.Split('(');
+                    string tmp = item.Replace(")", "");
+                    string[] s = tmp.Split('(');
                     if (s[1].StartsWith("00") || s[1].StartsWith("6") || s[1].StartsWith("3"))
                     {
                         datas.Add(new StockListTmp() { name = s[0], code = s[1]});
