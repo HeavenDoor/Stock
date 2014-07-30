@@ -19,10 +19,13 @@ using System.Text.RegularExpressions;
 using System.Data.SqlClient;
 using System.Data.Sql;
 
+
 using System.Data.Common;
 using MySql.Data.MySqlClient;
 using StockCommon;
 using StockServiceUITest.TestCode;
+using StockSync;
+
 
 namespace StockServiceUITest
 {
@@ -72,7 +75,17 @@ namespace StockServiceUITest
             //HttpTest.testHttpGet();
             //------------------------------------------------------------------------------------
 
-            Test.testlist();
+            //Test.testlist();
+
+
+            //StockSync.StockDataSync.SyncStockList();
+
+            DateTime currenttime = System.DateTime.Now;
+            if (currenttime.Hour == 16 && currenttime.Minute == 5 /*&& currenttime.Second == 0*/)
+            {
+                int m = 0;
+            }
+            
         }
     }
 

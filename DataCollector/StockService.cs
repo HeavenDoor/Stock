@@ -22,7 +22,10 @@ namespace DataCollector
 
         protected override void OnStart(string[] args)
         {
-            
+            TimeListenerThread thread = new TimeListenerThread();
+            thread.start();
+
+
             LogManager.WriteLog(LogManager.LogFile.Trace, "server start");
         }
 

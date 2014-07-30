@@ -38,6 +38,9 @@
     <Reference Include="StockCommon">
       <HintPath>..\StockCommon\bin\Debug\StockCommon.dll</HintPath>
     </Reference>
+    <Reference Include="StockSync">
+      <HintPath>..\StockSync\bin\Debug\StockSync.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
@@ -65,6 +68,7 @@
     <Compile Include="StockService.Designer.cs">
       <DependentUpon>StockService.cs</DependentUpon>
     </Compile>
+    <Compile Include="TimeListenerThread.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ProjectInstaller.resx">
@@ -73,9 +77,6 @@
     <EmbeddedResource Include="StockService.resx">
       <DependentUpon>StockService.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

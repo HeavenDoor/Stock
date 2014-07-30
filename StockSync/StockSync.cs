@@ -22,11 +22,6 @@ namespace StockSync
 {
     public class StockDataSync
     {
-        Configuration config = new Configuration();
-        string s = "server=localhost;uid=shenghai;pwd=123465;database=stock;"; /*System.Windows.Forms.Application.StartupPath + "\\StockService\\Setting.config";*/
-        ConfigLoader.Load(s,config);
-        DbUtility util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
-
         public StockDataSync()
         {
             
@@ -34,6 +29,11 @@ namespace StockSync
 
         public static void SyncStockList()
         {
+            Configuration config = new Configuration();
+            //string s = "server=localhost;uid=shenghai;pwd=123465;database=stock;"; /*System.Windows.Forms.Application.StartupPath + "\\StockService\\Setting.config";*/
+            string s = "E:\\Users\\shenghai\\Desktop\\Stock\\StockServiceUITest\\bin\\Debug\\StockService\\Setting.config";
+            ConfigLoader.Load(s, config);
+
             string tagUrl = Configuration.StockList;//"http://www.sina.com/";
             CookieCollection cookies = new CookieCollection();//如何从response.Headers["Set-Cookie"];中获取并设置CookieCollection的代码略  
             HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(tagUrl, null, null, cookies);
@@ -53,10 +53,10 @@ namespace StockSync
                 foreach (string item in line)
                 {
                     string tmp = item.Replace(")", "");
-                    string[] s = tmp.Split('(');
-                    if (s[1].StartsWith("00") || s[1].StartsWith("6") || s[1].StartsWith("3"))
+                    string[] st = tmp.Split('(');
+                    if (st[1].StartsWith("00") || st[1].StartsWith("6") || st[1].StartsWith("3"))
                     {
-                        datas.Add(new Stock() { StockName = s[0], StockCode = s[1] });
+                        datas.Add(new Stock() { StockName = st[0], StockCode = st[1] });
                     }
                 }
             }
@@ -66,9 +66,38 @@ namespace StockSync
 
         private static void SyncDatabase(ref List<Stock> datas)
         {
+            
+            DbUtility util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+
             foreach (Stock stock in datas)
             {
+                string sql = string.Format("select * from STOCK where STOCKCODE={0}",stock.StockCode);
+                DataTable table = util.ExecuteDataTable(sql, null);
+                List<Stock> _table = EntityReader.GetEntities<Stock>(table);
+                if (_table.Count < 1)
+                {
+                    string sqlInsert = string.Format("insert into STOCK values('{0}','{1}')", stock.StockName, stock.StockCode);
+                    try
+                    {
+                        int reCount = util.ExecuteNonQuery(sqlInsert, null);
+                    }
+                    catch (System.Exception e)
+                    {
+                    	
+                    }                   
+                }
+                else if (_table[0].StockName != stock.StockName)
+                {
+                    string sqlUpdate = string.Format("update STOCK set STOCKNAME='{0}' where STOCKCODE={1}", stock.StockName, stock.StockCode);
+                    try
+                    {
+                        int reCount = util.ExecuteNonQuery(sqlUpdate, null);
+                    }
+                    catch (System.Exception e)
+                    {
 
+                    }  
+                }
             }
         }
     }
