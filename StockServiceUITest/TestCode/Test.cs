@@ -47,9 +47,12 @@ namespace StockServiceUITest.TestCode
         public static void testHttpGet()
         {
             string userName = "15528358573";
+
+            string url = "http://quotes.money.163.com/service/chddata.html?code=1000686&start=20140731&end=20140731&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP";
+
             string tagUrl = Configuration.StockList;//"http://www.sina.com/";
             CookieCollection cookies = new CookieCollection();//如何从response.Headers["Set-Cookie"];中获取并设置CookieCollection的代码略  
-            HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(tagUrl, null, null, cookies);
+            HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(url, null, null, cookies);
             Stream stream = response.GetResponseStream();
 
             stream.ReadTimeout = 15 * 1000; //读取超时

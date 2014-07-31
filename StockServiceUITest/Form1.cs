@@ -64,7 +64,7 @@ namespace StockServiceUITest
             // All Test
             //---------------------------------------------------------------------------------------
             //LogManagerTest.testLogManager();
-            //HttpTest.testHttpGet();
+            HttpTest.testHttpGet();
             //DbUtilityTest.testSql();
             //ServiceProcessTest.testServe();
             //-------------------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ namespace StockServiceUITest
             //Test.testlist();
 
 
-            //StockSync.StockDataSync.SyncStockList();
+            StockSync.StockDataSync.SyncStockList();
 
             DateTime currenttime = System.DateTime.Now;
             if (currenttime.Hour == 16 && currenttime.Minute == 5 /*&& currenttime.Second == 0*/)

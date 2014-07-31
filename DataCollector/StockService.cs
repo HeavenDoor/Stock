@@ -22,8 +22,12 @@ namespace DataCollector
 
         protected override void OnStart(string[] args)
         {
-            TimeListenerThread thread = new TimeListenerThread();
-            thread.start();
+//             while(true)
+//             {
+//                 int m = 0;
+//             }
+//             TimeListenerThread thread = new TimeListenerThread();
+//             thread.start();
 
 
             LogManager.WriteLog(LogManager.LogFile.Trace, "server start");
@@ -31,6 +35,9 @@ namespace DataCollector
 
         protected override void OnStop()
         {
+            TimeListenerThread thread = new TimeListenerThread();
+            thread.start();
+
             string s = Configuration.SqlConnectStr;
             LogManager.WriteLog(LogManager.LogFile.Trace, "server end");
         }

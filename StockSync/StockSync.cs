@@ -32,7 +32,9 @@ namespace StockSync
             Configuration config = new Configuration();
             //string s = "server=localhost;uid=shenghai;pwd=123465;database=stock;"; /*System.Windows.Forms.Application.StartupPath + "\\StockService\\Setting.config";*/
             string s = "E:\\Users\\shenghai\\Desktop\\Stock\\StockServiceUITest\\bin\\Debug\\StockService\\Setting.config";
-            ConfigLoader.Load(s, config);
+
+            string strConfig = System.AppDomain.CurrentDomain.BaseDirectory + "Setting.config";
+            ConfigLoader.Load(strConfig, config);
 
             string tagUrl = Configuration.StockList;//"http://www.sina.com/";
             CookieCollection cookies = new CookieCollection();//如何从response.Headers["Set-Cookie"];中获取并设置CookieCollection的代码略  
@@ -99,6 +101,11 @@ namespace StockSync
                     }  
                 }
             }
+        }
+
+        public static void SyncStockData()
+        {
+
         }
     }
 }
