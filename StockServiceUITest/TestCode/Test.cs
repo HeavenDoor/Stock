@@ -21,6 +21,8 @@ using System.Security.Cryptography.X509Certificates;
 
 using StockCommon;
 using HtmlAgilityPack;
+using CsvHelper;
+
 
 namespace StockServiceUITest.TestCode
 {
@@ -44,13 +46,13 @@ namespace StockServiceUITest.TestCode
 
     public class HttpTest
     {
-        public static void testHttpGet()
+        public static string testHttpGet()
         {
             string userName = "15528358573";
 
-            string url = "http://quotes.money.163.com/service/chddata.html?code=1000686&start=20140731&end=20140731&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP";
+            string url = "http://quotes.money.163.com/service/chddata.html?code=1000686&start=20140725&end=20140801&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP";
 
-            string tagUrl = Configuration.StockList;//"http://www.sina.com/";
+            string tagUrl = Configuration.StockList; //"http://www.sina.com/";
             CookieCollection cookies = new CookieCollection();//如何从response.Headers["Set-Cookie"];中获取并设置CookieCollection的代码略  
             HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(url, null, null, cookies);
             Stream stream = response.GetResponseStream();
@@ -58,6 +60,7 @@ namespace StockServiceUITest.TestCode
             stream.ReadTimeout = 15 * 1000; //读取超时
             StreamReader sr = new StreamReader(stream, Encoding.GetEncoding("gb2312"));
             string strWebData = sr.ReadToEnd();
+            return strWebData;
         }
 
         public static void testHttpPost()
@@ -87,9 +90,9 @@ namespace StockServiceUITest.TestCode
         {
             string conStr = "server=localhost;uid=shenghai;" + "pwd=123465;database=stock;";
             DbUtility util = new DbUtility(conStr, DbProviderType.MySql);
-            DbDataReader reader = util.ExecuteReader("SELECT * FROM stockcode", null);
-            DataTable table = util.ExecuteDataTable("SELECT * FROM stockcode", null);
-            List<stock> _reader = EntityReader.GetEntities<stock>(reader);
+            DbDataReader reader = util.ExecuteReader("SELECT * FROM stock", null);
+            DataTable table = util.ExecuteDataTable("SELECT * FROM stock", null);
+            //List<stock> _reader = EntityReader.GetEntities<stock>(reader);
             List<stock> _table = EntityReader.GetEntities<stock>(table);
         }
     }
@@ -117,6 +120,7 @@ namespace StockServiceUITest.TestCode
             Console.WriteLine(lambda("Start of string"));
         }
     } 
+
     public class Test
     {
         public static void test()
@@ -209,7 +213,7 @@ namespace StockServiceUITest.TestCode
                     string[] s = tmp.Split('(');
                     if (s[1].StartsWith("00") || s[1].StartsWith("6") || s[1].StartsWith("3"))
                     {
-                        datas.Add(new StockListTmp() { name = s[0], code = s[1]});
+                        datas.Add(new StockListTmp() { stockname = s[0], stockcode = s[1]});
                     }
                 }
                 
@@ -217,10 +221,71 @@ namespace StockServiceUITest.TestCode
         }
     }
 
+    public class CSVTest
+    {
+        public static void ReadAllRecords()
+        {
+            string str = HttpTest.testHttpGet();
+            int m =  str.IndexOf("\r\n");
+            string a = str.Remove(0, m);
+            string b = Configuration.StockCSVHeader + a;
+            TextReader rea = new StreamReader(/*"E:\\Users\\shenghai\\Desktop\\600023.csv"*/StringToStream(b), System.Text.Encoding.UTF8);
+            using (var reader = new CsvReader(rea))
+            {
+                var records = reader.GetRecords<StockObject>();
+
+                foreach (StockObject s in records)//var record
+                {
+                    int k = 0;
+                    //Console.WriteLine( record );
+                }
+            }
+            Console.WriteLine();
+
+            
+        }
+
+        public static Stream GenerateStreamFromString(string s)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
+        public static Stream StringToStream(string src)
+        {
+            byte[] byteArray = Encoding.UTF8.GetBytes(src);
+            return new MemoryStream(byteArray);
+        }
+    }
+
+    public class StockObject
+    {
+        public string Date { get; set; }
+        public string StockCode { get; set; }
+        public string StockName { get; set; }
+        public string EndPrice { get; set; }
+        public string HighPrice { get; set; }
+        public string LowPrice { get; set; }
+        public string StartPrice { get; set; }
+        public string BeforeEndPrice { get; set; }
+        public string UpPrice { get; set; }
+        public string UpFuPrice { get; set; }
+        public string Change { get; set; }
+        public string Chengjiaoliang { get; set; }
+        public string Chengjiaojin { get; set; }
+        public string shizhi { get; set; }
+        public string Zshizhi { get; set; }
+    }
+
+
     public class StockListTmp
     {
-        public string name { get; set; }
-        public string code { get; set; }
+        public string stockname { get; set; }
+        public string stockcode { get; set; }
     }
 
     public class Data

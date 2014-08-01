@@ -11,6 +11,8 @@ namespace StockCommon
     {
         public static string SqlConnectStr { get; set; }
         public static string StockList { get; set; }
+        public static string StockCSVHeader { get; set; }
+        public static string StockItemUrl { get; set; }
         static Configuration()
         {
 

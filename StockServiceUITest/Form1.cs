@@ -64,7 +64,7 @@ namespace StockServiceUITest
             // All Test
             //---------------------------------------------------------------------------------------
             //LogManagerTest.testLogManager();
-            HttpTest.testHttpGet();
+            //HttpTest.testHttpGet();
             //DbUtilityTest.testSql();
             //ServiceProcessTest.testServe();
             //-------------------------------------------------------------------------------------------
@@ -78,13 +78,19 @@ namespace StockServiceUITest
             //Test.testlist();
 
 
-            StockSync.StockDataSync.SyncStockList();
+//             StockSync.StockDataSync.SyncStockList();
+// 
+//             DateTime currenttime = System.DateTime.Now;
+//             if (currenttime.Hour == 16 && currenttime.Minute == 5 /*&& currenttime.Second == 0*/)
+//             {
+//                 int m = 0;
+//             }
 
-            DateTime currenttime = System.DateTime.Now;
-            if (currenttime.Hour == 16 && currenttime.Minute == 5 /*&& currenttime.Second == 0*/)
-            {
-                int m = 0;
-            }
+            DateTime dt = DateTime.Now;
+            string day = dt.DayOfWeek.ToString();
+
+
+            CSVTest.ReadAllRecords();
             
         }
     }
@@ -93,14 +99,14 @@ namespace StockServiceUITest
     {
         public stock(){}
         private string name;
-        public string Name
+        public string StockName
         {
             get {return name;}
             set { name = value; }
         }
 
         private string code;
-        public string Code
+        public string StockCode
         {
             get { return code; }
             set { code = value; }

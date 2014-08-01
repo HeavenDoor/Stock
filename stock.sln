@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockCommon", "StockCommon\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockSync", "StockSync\StockSync.csproj", "{34729FA4-2270-471D-9045-AA4B4623F12D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvHelper", "CsvHelper\CsvHelper.csproj", "{968A4E7C-B1E9-457E-B1F9-A774E68926C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{34729FA4-2270-471D-9045-AA4B4623F12D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{34729FA4-2270-471D-9045-AA4B4623F12D}.Release|Win32.ActiveCfg = Release|Any CPU
 		{34729FA4-2270-471D-9045-AA4B4623F12D}.Release|x86.ActiveCfg = Release|Any CPU
+		{968A4E7C-B1E9-457E-B1F9-A774E68926C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{968A4E7C-B1E9-457E-B1F9-A774E68926C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{968A4E7C-B1E9-457E-B1F9-A774E68926C6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{968A4E7C-B1E9-457E-B1F9-A774E68926C6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{968A4E7C-B1E9-457E-B1F9-A774E68926C6}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{968A4E7C-B1E9-457E-B1F9-A774E68926C6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{968A4E7C-B1E9-457E-B1F9-A774E68926C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{968A4E7C-B1E9-457E-B1F9-A774E68926C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{968A4E7C-B1E9-457E-B1F9-A774E68926C6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{968A4E7C-B1E9-457E-B1F9-A774E68926C6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{968A4E7C-B1E9-457E-B1F9-A774E68926C6}.Release|Win32.ActiveCfg = Release|Any CPU
+		{968A4E7C-B1E9-457E-B1F9-A774E68926C6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
