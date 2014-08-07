@@ -22,7 +22,7 @@ using System.Security.Cryptography.X509Certificates;
 using StockCommon;
 using HtmlAgilityPack;
 using CsvHelper;
-
+using StockSync;
 
 namespace StockServiceUITest.TestCode
 {
@@ -120,6 +120,14 @@ namespace StockServiceUITest.TestCode
             Console.WriteLine(lambda("Start of string"));
         }
     } 
+
+    public class SyncTest
+    {
+        public static void SyncStockDataDetaileList()
+        {
+            StockDataSync.SyncStockDataDetaileList();
+        }
+    }
 
     public class Test
     {
@@ -232,9 +240,9 @@ namespace StockServiceUITest.TestCode
             TextReader rea = new StreamReader(/*"E:\\Users\\shenghai\\Desktop\\600023.csv"*/StringToStream(b), System.Text.Encoding.UTF8);
             using (var reader = new CsvReader(rea))
             {
-                var records = reader.GetRecords<StockObject>();
+                var records = reader.GetRecords<StockItem>();
 
-                foreach (StockObject s in records)//var record
+                foreach (StockItem s in records)//var record
                 {
                     int k = 0;
                     //Console.WriteLine( record );
@@ -242,7 +250,7 @@ namespace StockServiceUITest.TestCode
             }
             Console.WriteLine();
 
-            
+             
         }
 
         public static Stream GenerateStreamFromString(string s)

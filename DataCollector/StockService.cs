@@ -17,7 +17,7 @@ namespace DataCollector
         {
             
             InitializeComponent();
-            LogManager.LogPath = "E:\\Users\\shenghai\\Desktop\\hrer\\";
+            LogManager.LogPath = System.AppDomain.CurrentDomain.BaseDirectory;  //"E:\\Users\\shenghai\\Desktop\\hrer\\";
         }
 
         protected override void OnStart(string[] args)
@@ -26,8 +26,8 @@ namespace DataCollector
 //             {
 //                 int m = 0;
 //             }
-//             TimeListenerThread thread = new TimeListenerThread();
-//             thread.start();
+             TimeListenerThread thread = new TimeListenerThread();
+             thread.start();
 
 
             LogManager.WriteLog(LogManager.LogFile.Trace, "server start");
@@ -35,8 +35,8 @@ namespace DataCollector
 
         protected override void OnStop()
         {
-            TimeListenerThread thread = new TimeListenerThread();
-            thread.start();
+            //TimeListenerThread thread = new TimeListenerThread();
+            //thread.start();
 
             string s = Configuration.SqlConnectStr;
             LogManager.WriteLog(LogManager.LogFile.Trace, "server end");

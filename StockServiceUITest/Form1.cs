@@ -86,11 +86,13 @@ namespace StockServiceUITest
 //                 int m = 0;
 //             }
 
-            DateTime dt = DateTime.Now;
-            string day = dt.DayOfWeek.ToString();
+//             DateTime dt = DateTime.Now;
+//             string day = dt.DayOfWeek.ToString();
+
+            SyncTest.SyncStockDataDetaileList();
 
 
-            CSVTest.ReadAllRecords();
+            //CSVTest.ReadAllRecords();
             
         }
     }

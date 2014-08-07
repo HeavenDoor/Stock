@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 
 using StockSync;
+using StockCommon;
 
 namespace DataCollector
 {
@@ -26,13 +27,20 @@ namespace DataCollector
             
             while(true)
             {
+                
                 DateTime currenttime = System.DateTime.Now;
-                if (currenttime.Hour == 15 && currenttime.Minute == 5 && currenttime.Second == 0)
+                if (/*currenttime.Hour == 15 &&*/ currenttime.Minute%10 == 5 && currenttime.Second == 0)
                 {
+                    LogManager.WriteLog(LogManager.LogFile.Trace,
+                        "*****************************************  Start Sync  *****************************************");
                     StockDataSync.SyncStockList();
 
-
+                    StockDataSync.SyncStockDataDetaileList();
+                    LogManager.WriteLog(LogManager.LogFile.Trace,
+                        "*****************************************  End Sync  *****************************************");
                 }
+
+               
             }
         }
     }

@@ -27,17 +27,26 @@ namespace StockSync
             
         }
 
-        public static void SyncStockList()
+        /// <summary>
+        /// 同步所有股票信息
+        /// 1.增加新股票
+        /// 2.同步股票名称变动
+        /// </summary>
+        public static void SyncStockList()  
         {
             Configuration config = new Configuration();
             //string s = "server=localhost;uid=shenghai;pwd=123465;database=stock;"; /*System.Windows.Forms.Application.StartupPath + "\\StockService\\Setting.config";*/
-            string s = "E:\\Users\\shenghai\\Desktop\\Stock\\StockServiceUITest\\bin\\Debug\\StockService\\Setting.config";
+            //string s = "E:\\Users\\shenghai\\Desktop\\Stock\\StockServiceUITest\\bin\\Debug\\StockService\\Setting.config";
 
             string strConfig = System.AppDomain.CurrentDomain.BaseDirectory + "Setting.config";
             ConfigLoader.Load(strConfig, config);
+            LogManager.WriteLog(LogManager.LogFile.Trace, "Setting.config Path: " + strConfig);
 
-            string tagUrl = Configuration.StockList;//"http://www.sina.com/";
-            CookieCollection cookies = new CookieCollection();//如何从response.Headers["Set-Cookie"];中获取并设置CookieCollection的代码略  
+
+            string tagUrl = Configuration.StockList;
+            LogManager.WriteLog(LogManager.LogFile.Trace, "Configuration.StockList: " + tagUrl);
+
+            CookieCollection cookies = new CookieCollection();
             HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(tagUrl, null, null, cookies);
             Stream stream = response.GetResponseStream();
             stream.ReadTimeout = 15 * 1000; //读取超时
@@ -103,9 +112,23 @@ namespace StockSync
             }
         }
 
-        public static void SyncStockData()
+        /// <summary>
+        /// 同步股票交易信息
+        /// 新增每日交易信息
+        /// 同步3个月之内所有股票日交易详细信息
+        /// </summary>
+        public static void SyncStockDataDetaileList()
         {
-
+            DbUtility util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+            string sql = string.Format("select * from STOCK");
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<Stock> _table = EntityReader.GetEntities<Stock>(table);
+            foreach ( Stock stock in _table )
+            {
+                string resUrl = StockLogic.GenetateStockUrl(stock.StockCode, true);
+            }
         }
+
+
     }
 }
