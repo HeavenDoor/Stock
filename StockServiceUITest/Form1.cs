@@ -26,6 +26,7 @@ using StockCommon;
 using StockServiceUITest.TestCode;
 using StockSync;
 
+//using Quartz;
 
 namespace StockServiceUITest
 {

@@ -115,7 +115,7 @@ namespace StockSync
         /// <summary>
         /// 同步股票交易信息
         /// 新增每日交易信息
-        /// 同步3个月之内所有股票日交易详细信息
+        /// 同步3个月 之内所有股票日交易详细信息
         /// </summary>
         public static void SyncStockDataDetaileList()
         {
@@ -126,6 +126,7 @@ namespace StockSync
             foreach ( Stock stock in _table )
             {
                 string resUrl = StockLogic.GenetateStockUrl(stock.StockCode, true);
+
             }
         }
 

@@ -9,3 +9,4 @@ E:\Users\shenghai\Desktop\stock\DataCollector\obj\x86\Debug\DataCollector.pdb
 E:\Users\shenghai\Desktop\stock\DataCollector\obj\x86\Debug\DataCollector.ProjectInstaller.resources
 E:\Users\shenghai\Desktop\stock\StockServiceUITest\bin\Debug\StockService\DataCollector.exe
 E:\Users\shenghai\Desktop\stock\StockServiceUITest\bin\Debug\StockService\DataCollector.pdb
+E:\Users\shenghai\Desktop\Stock\StockServiceUITest\bin\Debug\StockService\DataCollector.exe.config

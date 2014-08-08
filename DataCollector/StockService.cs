@@ -9,15 +9,38 @@ using System.Text;
 
 using StockCommon;
 
+using Quartz.Impl;
+using Quartz;
+
 namespace DataCollector
 {
     public partial class StockService : ServiceBase
     {
+        public ISchedulerFactory sf;
+        public IScheduler sched;
+        public DateTimeOffset startTime;
+        public IJobDetail job;
+        public ISimpleTrigger trigger;
+        public DateTimeOffset? ft;
         public StockService()
         {
             
             InitializeComponent();
-            LogManager.LogPath = System.AppDomain.CurrentDomain.BaseDirectory;  //"E:\\Users\\shenghai\\Desktop\\hrer\\";
+            StockCommon.LogManager.LogPath = System.AppDomain.CurrentDomain.BaseDirectory;  //"E:\\Users\\shenghai\\Desktop\\hrer\\";
+
+
+            sf = new StdSchedulerFactory();
+            sched = sf.GetScheduler();
+
+            startTime = DateBuilder.DateOf(17, 30, 10);
+
+            job = JobBuilder.Create<StockSyncJob>().WithIdentity("StockSyncJob", "StockSyncJobGroup").Build();
+
+            trigger = (ISimpleTrigger)TriggerBuilder.Create().WithIdentity("trigger1", "group1").StartAt(startTime).Build();
+
+            //ISimpleTrigger trigger = TriggerUtils.MakeMinutelyTrigger(1)
+            ft = sched.ScheduleJob(job, trigger);
+        
         }
 
         protected override void OnStart(string[] args)
@@ -26,20 +49,26 @@ namespace DataCollector
 //             {
 //                 int m = 0;
 //             }
-             TimeListenerThread thread = new TimeListenerThread();
-             thread.start();
 
 
-            LogManager.WriteLog(LogManager.LogFile.Trace, "server start");
+            sched.Start();
+
+//              TimeListenerThread thread = new TimeListenerThread();
+//              thread.start();
+
+
+             StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "server start");
         }
 
         protected override void OnStop()
         {
-            //TimeListenerThread thread = new TimeListenerThread();
-            //thread.start();
+
+            sched.Shutdown(true);
+
+
 
             string s = Configuration.SqlConnectStr;
-            LogManager.WriteLog(LogManager.LogFile.Trace, "server end");
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "server end");
         }
     }
 }

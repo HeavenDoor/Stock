@@ -1,0 +1,12 @@
+E:\Users\shenghai\Desktop\common-logging\build\net40\Common.Logging\Debug\Common.Logging.dll
+E:\Users\shenghai\Desktop\common-logging\build\net40\Common.Logging\Debug\Common.Logging.pdb
+E:\Users\shenghai\Desktop\common-logging\build\net40\Common.Logging\Debug\Common.Logging.xml
+E:\Users\shenghai\Desktop\common-logging\src\Common.Logging\obj\Debug\ResolveAssemblyReference.cache
+E:\Users\shenghai\Desktop\common-logging\src\Common.Logging\obj\Debug\Common.Logging.dll
+E:\Users\shenghai\Desktop\common-logging\src\Common.Logging\obj\Debug\Common.Logging.pdb
+E:\Users\shenghai\Desktop\Stock\build\net40\Common.Logging\Debug\Common.Logging.dll
+E:\Users\shenghai\Desktop\Stock\build\net40\Common.Logging\Debug\Common.Logging.pdb
+E:\Users\shenghai\Desktop\Stock\build\net40\Common.Logging\Debug\Common.Logging.xml
+E:\Users\shenghai\Desktop\Stock\src\Common.Logging\obj\Debug\ResolveAssemblyReference.cache
+E:\Users\shenghai\Desktop\Stock\src\Common.Logging\obj\Debug\Common.Logging.dll
+E:\Users\shenghai\Desktop\Stock\src\Common.Logging\obj\Debug\Common.Logging.pdb

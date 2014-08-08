@@ -1,0 +1,9 @@
+E:\Users\shenghai\Desktop\Stock\tools\build\net40\Common.Logging\Debug\Common.Logging.dll
+E:\Users\shenghai\Desktop\Stock\tools\build\net40\Common.Logging\Debug\Common.Logging.pdb
+E:\Users\shenghai\Desktop\Stock\tools\build\net40\Common.Logging\Debug\Common.Logging.xml
+E:\Users\shenghai\Desktop\Stock\tools\Logging\Common.Logging\obj\Debug\ResolveAssemblyReference.cache
+E:\Users\shenghai\Desktop\Stock\tools\Logging\Common.Logging\obj\Debug\Common.Logging.dll
+E:\Users\shenghai\Desktop\Stock\tools\Logging\Common.Logging\obj\Debug\Common.Logging.pdb
+E:\Users\shenghai\Desktop\Stock\tools\build\Debug\Common.Logging.dll
+E:\Users\shenghai\Desktop\Stock\tools\build\Debug\Common.Logging.pdb
+E:\Users\shenghai\Desktop\Stock\tools\build\Debug\Common.Logging.xml
