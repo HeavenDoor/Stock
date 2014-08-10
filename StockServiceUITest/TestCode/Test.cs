@@ -127,6 +127,12 @@ namespace StockServiceUITest.TestCode
         {
             StockDataSync.SyncStockDataDetaileList();
         }
+
+        public static void testQuery()
+        {
+            DateTime da = new DateTime(2008,12,26);
+            //StockDataSync.IsStockItemExits(da);
+        }
     }
 
     public class Test
@@ -226,6 +232,11 @@ namespace StockServiceUITest.TestCode
                 }
                 
             }
+        }
+
+        public static void SyncStockList()
+        {
+            StockDataSync.SyncStockList();
         }
     }
 

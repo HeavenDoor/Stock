@@ -17,14 +17,16 @@ using System.Data.Common;
 
 using StockCommon;
 using HtmlAgilityPack;
+using CsvHelper;
 
 namespace StockSync
 {
     public class StockDataSync
     {
+        public static DbUtility util;
         public StockDataSync()
         {
-            
+            InitDB();
         }
 
         /// <summary>
@@ -65,7 +67,7 @@ namespace StockSync
                 {
                     string tmp = item.Replace(")", "");
                     string[] st = tmp.Split('(');
-                    if (st[1].StartsWith("00") || st[1].StartsWith("6") || st[1].StartsWith("3"))
+                    if (StockLogic.GetCodeType(st[1]) != StockLogic.CodeType.UnKnown)   /*st[1].StartsWith("00") || st[1].StartsWith("6") || st[1].StartsWith("3")*/
                     {
                         datas.Add(new Stock() { StockName = st[0], StockCode = st[1] });
                     }
@@ -77,8 +79,7 @@ namespace StockSync
 
         private static void SyncDatabase(ref List<Stock> datas)
         {
-            
-            DbUtility util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+            InitDB();
 
             foreach (Stock stock in datas)
             {
@@ -119,17 +120,107 @@ namespace StockSync
         /// </summary>
         public static void SyncStockDataDetaileList()
         {
-            DbUtility util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+            InitDB();    
             string sql = string.Format("select * from STOCK");
             DataTable table = util.ExecuteDataTable(sql, null);
             List<Stock> _table = EntityReader.GetEntities<Stock>(table);
             foreach ( Stock stock in _table )
             {
                 string resUrl = StockLogic.GenetateStockUrl(stock.StockCode, true);
+                string strHtml = GetHtmlString(resUrl);
+                int pos = strHtml.IndexOf("\r\n");
+                string strCsv = strHtml.Remove(0, pos);
+                string _strCsv = Configuration.StockCSVHeader + strCsv;
+
+
+
+                if (_strCsv.Contains("None"))
+                {
+                    _strCsv = _strCsv.Replace("None", "0.0");
+                }
+                
+
+
+                TextReader rea = new StreamReader(StringToStream(_strCsv), System.Text.Encoding.UTF8);
+                using (var reader = new CsvReader(rea))
+                {
+                    var records = reader.GetRecords<StockItem>();
+
+                    foreach (StockItem item in records)//var record
+                    {
+                        string date = string.Format("{0}/{1}/{2}", item.StockDate.Year, item.StockDate.Month, item.StockDate.Day);
+                        pos = item.StockCode.IndexOf("'");
+                        string stockCode = item.StockCode.Remove(pos,1);
+                        StockItem dbItem = GetStockItemFromDB(item.StockDate);
+                        if (dbItem != null)  // update
+                        {
+                            if (dbItem == item)
+                            {
+                                break;
+                            }
+                            string sqlUpdate = string.Format("update STOCKITEM set STOCKCODE='{0}' , STOCKNAME='{1}' , OPENPRICE={2} , CLOSEPRICE={3} , HIGHESTPRICE={4} , LOWESTPRICE={5} , FLUCTUATEMOUNT={6} , FLUCTUATERATE={7} , CHANGERATE={8} , TRADEVOLUME={9} , TRADEMOUNT={10} , TOATLMARKETCAP={11} , CIRCULATIONMARKETCAP={12} where STOCKDATE='{13}'",
+                                stockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap, date);
+                            try
+                            {
+                                int reCount = util.ExecuteNonQuery(sqlUpdate, null);
+                            }
+                            catch (System.Exception e)
+                            {
+
+                            }
+                        }
+                        else // insert
+                        {
+                            string sqlInsert = string.Format("insert into STOCKITEM values('{0}','{1}','{2}',{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13})",
+                                date, stockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap);
+                            try
+                            {
+                                int reCount = util.ExecuteNonQuery(sqlInsert, null);
+                            }
+                            catch (System.Exception e)
+                            {
+
+                            }
+                        }
+                    }
+                }
 
             }
         }
 
+        public static Stream StringToStream(string src)
+        {
+            byte[] byteArray = Encoding.UTF8.GetBytes(src);
+            return new MemoryStream(byteArray);
+        }
+
+        public static string GetHtmlString(string url)
+        {
+            CookieCollection cookies = new CookieCollection(); 
+            HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(url, null, null, cookies);
+            Stream stream = response.GetResponseStream();
+            stream.ReadTimeout = 15 * 1000; //读取超时
+            StreamReader sr = new StreamReader(stream, Encoding.GetEncoding("gb2312"));
+            string strWebData = sr.ReadToEnd();
+            return strWebData;
+        }
+
+        public static StockItem GetStockItemFromDB(DateTime datetime)
+        {
+            InitDB();
+            string date = string.Format("{0}/{1}/{2}", datetime.Year, datetime.Month, datetime.Day);
+            string sql = string.Format("select * from STOCKITEM where STOCKDATE='{0}'", date);
+            StockItem item = util.QueryForObject<StockItem>(sql, null);
+            return item;
+        }
+
+        public static void InitDB()
+        {
+            if (util == null)
+            {
+                util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+            }
+        }
 
     }
 }
