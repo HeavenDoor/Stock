@@ -151,7 +151,7 @@ namespace StockSync
                         string date = string.Format("{0}/{1}/{2}", item.StockDate.Year, item.StockDate.Month, item.StockDate.Day);
                         pos = item.StockCode.IndexOf("'");
                         string stockCode = item.StockCode.Remove(pos,1);
-                        StockItem dbItem = GetStockItemFromDB(item.StockDate);
+                        StockItem dbItem = GetStockItemFromDB(item);
                         if (dbItem != null)  // update
                         {
                             if (dbItem == item)
@@ -205,13 +205,16 @@ namespace StockSync
             return strWebData;
         }
 
-        public static StockItem GetStockItemFromDB(DateTime datetime)
+        public static StockItem GetStockItemFromDB(StockItem item)
         {
             InitDB();
+            DateTime datetime = item.StockDate;
+            int pos = item.StockCode.IndexOf("'");
+            string stockCode = item.StockCode.Remove(pos, 1);
             string date = string.Format("{0}/{1}/{2}", datetime.Year, datetime.Month, datetime.Day);
-            string sql = string.Format("select * from STOCKITEM where STOCKDATE='{0}'", date);
-            StockItem item = util.QueryForObject<StockItem>(sql, null);
-            return item;
+            string sql = string.Format("select * from STOCKITEM where STOCKDATE='{0}' and STOCKCODE='{1}'", date, stockCode);
+            StockItem _item = util.QueryForObject<StockItem>(sql, null);
+            return _item;
         }
 
         public static void InitDB()
