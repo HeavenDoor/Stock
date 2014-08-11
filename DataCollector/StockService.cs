@@ -10,6 +10,7 @@ using System.Text;
 using StockCommon;
 
 using Quartz.Impl;
+using Quartz.Job;
 using Quartz;
 
 namespace DataCollector

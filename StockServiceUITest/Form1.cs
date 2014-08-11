@@ -78,6 +78,8 @@ namespace StockServiceUITest
 
             //Test.testlist();
 
+            //Test.SyncStockList();
+
 
 //             StockSync.StockDataSync.SyncStockList();
 // 
@@ -91,7 +93,7 @@ namespace StockServiceUITest
 //             string day = dt.DayOfWeek.ToString();
 
             SyncTest.SyncStockDataDetaileList();
-
+            //SyncTest.testQuery();
 
             //CSVTest.ReadAllRecords();
             
