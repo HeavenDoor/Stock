@@ -192,6 +192,22 @@ namespace StockServiceUITest.TestCode
 
         }
 
+        public static void testEqual()
+        {
+            StockListTmp a = new StockListTmp();
+            StockListTmp b = new StockListTmp();
+            a.stockcode = "123";
+            b.stockcode = "123";
+
+            a.stockname = "456";
+            b.stockname = "456";
+           // b = a;
+            if (a.Equals(b))
+            {
+                int m = 0;
+            }
+
+        }
 
         public static void testlist()
         {
@@ -305,6 +321,16 @@ namespace StockServiceUITest.TestCode
     {
         public string stockname { get; set; }
         public string stockcode { get; set; }
+
+        public bool Equals(StockListTmp o) 
+        {
+            bool ret = false;
+            if (stockname == o.stockname && stockcode == o.stockcode)
+            {
+                ret = true;
+            }
+            return ret;
+        }
     }
 
     public class Data

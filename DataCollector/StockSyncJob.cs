@@ -18,9 +18,9 @@ namespace DataCollector
 //             {
                 LogManager.WriteLog(LogManager.LogFile.Trace,
                     "*****************************************  Start Sync  *****************************************");
-                StockDataSync.SyncStockList();
+                //StockDataSync.SyncStockList();
 
-                StockDataSync.SyncStockDataDetaileList();
+                //StockDataSync.SyncStockDataDetaileList();
                 LogManager.WriteLog(LogManager.LogFile.Trace,
                     "*****************************************  End Sync  *****************************************");
 //            }

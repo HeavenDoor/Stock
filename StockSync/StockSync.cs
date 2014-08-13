@@ -24,6 +24,8 @@ namespace StockSync
     public class StockDataSync
     {
         public static DbUtility util;
+        public static int ItemCount = 15; // 符合条件的单边股票数量
+
         public StockDataSync()
         {
             InitDB();
@@ -150,13 +152,15 @@ namespace StockSync
                     {
                         string date = string.Format("{0}/{1}/{2}", item.StockDate.Year, item.StockDate.Month, item.StockDate.Day);
                         pos = item.StockCode.IndexOf("'");
-                        string stockCode = item.StockCode.Remove(pos,1);
+                        string stockCode = item.StockCode.Remove(pos,1);  // 去除 " csv文件中股票代码前面的 '  如 '002560 "
+                        item.StockCode = stockCode;
+
                         StockItem dbItem = GetStockItemFromDB(item);
                         if (dbItem != null)  // update
                         {
-                            if (dbItem == item)
+                            if (dbItem.Equals(item))
                             {
-                                break;
+                                continue;
                             }
                             string sqlUpdate = string.Format("update STOCKITEM set STOCKCODE='{0}' , STOCKNAME='{1}' , OPENPRICE={2} , CLOSEPRICE={3} , HIGHESTPRICE={4} , LOWESTPRICE={5} , FLUCTUATEMOUNT={6} , FLUCTUATERATE={7} , CHANGERATE={8} , TRADEVOLUME={9} , TRADEMOUNT={10} , TOATLMARKETCAP={11} , CIRCULATIONMARKETCAP={12} where STOCKDATE='{13}'",
                                 stockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap, date);
@@ -209,10 +213,8 @@ namespace StockSync
         {
             InitDB();
             DateTime datetime = item.StockDate;
-            int pos = item.StockCode.IndexOf("'");
-            string stockCode = item.StockCode.Remove(pos, 1);
             string date = string.Format("{0}/{1}/{2}", datetime.Year, datetime.Month, datetime.Day);
-            string sql = string.Format("select * from STOCKITEM where STOCKDATE='{0}' and STOCKCODE='{1}'", date, stockCode);
+            string sql = string.Format("select * from STOCKITEM where STOCKDATE='{0}' and STOCKCODE='{1}'", date, item.StockCode);
             StockItem _item = util.QueryForObject<StockItem>(sql, null);
             return _item;
         }
@@ -223,6 +225,30 @@ namespace StockSync
             {
                 util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
             }
+        }
+
+        /// <summary>
+        /// 计算股票边界值 保存到数据库
+        /// 在更新当日交易数据之后  计算接口开始执行
+        /// 执行完毕写入更新日期
+        /// </summary>
+        public  static void ComputeStockSide()
+        {
+            ComputeTodayFluctuateRate();
+        }
+
+        /// <summary>
+        /// 计算股票当天涨跌幅
+        /// </summary>
+        public static void ComputeTodayFluctuateRate()
+        {
+            string sql = "SELECT TOP 15 * FROM STOCKITEM";
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
+
+            string _sql = "SELECT BOTTOM 15 * FROM STOCKITEM";
+            DataTable table_E = util.ExecuteDataTable(_sql, null);
+            List<StockItem> _table_E = EntityReader.GetEntities<StockItem>(table_E);
         }
 
     }

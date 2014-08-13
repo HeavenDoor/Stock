@@ -92,6 +92,8 @@ namespace StockServiceUITest
 //             DateTime dt = DateTime.Now;
 //             string day = dt.DayOfWeek.ToString();
 
+            //Test.testEqual();
+
             SyncTest.SyncStockDataDetaileList();
             //SyncTest.testQuery();
 

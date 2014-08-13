@@ -21,7 +21,8 @@ namespace DataCollector
         public IScheduler sched;
         public DateTimeOffset startTime;
         public IJobDetail job;
-        public ISimpleTrigger trigger;
+        public ICronTrigger trigger;
+        //public ISimpleTrigger trigger;
         public DateTimeOffset? ft;
         public StockService()
         {
@@ -33,11 +34,12 @@ namespace DataCollector
             sf = new StdSchedulerFactory();
             sched = sf.GetScheduler();
 
-            startTime = DateBuilder.DateOf(17, 30, 10);
+            //startTime = DateBuilder.DateOf(10, 30, 10);
 
             job = JobBuilder.Create<StockSyncJob>().WithIdentity("StockSyncJob", "StockSyncJobGroup").Build();
 
-            trigger = (ISimpleTrigger)TriggerBuilder.Create().WithIdentity("trigger1", "group1").StartAt(startTime).Build();
+
+            trigger = (ICronTrigger)TriggerBuilder.Create().WithIdentity("StockSyncJob", "StockSyncJobGroup").WithSchedule(CronScheduleBuilder.CronSchedule("0 40 16 ? * *")).Build();
 
             //ISimpleTrigger trigger = TriggerUtils.MakeMinutelyTrigger(1)
             ft = sched.ScheduleJob(job, trigger);
