@@ -133,6 +133,11 @@ namespace StockServiceUITest.TestCode
             DateTime da = new DateTime(2008,12,26);
             //StockDataSync.IsStockItemExits(da);
         }
+
+        public static void ComputeTodayFluctuateRate()
+        {
+            StockDataSync.ComputeTodayFluctuateRate();
+        }
     }
 
     public class Test

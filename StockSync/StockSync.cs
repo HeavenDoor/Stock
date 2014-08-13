@@ -242,11 +242,12 @@ namespace StockSync
         /// </summary>
         public static void ComputeTodayFluctuateRate()
         {
-            string sql = "SELECT TOP 15 * FROM STOCKITEM";
+            InitDB();
+            string sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='2014/8/8' ORDER BY FLUCTUATERATE DESC LIMIT 0,{0}", ItemCount);
             DataTable table = util.ExecuteDataTable(sql, null);
             List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
 
-            string _sql = "SELECT BOTTOM 15 * FROM STOCKITEM";
+            string _sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='2014/8/8' ORDER BY FLUCTUATERATE ASC LIMIT 0,{0}", ItemCount);
             DataTable table_E = util.ExecuteDataTable(_sql, null);
             List<StockItem> _table_E = EntityReader.GetEntities<StockItem>(table_E);
         }

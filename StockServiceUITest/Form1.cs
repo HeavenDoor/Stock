@@ -94,6 +94,8 @@ namespace StockServiceUITest
 
             //Test.testEqual();
 
+            SyncTest.ComputeTodayFluctuateRate();
+
             SyncTest.SyncStockDataDetaileList();
             //SyncTest.testQuery();
 
