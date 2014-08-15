@@ -134,9 +134,14 @@ namespace StockServiceUITest.TestCode
             //StockDataSync.IsStockItemExits(da);
         }
 
-        public static void ComputeTodayFluctuateRate()
+        public static void ComputeStockSide()
         {
-            StockDataSync.ComputeTodayFluctuateRate();
+            StockDataSync.ComputeStockSide();
+        }
+
+        public static void SyncLastUpdate()
+        {
+            StockDataSync.SyncLastUpdate();
         }
     }
 

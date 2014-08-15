@@ -24,7 +24,7 @@ namespace DataDispacher
     public class DataDispacher : System.Web.Services.WebService
     {
         private static string connectString = "server=localhost;uid=shenghai;pwd=123465;database=stock;";
-        private DbUtility util = new DbUtility(delegate (string str) { return new string("123");}, DbProviderType.MySql);
+        private DbUtility util = new DbUtility(connectString, DbProviderType.MySql);
         private Configuration config = new Configuration();
         
 
@@ -32,6 +32,7 @@ namespace DataDispacher
         [WebMethod]
         public bool TestConnection()
         {
+            string path = System.AppDomain.CurrentDomain.BaseDirectory;
             //ConfigLoader.Load(System.Windows.Forms.Application.StartupPath + "\\Setting.config", config);
             return true;
         }
@@ -41,20 +42,7 @@ namespace DataDispacher
         [WebMethod]
         public string RegisterUser(string userName, string pwd, string email, string phone)
         {
-            //DbUtility uu = new DbUtility(delegate(string str) { return "ss"; }, DbProviderType.MySql);
-
-            List<string> list=new List<string>();
-            var numbers = new []{ "5", "4", "1", "3", "9", "8", "6", "7", "2", "0" };
-            list.AddRange(numbers);
-            list.Sort(delegate (string a, string b)
-                {
-                    ConfigLoader.Load("",config);
-                    /*return*/ a.CompareTo(b);
-                    ConfigLoader.Load("", config);
-                    b = a =  Configuration.SqlConnectStr;
-                    return a/*.CompareTo(b)*/;
-                }
-            );
+           
 
            // list.Sort((a,b)=>a.CompareTo(b));
 

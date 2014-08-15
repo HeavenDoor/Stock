@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StockSync
 {
-    class WeekLogic
+    public class WeekLogic
     {
         public static bool IsWeekend()
         {
@@ -35,6 +35,26 @@ namespace StockSync
             DateTime dt = DateTime.Now;
 
             return isHoliday;
+        }
+    }
+
+    public class LastUpdate
+    {
+        private DateTime m_LastUpdateTime;
+        public DateTime LastUpdateTime
+        {
+            get { return m_LastUpdateTime; }
+            set { m_LastUpdateTime = value; }
+        }
+    }
+
+    public class HoliDays
+    {
+        private DateTime m_Holiday;
+        public DateTime Holiday
+        {
+            get { return m_Holiday; }
+            set { m_Holiday = value; }
         }
     }
 }

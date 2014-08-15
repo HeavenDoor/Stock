@@ -234,15 +234,16 @@ namespace StockSync
         /// </summary>
         public  static void ComputeStockSide()
         {
-            ComputeTodayFluctuateRate();
+            SyncTodayFluctuateRate();
         }
 
         /// <summary>
-        /// 计算股票当天涨跌幅
+        /// 计算股票当天涨跌幅 
         /// </summary>
-        public static void ComputeTodayFluctuateRate()
+        private static void SyncTodayFluctuateRate()
         {
-            InitDB();
+            InitDB();//
+            string tableName = "STOCKITEM_DAILYFLUCTUATERATE";
             string sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='2014/8/8' ORDER BY FLUCTUATERATE DESC LIMIT 0,{0}", ItemCount);
             DataTable table = util.ExecuteDataTable(sql, null);
             List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
@@ -250,7 +251,121 @@ namespace StockSync
             string _sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='2014/8/8' ORDER BY FLUCTUATERATE ASC LIMIT 0,{0}", ItemCount);
             DataTable table_E = util.ExecuteDataTable(_sql, null);
             List<StockItem> _table_E = EntityReader.GetEntities<StockItem>(table_E);
+
+            if (!IsStockItemTableEmpty(tableName))
+            {
+                EmptyStockItemTable(tableName);
+            }
+            FillStockItemTable(tableName, ref _table);
+            FillStockItemTable(tableName, ref _table_E);
         }
 
+        private static bool IsStockItemTableEmpty(string tableName)
+        {
+            bool ISEmpty = false;
+            InitDB();
+            string sql = string.Format("SELECT * FROM {0}", tableName);
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<StockItem> values = EntityReader.GetEntities<StockItem>(table);
+            if (values.Count == 0)
+            {
+                ISEmpty = true;
+            }
+            return ISEmpty;
+        }
+
+        private static void EmptyStockItemTable(string tableName)
+        {
+            string sqlDelete = string.Format("DELETE FROM {0}", tableName);
+            try
+            {
+                util.ExecuteNonQuery(sqlDelete, null);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        private static void FillStockItemTable(string tableName, ref List<StockItem> items)
+        {
+            foreach (StockItem item in items)
+            {
+                string sqlInsert = string.Format("insert into {0} values('{1}','{2}','{3}',{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14})",
+                                    tableName, item.StockDate, item.StockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap);
+                try
+                {
+                    int reCount = util.ExecuteNonQuery(sqlInsert, null);
+                }
+                catch (System.Exception e)
+                {
+
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// 同步最后更新时间
+        /// </summary>
+        public static void SyncLastUpdate()
+        {
+            InitDB();
+            string sql = string.Format("SELECT * FROM LASTUPDATE");
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<LastUpdate> values = EntityReader.GetEntities<LastUpdate>(table);
+            if (values.Count == 0)  // insert 
+            {
+                DateTime today = DateTime.Now;
+                string date = string.Format("{0}/{1}/{2}", today.Year, today.Month, today.Day);
+                string sqlInsert = string.Format("INSERT INTO LASTUPDATE VALUES('{0}')", date);
+                try
+                {
+                    util.ExecuteNonQuery(sqlInsert, null);
+                }
+                catch(Exception e)
+                {
+
+                }
+            }
+            else if (values.Count > 1)  // delete and insert
+            {
+                string sqlDelete = string.Format("DELETE FROM LASTUPDATE");
+                try
+                {
+                    util.ExecuteNonQuery(sqlDelete, null);
+                }
+                catch (Exception e)
+                {
+
+                }
+
+                DateTime today = DateTime.Now;
+                string date = string.Format("{0}/{1}/{2}", today.Year, today.Month, today.Day);
+                string sqlInsert = string.Format("INSERT INTO LASTUPDATE VALUES('{0}')", date);
+                try
+                {
+                    util.ExecuteNonQuery(sqlInsert, null);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            else // update
+            {
+                DateTime today = DateTime.Now;
+                string date = string.Format("{0}/{1}/{2}", today.Year, today.Month, today.Day);
+                string sqlUpdate = string.Format("update LASTUPDATE set LASTUPDATETIME='{0}'", date);
+                try
+                {
+                    util.ExecuteNonQuery(sqlUpdate, null);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+        }
     }
 }
