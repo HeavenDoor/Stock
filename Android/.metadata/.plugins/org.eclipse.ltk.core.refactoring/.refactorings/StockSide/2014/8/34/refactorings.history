@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Extracts string &apos;CheckBox&apos; into R.string.checkbox" description="Extracts string &apos;CheckBox&apos; into R.string.checkbox" file="/StockSide/res/layout/activity_stockside.xml" flags="6" id="com.android.ide.eclipse.adt.refactoring.extract.string" mode="EDIT_SOURCE" proj="/StockSide" rplc-all-java="false" rplc-all-xml="false" sel-end="2136" sel-start="2114" stamp="1408351611002" tok-esc="CheckBox" xml-attr-name="android:text"/>
+</session>
