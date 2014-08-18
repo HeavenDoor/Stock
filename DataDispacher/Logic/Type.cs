@@ -15,7 +15,8 @@ namespace DataDispacher.Logic
         NoException = 0,
         DatabaseException = 1,
         UserExists = 2,
-        OtherThanDatabaseException,
+        OtherThanDatabaseException = 3,
+        UserNameOrPWDError = 4,
     }
 
     public enum ErrorID : int
@@ -24,6 +25,7 @@ namespace DataDispacher.Logic
         DatabaseException = 1,
         UserExists = 2,
         ValidateSerializeFailure = 3,
+        ValidateUserFailure = 4,
     }
 
     public enum Test : int

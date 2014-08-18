@@ -235,8 +235,10 @@ namespace StockSync
         public  static void ComputeStockSide()
         {
             SyncTodayFluctuateRate();
+            SyncTodayChangeRate();
         }
 
+        #region 
         /// <summary>
         /// 计算股票当天涨跌幅 
         /// </summary>
@@ -259,6 +261,33 @@ namespace StockSync
             FillStockItemTable(tableName, ref _table);
             FillStockItemTable(tableName, ref _table_E);
         }
+        #endregion
+
+        #region 
+        /// <summary>
+        /// 计算股票当天换手率  
+        /// 停牌股票换手率为最小值0 应该排除
+        /// </summary>
+        private static void SyncTodayChangeRate()
+        {
+            InitDB();
+            string tableName = "STOCKITEM_DAILYCHANGERATE";
+            string sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='2014/8/8' ORDER BY CHANGERATE DESC LIMIT 0,{0}", ItemCount);
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
+
+            string _sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='2014/8/8' and CHANGERATE!=0 ORDER BY CHANGERATE ASC LIMIT 0,{0}", ItemCount);
+            DataTable table_E = util.ExecuteDataTable(_sql, null);
+            List<StockItem> _table_E = EntityReader.GetEntities<StockItem>(table_E);
+
+            if (!IsStockItemTableEmpty(tableName))
+            {
+                EmptyStockItemTable(tableName);
+            }
+            FillStockItemTable(tableName, ref _table);
+            FillStockItemTable(tableName, ref _table_E);
+        }
+        #endregion
 
         private static bool IsStockItemTableEmpty(string tableName)
         {

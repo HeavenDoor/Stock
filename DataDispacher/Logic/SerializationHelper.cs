@@ -26,7 +26,7 @@ namespace DataDispacher.Logic
                 catch (Exception ex)
                 {
                     throw new Exception();
-                    //throw new Exception(ErrorType.OtherThanDatabaseException, ErrorID.ValidateSerializeFailure, "Can't get XML data.", ex);
+                    
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace DataDispacher.Logic
                 catch (Exception ex)
                 {
                     throw new Exception();
-                    //throw new VersionLinkException(TechExcel.DevTrack.VersionLink.WebService.ErrorType.OtherThanDatabaseException, TechExcel.DevTrack.VersionLink.WebService.ErrorID.ValidateDeserializeFailure, "Input XML data format error.", ex);
+                    
                 }
             }
         }

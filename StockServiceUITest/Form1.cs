@@ -96,12 +96,15 @@ namespace StockServiceUITest
 
             //SyncTest.SyncLastUpdate();
 
-            SyncTest.ComputeStockSide();
+            //SyncTest.ComputeStockSide();
 
-            SyncTest.SyncStockDataDetaileList();
+            //SyncTest.SyncStockDataDetaileList();
             //SyncTest.testQuery();
 
             //CSVTest.ReadAllRecords();
+
+            DrawValidationCode aa = new DrawValidationCode();
+            string s = aa.Next(4);
             
         }
     }
