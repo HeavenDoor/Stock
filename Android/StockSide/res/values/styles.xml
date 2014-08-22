@@ -17,8 +17,11 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
     
-	<style name="mywindowTitleBackground">    
-         <item name="android:background">@color/titleBgColor</item>   
-    </style> 
+	<style name="AppBlackTheme" parent="Theme.AppCompat">
+	</style>
+	
+	<style name="mywindowTitleBackground">       
+     	<item name="android:background">@color/titleBgColor</item>   
+	</style>  
     
 </resources>

@@ -5,17 +5,21 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="10" />
+        android:minSdkVersion="15"
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/themeTitle">
+        android:icon="@drawable/app"
+		android:logo="@drawable/empty"
+		android:label="@string/null_name"
+        android:theme="@style/ThemeBlack"
+        >
         <activity
             android:name="com.stockside.StockSideActivity"
-            android:label="@string/app_name" >
+			android:label="@string/app_name"
+			android:logo="@drawable/empty"
+			>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

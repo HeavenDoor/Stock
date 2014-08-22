@@ -22,33 +22,84 @@ import java.util.Date;
 
 public class StockSideActivity extends ActionBarActivity implements View.OnClickListener
 {
-	Button btn;
+	private ActionBar actionBar;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		
 		super.onCreate(savedInstanceState);
-		
-		
-		this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		setContentView(R.layout.activity_stock_side); 
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
-		
-		btn = (Button)findViewById(R.id.button);
-		btn.setOnClickListener( this );
-		/*{
-			
-			@Override
-			public void onClick(View arg0)
-			{
-				btn.setText("你点击了Button");   
-				
-			}
-		});*/
-		//setContentView(btn); // R.layout.activity_stock_side
 
+		setContentView(R.layout.activity_stock_side); 
+		
+        initView();
+		
+		initData();
+		
 	}
 	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) 
+     {
+		getMenuInflater().inflate(R.menu.stock_side, menu);   
+		/*MenuItem actionItemset = menu.add("settings");
+         actionItemset.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+         actionItemset.setIcon(R.drawable.setting);
+         
+         MenuItem actionItemsearch = menu.add("Search");
+         actionItemsearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+         actionItemsearch.setIcon(R.drawable.search);*/
+         
+        return true;
+
+    }
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
+		int id = item.getItemId();
+	        if (id == R.id.action_setting) {
+	            return true;
+	        }
+	        else 
+		if( id == R.id.action_search)
+	    {
+			int num;
+			num = 0;
+			num++;
+	            //this.finish();
+	    }
+		return super.onOptionsItemSelected(item);
+	}
+	
+	private void initView()
+	{
+		//得到ActionBar
+		actionBar = getSupportActionBar();
+	}
+    
+    private void initData()
+	{
+    	//actionBar.setTitle("StockSide");
+    	actionBar.setDisplayShowHomeEnabled(false);
+    	actionBar.setDisplayHomeAsUpEnabled(false);
+		//设置ActionBar标题不显示
+		actionBar.setDisplayShowTitleEnabled(true);
+		
+		//设置ActionBar的背景
+		//actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_gradient_bg));
+		
+		//设置ActionBar左边默认的图标是否可用
+		actionBar.setDisplayUseLogoEnabled(false);
+		
+		//设置导航模式为Tab选项标签导航模式
+		//actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		
+		//设置ActinBar添加Tab选项标签
+		//actionBar.addTab(actionBar.newTab().setText("TAB1").setTabListener(new MyTabListener<FragmentPage1>(this,FragmentPage1.class)));
+		//actionBar.addTab(actionBar.newTab().setText("TAB2").setTabListener(new MyTabListener<FragmentPage2>(this,FragmentPage2.class)));
+		//actionBar.addTab(actionBar.newTab().setText("TAB3").setTabListener(new MyTabListener<FragmentPage3>(this,FragmentPage3.class)));
+				
+	}
 	@Override
 	protected void onStart()
 	{
@@ -87,7 +138,7 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 	@Override
 	public void onClick(View arg0)
 	{
-		btn.setText(updatetime());   
+		 
 		
 	}
 	private CharSequence updatetime()
@@ -95,20 +146,5 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 		return (new Date().toString());
 	}
 	
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment 
-	{
-
-		public PlaceholderFragment() {}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
-		{
-			View rootView = inflater.inflate(R.layout.fragment_stock_side, container, false);
-			return rootView;
-		}
-	}
 
 }
