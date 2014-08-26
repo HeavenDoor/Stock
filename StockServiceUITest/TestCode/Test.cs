@@ -143,6 +143,16 @@ namespace StockServiceUITest.TestCode
         {
             StockDataSync.SyncLastUpdate();
         }
+
+        public static void SyncTradeDate()
+        {
+            StockDataSync.SyncTradeDate();
+        }
+
+        public static void test()
+        {
+            StockDataSync.test();
+        }
     }
 
     public class Test

@@ -18,9 +18,11 @@ namespace DataCollector
             LogManager.WriteLog(LogManager.LogFile.Trace,
                 "*****************************************  Start Sync  *****************************************");
 
+            StockDataSync.SyncTradeDate();  // 更新同步交易日期 
+            
             StockDataSync.SyncStockList(); // 更新同步股票列表
 
-            StockDataSync.SyncStockDataDetaileList(); // 跟新同步股票日交易数据
+            StockDataSync.SyncStockDataDetaileList(); // 更新同步股票日交易数据
 
             StockDataSync.ComputeStockSide(); // 股票边界数据逻辑处理
 

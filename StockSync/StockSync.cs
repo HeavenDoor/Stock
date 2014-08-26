@@ -31,6 +31,14 @@ namespace StockSync
             InitDB();
         }
 
+        public static void InitDB()
+        {
+            if (util == null)
+            {
+                util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+            }
+        }
+        #region
         /// <summary>
         /// 同步所有股票信息
         /// 1.增加新股票
@@ -114,7 +122,9 @@ namespace StockSync
                 }
             }
         }
+        #endregion
 
+        #region
         /// <summary>
         /// 同步股票交易信息
         /// 新增每日交易信息
@@ -218,21 +228,39 @@ namespace StockSync
             StockItem _item = util.QueryForObject<StockItem>(sql, null);
             return _item;
         }
+        #endregion
 
-        public static void InitDB()
+        #region 
+        /// <summary>
+        /// 同步股票交易日期（加入所有交易日日期） 
+        /// </summary>
+        public static void SyncTradeDate()
         {
-            if (util == null)
+            DateTime today = DateTime.Now;
+            if (WeekLogic.IsHoliday(today) || WeekLogic.IsWeekend(today))
             {
-                util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+                return;
+            }
+            InitDB();
+            string date = string.Format("{0}/{1}/{2}", today.Year, today.Month, today.Day);
+            string sqlInsert = string.Format("INSERT INTO TRADEDATE VALUES('{0}')", date);
+            try
+            {
+                util.ExecuteNonQuery(sqlInsert, null);
+            }
+            catch (Exception e)
+            {
+
             }
         }
+        #endregion
 
         /// <summary>
         /// 计算股票边界值 保存到数据库
         /// 在更新当日交易数据之后  计算接口开始执行
         /// 执行完毕写入更新日期
         /// </summary>
-        public  static void ComputeStockSide()
+        public static void ComputeStockSide()
         {
             SyncTodayFluctuateRate();
             SyncTodayChangeRate();
@@ -245,8 +273,9 @@ namespace StockSync
         private static void SyncTodayFluctuateRate()
         {
             InitDB();//
+            string recentday = TransactionDate.GetRecentDay();
             string tableName = "STOCKITEM_DAILYFLUCTUATERATE";
-            string sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='2014/8/8' ORDER BY FLUCTUATERATE DESC LIMIT 0,{0}", ItemCount);
+            string sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='{0}' ORDER BY FLUCTUATERATE DESC LIMIT 0,{1}", recentday, ItemCount);
             DataTable table = util.ExecuteDataTable(sql, null);
             List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
 
@@ -261,34 +290,208 @@ namespace StockSync
             FillStockItemTable(tableName, ref _table);
             FillStockItemTable(tableName, ref _table_E);
         }
-        #endregion
 
-        #region 
         /// <summary>
         /// 计算股票当天换手率  
-        /// 停牌股票换手率为最小值0 应该排除
+        /// 换手率只计算最大值
         /// </summary>
         private static void SyncTodayChangeRate()
         {
             InitDB();
+            string recentday = TransactionDate.GetRecentDay();
             string tableName = "STOCKITEM_DAILYCHANGERATE";
-            string sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='2014/8/8' ORDER BY CHANGERATE DESC LIMIT 0,{0}", ItemCount);
+            string sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='{0}' ORDER BY CHANGERATE DESC LIMIT 0,{1}", recentday, ItemCount * 2);
             DataTable table = util.ExecuteDataTable(sql, null);
             List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
 
-            string _sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='2014/8/8' and CHANGERATE!=0 ORDER BY CHANGERATE ASC LIMIT 0,{0}", ItemCount);
-            DataTable table_E = util.ExecuteDataTable(_sql, null);
-            List<StockItem> _table_E = EntityReader.GetEntities<StockItem>(table_E);
+            //string _sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='2014/8/8' and CHANGERATE!=0 ORDER BY CHANGERATE ASC LIMIT 0,{0}", ItemCount);
+            //DataTable table_E = util.ExecuteDataTable(_sql, null);
+            //List<StockItem> _table_E = EntityReader.GetEntities<StockItem>(table_E);
 
             if (!IsStockItemTableEmpty(tableName))
             {
                 EmptyStockItemTable(tableName);
             }
             FillStockItemTable(tableName, ref _table);
-            FillStockItemTable(tableName, ref _table_E);
+            //FillStockItemTable(tableName, ref _table_E);
         }
         #endregion
 
+        #region
+        /// <summary>
+        /// 计算股票两个交易日涨跌幅 
+        /// </summary>
+        public static void Sync2DaysFluctuateRate()
+        {
+            InitDB();
+
+        }
+
+        /// <summary>
+        /// 计算股票两个交易日换手率  
+        /// 停牌股票换手率为最小值0 应该排除
+        /// </summary>
+        private static void Sync2DaysChangeRate()
+        {
+            InitDB();
+        }
+        #endregion
+
+        #region
+        /// <summary>
+        /// 计算股票三个交易日涨跌幅 
+        /// </summary>
+        public static void Sync3DaysFluctuateRate()
+        {
+            InitDB();
+        }
+
+        /// <summary>
+        /// 计算股票三个交易日换手率  
+        /// 停牌股票换手率为最小值0 应该排除
+        /// </summary>
+        private static void Sync3DaysChangeRate()
+        {
+            InitDB();
+        }
+        #endregion
+
+        #region
+        /// <summary>
+        /// 计算股票五个交易日涨跌幅 
+        /// </summary>
+        public static void Sync5DaysFluctuateRate()
+        {
+            InitDB();
+        }
+
+        /// <summary>
+        /// 计算股票五个交易日换手率  
+        /// 停牌股票换手率为最小值0 应该排除
+        /// </summary>
+        private static void Sync5DaysChangeRate()
+        {
+            InitDB();
+        }
+        #endregion
+
+        #region
+        /// <summary>
+        /// 计算股票十个交易日涨跌幅 
+        /// </summary>
+        public static void Sync10DaysFluctuateRate()
+        {
+            InitDB();
+        }
+
+        /// <summary>
+        /// 计算股票十个交易日换手率  
+        /// 停牌股票换手率为最小值0 应该排除
+        /// </summary>
+        private static void Sync10DaysChangeRate()
+        {
+            InitDB();
+        }
+        #endregion
+
+        #region
+        /// <summary>
+        /// 计算股票十五个交易日涨跌幅 
+        /// </summary>
+        public static void Sync15DaysFluctuateRate()
+        {
+            InitDB();
+        }
+
+        /// <summary>
+        /// 计算股票十五个交易日换手率  
+        /// 停牌股票换手率为最小值0 应该排除
+        /// </summary>
+        private static void Sync15DaysChangeRate()
+        {
+            InitDB();
+        }
+        #endregion
+
+        #region
+        /// <summary>
+        /// 计算股票三十个交易日涨跌幅 
+        /// </summary>
+        public static void Sync30DaysFluctuateRate()
+        {
+            InitDB();
+        }
+
+        /// <summary>
+        /// 计算股票三十个交易日换手率  
+        /// 停牌股票换手率为最小值0 应该排除
+        /// </summary>
+        private static void Sync30DaysChangeRate()
+        {
+            InitDB();
+        }
+        #endregion
+
+        #region
+        /// <summary>
+        /// 计算股票四十五个交易日涨跌幅 
+        /// </summary>
+        public static void Sync45DaysFluctuateRate()
+        {
+            InitDB();
+        }
+
+        /// <summary>
+        /// 计算股票四十五个交易日换手率  
+        /// 停牌股票换手率为最小值0 应该排除
+        /// </summary>
+        private static void Sync45DaysChangeRate()
+        {
+            InitDB();
+        }
+        #endregion
+
+        #region
+        /// <summary>
+        /// 计算股票六十个交易日涨跌幅 
+        /// </summary>
+        public static void Sync60DaysFluctuateRate()
+        {
+            InitDB();
+        }
+
+        /// <summary>
+        /// 计算股票六十个交易日换手率  
+        /// 停牌股票换手率为最小值0 应该排除
+        /// </summary>
+        private static void Sync60DaysChangeRate()
+        {
+            InitDB();
+        }
+        #endregion
+
+
+        #region
+        /// <summary>
+        /// 计算股票**个交易日换手率  
+        /// </summary>
+        private static void SyncRecentDaysChangeRate(int days)
+        {
+            InitDB();
+            //SELECT STOCKCODE,STOCKNAME,SUM(CHANGERATE) AS CHANGE_RATE, SUM(FLUCTUATERATE) AS FLUCTUATE_RATE FROM STOCKITEM WHERE STOCKDATE >='2014-8-7' GROUP BY stockcode ORDER BY FLUCTUATE_RATE DESC LIMIT 0,15
+
+        }
+
+        /// <summary>
+        /// 计算股票**个交易日涨跌幅 
+        /// </summary>
+        private static void SyncRecentDaysFluctuateRate(int days)
+        {
+            InitDB();
+        }
+        #endregion
+
+        #region
         private static bool IsStockItemTableEmpty(string tableName)
         {
             bool ISEmpty = false;
@@ -333,7 +536,9 @@ namespace StockSync
 
             }
         }
+        #endregion
 
+        #region
         /// <summary>
         /// 同步最后更新时间
         /// </summary>
@@ -395,6 +600,12 @@ namespace StockSync
 
                 }
             }
+        }
+        #endregion
+
+        public static void test()
+        {
+            TransactionDate.GetRecentDay();
         }
     }
 }

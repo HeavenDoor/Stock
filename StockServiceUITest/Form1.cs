@@ -103,6 +103,10 @@ namespace StockServiceUITest
 
             //CSVTest.ReadAllRecords();
 
+            //SyncTest.SyncTradeDate();
+
+            SyncTest.test();
+
             DrawValidationCode aa = new DrawValidationCode();
             string s = aa.Next(4);
             
