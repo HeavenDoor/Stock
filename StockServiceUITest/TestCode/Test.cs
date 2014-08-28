@@ -146,7 +146,7 @@ namespace StockServiceUITest.TestCode
 
         public static void SyncTradeDate()
         {
-            StockDataSync.SyncTradeDate();
+            StockDataSync.SyncTradeCurrentDate();
         }
 
         public static void test()

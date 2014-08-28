@@ -230,30 +230,6 @@ namespace StockSync
         }
         #endregion
 
-        #region 
-        /// <summary>
-        /// 同步股票交易日期（加入所有交易日日期） 
-        /// </summary>
-        public static void SyncTradeDate()
-        {
-            DateTime today = DateTime.Now;
-            if (WeekLogic.IsHoliday(today) || WeekLogic.IsWeekend(today))
-            {
-                return;
-            }
-            InitDB();
-            string date = string.Format("{0}/{1}/{2}", today.Year, today.Month, today.Day);
-            string sqlInsert = string.Format("INSERT INTO TRADEDATE VALUES('{0}')", date);
-            try
-            {
-                util.ExecuteNonQuery(sqlInsert, null);
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-        #endregion
 
         /// <summary>
         /// 计算股票边界值 保存到数据库
@@ -264,6 +240,23 @@ namespace StockSync
         {
             SyncTodayFluctuateRate();
             SyncTodayChangeRate();
+
+            SyncRecentDaysChangeRate(2);
+            SyncRecentDaysFluctuateRate(2);
+            SyncRecentDaysChangeRate(3);
+            SyncRecentDaysFluctuateRate(3);
+            SyncRecentDaysChangeRate(5);
+            SyncRecentDaysFluctuateRate(5);
+            SyncRecentDaysChangeRate(10);
+            SyncRecentDaysFluctuateRate(10);
+            SyncRecentDaysChangeRate(15);
+            SyncRecentDaysFluctuateRate(15);
+            SyncRecentDaysChangeRate(30);
+            SyncRecentDaysFluctuateRate(30);
+            SyncRecentDaysChangeRate(45);
+            SyncRecentDaysFluctuateRate(45);
+            SyncRecentDaysChangeRate(60);
+            SyncRecentDaysFluctuateRate(60);
         }
 
         #region 
@@ -319,167 +312,32 @@ namespace StockSync
 
         #region
         /// <summary>
-        /// 计算股票两个交易日涨跌幅 
-        /// </summary>
-        public static void Sync2DaysFluctuateRate()
-        {
-            InitDB();
-
-        }
-
-        /// <summary>
-        /// 计算股票两个交易日换手率  
-        /// 停牌股票换手率为最小值0 应该排除
-        /// </summary>
-        private static void Sync2DaysChangeRate()
-        {
-            InitDB();
-        }
-        #endregion
-
-        #region
-        /// <summary>
-        /// 计算股票三个交易日涨跌幅 
-        /// </summary>
-        public static void Sync3DaysFluctuateRate()
-        {
-            InitDB();
-        }
-
-        /// <summary>
-        /// 计算股票三个交易日换手率  
-        /// 停牌股票换手率为最小值0 应该排除
-        /// </summary>
-        private static void Sync3DaysChangeRate()
-        {
-            InitDB();
-        }
-        #endregion
-
-        #region
-        /// <summary>
-        /// 计算股票五个交易日涨跌幅 
-        /// </summary>
-        public static void Sync5DaysFluctuateRate()
-        {
-            InitDB();
-        }
-
-        /// <summary>
-        /// 计算股票五个交易日换手率  
-        /// 停牌股票换手率为最小值0 应该排除
-        /// </summary>
-        private static void Sync5DaysChangeRate()
-        {
-            InitDB();
-        }
-        #endregion
-
-        #region
-        /// <summary>
-        /// 计算股票十个交易日涨跌幅 
-        /// </summary>
-        public static void Sync10DaysFluctuateRate()
-        {
-            InitDB();
-        }
-
-        /// <summary>
-        /// 计算股票十个交易日换手率  
-        /// 停牌股票换手率为最小值0 应该排除
-        /// </summary>
-        private static void Sync10DaysChangeRate()
-        {
-            InitDB();
-        }
-        #endregion
-
-        #region
-        /// <summary>
-        /// 计算股票十五个交易日涨跌幅 
-        /// </summary>
-        public static void Sync15DaysFluctuateRate()
-        {
-            InitDB();
-        }
-
-        /// <summary>
-        /// 计算股票十五个交易日换手率  
-        /// 停牌股票换手率为最小值0 应该排除
-        /// </summary>
-        private static void Sync15DaysChangeRate()
-        {
-            InitDB();
-        }
-        #endregion
-
-        #region
-        /// <summary>
-        /// 计算股票三十个交易日涨跌幅 
-        /// </summary>
-        public static void Sync30DaysFluctuateRate()
-        {
-            InitDB();
-        }
-
-        /// <summary>
-        /// 计算股票三十个交易日换手率  
-        /// 停牌股票换手率为最小值0 应该排除
-        /// </summary>
-        private static void Sync30DaysChangeRate()
-        {
-            InitDB();
-        }
-        #endregion
-
-        #region
-        /// <summary>
-        /// 计算股票四十五个交易日涨跌幅 
-        /// </summary>
-        public static void Sync45DaysFluctuateRate()
-        {
-            InitDB();
-        }
-
-        /// <summary>
-        /// 计算股票四十五个交易日换手率  
-        /// 停牌股票换手率为最小值0 应该排除
-        /// </summary>
-        private static void Sync45DaysChangeRate()
-        {
-            InitDB();
-        }
-        #endregion
-
-        #region
-        /// <summary>
-        /// 计算股票六十个交易日涨跌幅 
-        /// </summary>
-        public static void Sync60DaysFluctuateRate()
-        {
-            InitDB();
-        }
-
-        /// <summary>
-        /// 计算股票六十个交易日换手率  
-        /// 停牌股票换手率为最小值0 应该排除
-        /// </summary>
-        private static void Sync60DaysChangeRate()
-        {
-            InitDB();
-        }
-        #endregion
-
-
-        #region
-        /// <summary>
         /// 计算股票**个交易日换手率  
         /// </summary>
         private static void SyncRecentDaysChangeRate(int days)
         {
             InitDB();
-            //SELECT STOCKCODE,STOCKNAME,SUM(CHANGERATE) AS CHANGE_RATE, SUM(FLUCTUATERATE) AS FLUCTUATE_RATE FROM STOCKITEM WHERE STOCKDATE >='2014-8-7' GROUP BY stockcode ORDER BY FLUCTUATE_RATE DESC LIMIT 0,15
+            bool IsChangerateMain = true;
+            string tableName = "STOCKITEM_CHANGERATE_FLUCTUATERATE";
+            string recentDay = TransactionDate.GetRecentDay();
+            string destDay = TransactionDate.GetDatesOfTransaction(days);
+            string sql = string.Format("SELECT B.STOCKCODE, B.STOCKNAME,(SELECT S.CLOSEPRICE FROM STOCKITEM S WHERE S.STOCKDATE='{0}' AND S.STOCKCODE=B.STOCKCODE) AS CLOSEPRICE,SUM(CHANGERATE) AS CHANGERATE, SUM(FLUCTUATERATE) AS FLUCTUATERATE FROM STOCKITEM B WHERE B.STOCKDATE >='{1}' GROUP BY B.STOCKCODE ORDER BY CHANGERATE DESC LIMIT 0,{2}", recentDay, destDay, ItemCount * 2);
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<TEMP_Stockitem_Changerate_Fluctuaterate> _table = EntityReader.GetEntities<TEMP_Stockitem_Changerate_Fluctuaterate>(table);
 
+            List<Stockitem_Changerate_Fluctuaterate> UpStockitems = new List<Stockitem_Changerate_Fluctuaterate>();
+            foreach (TEMP_Stockitem_Changerate_Fluctuaterate item in _table)
+            {
+                Stockitem_Changerate_Fluctuaterate _item = new Stockitem_Changerate_Fluctuaterate(item);
+                _item.ChangerateMain = IsChangerateMain;
+                _item.TradeDays = days;
+                UpStockitems.Add(_item);
+            }
+            if (!IsStockitem_Changerate_FluctuaterateTableEmpty(tableName, IsChangerateMain, days))
+            {
+                EmptyStockitem_Changerate_FluctuaterateTable(tableName, IsChangerateMain, days);
+            }
+            FillStockitem_Changerate_FluctuaterateTable(tableName, ref UpStockitems, IsChangerateMain, days);
         }
 
         /// <summary>
@@ -488,6 +346,42 @@ namespace StockSync
         private static void SyncRecentDaysFluctuateRate(int days)
         {
             InitDB();
+            bool IsChangerateMain = false;
+            string tableName = "STOCKITEM_CHANGERATE_FLUCTUATERATE";
+            string recentDay = TransactionDate.GetRecentDay();
+            string destDay = TransactionDate.GetDatesOfTransaction(days);
+            string sql = string.Format("SELECT B.STOCKCODE, B.STOCKNAME,(SELECT S.CLOSEPRICE FROM STOCKITEM S WHERE S.STOCKDATE='{0}' AND S.STOCKCODE=B.STOCKCODE) AS CLOSEPRICE,SUM(CHANGERATE) AS CHANGERATE, SUM(FLUCTUATERATE) AS FLUCTUATERATE FROM STOCKITEM B WHERE B.STOCKDATE >='{1}' GROUP BY B.STOCKCODE ORDER BY FLUCTUATERATE DESC LIMIT 0,{2}", recentDay, destDay, ItemCount);
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<TEMP_Stockitem_Changerate_Fluctuaterate> _table = EntityReader.GetEntities<TEMP_Stockitem_Changerate_Fluctuaterate>(table);
+
+            List<Stockitem_Changerate_Fluctuaterate> UpStockitems = new List<Stockitem_Changerate_Fluctuaterate>();
+            foreach(TEMP_Stockitem_Changerate_Fluctuaterate item in _table)
+            {
+                Stockitem_Changerate_Fluctuaterate _item = new Stockitem_Changerate_Fluctuaterate(item);
+                _item.ChangerateMain = IsChangerateMain;
+                _item.TradeDays = days;
+                UpStockitems.Add(_item);
+            }
+
+            string _sql = string.Format("SELECT B.STOCKCODE, B.STOCKNAME,(SELECT S.CLOSEPRICE FROM STOCKITEM S WHERE S.STOCKDATE='{0}' AND S.STOCKCODE=B.STOCKCODE) AS CLOSEPRICE,SUM(CHANGERATE) AS CHANGERATE, SUM(FLUCTUATERATE) AS FLUCTUATERATE FROM STOCKITEM B WHERE B.STOCKDATE >='{1}' GROUP BY B.STOCKCODE ORDER BY FLUCTUATERATE ASC LIMIT 0,{2}", recentDay, destDay, ItemCount);
+            DataTable table_E = util.ExecuteDataTable(_sql, null);
+            List<TEMP_Stockitem_Changerate_Fluctuaterate> _table_E = EntityReader.GetEntities<TEMP_Stockitem_Changerate_Fluctuaterate>(table_E);
+
+            List<Stockitem_Changerate_Fluctuaterate> DownStockitems = new List<Stockitem_Changerate_Fluctuaterate>();
+            foreach (TEMP_Stockitem_Changerate_Fluctuaterate item in _table_E)
+            {
+                Stockitem_Changerate_Fluctuaterate _item = new Stockitem_Changerate_Fluctuaterate(item);
+                _item.ChangerateMain = IsChangerateMain;
+                _item.TradeDays = days;
+                DownStockitems.Add(_item);
+            }
+
+            if (!IsStockitem_Changerate_FluctuaterateTableEmpty(tableName, IsChangerateMain, days))
+            {
+                EmptyStockitem_Changerate_FluctuaterateTable(tableName, IsChangerateMain, days);
+            }
+            FillStockitem_Changerate_FluctuaterateTable(tableName, ref UpStockitems, IsChangerateMain, days);
+            FillStockitem_Changerate_FluctuaterateTable(tableName, ref DownStockitems, IsChangerateMain, days);        
         }
         #endregion
 
@@ -506,6 +400,20 @@ namespace StockSync
             return ISEmpty;
         }
 
+        private static bool IsStockitem_Changerate_FluctuaterateTableEmpty(string tableName, bool IsChangerateMain, int Days)
+        {
+            bool ISEmpty = false;
+            InitDB();
+            string sql = string.Format("SELECT * FROM {0} WHERE CHANGERATEMAIN={1} AND TRADEDAYS={2}", tableName, IsChangerateMain, Days);
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<Stockitem_Changerate_Fluctuaterate> values = EntityReader.GetEntities<Stockitem_Changerate_Fluctuaterate>(table);
+            if (values.Count == 0)
+            {
+                ISEmpty = true;
+            }
+            return ISEmpty;
+        }
+
         private static void EmptyStockItemTable(string tableName)
         {
             string sqlDelete = string.Format("DELETE FROM {0}", tableName);
@@ -515,6 +423,37 @@ namespace StockSync
             }
             catch (Exception e)
             {
+
+            }
+        }
+
+        private static void EmptyStockitem_Changerate_FluctuaterateTable(string tableName, bool IsChangerateMain, int Days)
+        {
+            string sqlDelete = string.Format("DELETE FROM {0} WHERE CHANGERATEMAIN={1} AND TRADEDAYS={2}", tableName, IsChangerateMain, Days);
+            try
+            {
+                util.ExecuteNonQuery(sqlDelete, null);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        private static void FillStockitem_Changerate_FluctuaterateTable(string tableName, ref List<Stockitem_Changerate_Fluctuaterate> items, bool IsChangerateMain, int Days)
+        {
+            foreach (Stockitem_Changerate_Fluctuaterate item in items)
+            {
+                string sqlInsert = string.Format("insert into {0} values('{1}','{2}','{3}',{4},{5},{6},{7})",
+                                    tableName, item.StockCode, item.StockName, item.ClosePrice, item.FluctuateRate, item.ChangeRate, IsChangerateMain, Days);
+                try
+                {
+                    int reCount = util.ExecuteNonQuery(sqlInsert, null);
+                }
+                catch (System.Exception e)
+                {
+
+                }
 
             }
         }
@@ -603,9 +542,32 @@ namespace StockSync
         }
         #endregion
 
+        #region
+        /// <summary>
+        /// 同步股票交易日期（加入所有交易日日期）
+        /// </summary>
+        public static void SyncTradeAllDate()
+        {
+            TransactionDate.SyncTradeAllDate();
+        }
+
+        /// <summary>
+        /// 同步股票交易日期（加入当日交易日日期） 
+        /// </summary>
+        public static void SyncTradeCurrentDate()
+        {
+            TransactionDate.SyncTradeCurrentDate();
+        }
+        #endregion
+
         public static void test()
         {
-            TransactionDate.GetRecentDay();
+            //TransactionDate.SyncTradeAllDate();
+            SyncRecentDaysFluctuateRate(2);
+            //TransactionDate.GetDatesOfTransaction(420);
+            //SyncRecentDaysFluctuateRate(2);
+
+            SyncRecentDaysChangeRate(3);
         }
     }
 }

@@ -52,6 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stock.cs" />
     <Compile Include="StockItem.cs" />
+    <Compile Include="Stockitem_Changerate_Fluctuaterate.cs" />
     <Compile Include="StockLogic.cs" />
     <Compile Include="StockSync.cs" />
     <Compile Include="StockSyncThread.cs" />

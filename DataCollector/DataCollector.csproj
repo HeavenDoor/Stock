@@ -43,7 +43,8 @@
     <Reference Include="StockCommon">
       <HintPath>..\StockCommon\bin\Debug\StockCommon.dll</HintPath>
     </Reference>
-    <Reference Include="StockSync">
+    <Reference Include="StockSync, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\StockSync\bin\Debug\StockSync.dll</HintPath>
     </Reference>
     <Reference Include="System" />

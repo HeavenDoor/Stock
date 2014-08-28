@@ -84,12 +84,27 @@ namespace StockSync
     {
         public static string GetDatesOfTransaction(int days)
         {
-            DateTime today = DateTime.Now;
-//             for (DateTime dt = new DateTime(2009, 12, 4); dt < new DateTime(2010, 12, 1); dt = dt.)
-//             {
-//                 //Response.Write(dt.ToShortDateString());
-//             }
-            return "";
+            string destDay = string.Empty;
+            string recentDay = GetRecentDay();
+            DbUtility util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+            string sql = string.Format("SELECT * from TRADEDATE ORDER BY STOCKTRADEDATE DESC LIMIT {0}", days);
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<TradeDates> _table = EntityReader.GetEntities<TradeDates>(table);
+            DateTime dt;
+            if (_table.Count == 0)
+            {
+                return destDay;
+            }
+            else if (_table.Count < days)
+            {
+                dt = _table[_table.Count -1].StockTradeDate;
+            }
+            else
+            {
+                dt = _table[days - 1].StockTradeDate;
+            }
+            destDay = string.Format("{0}/{1}/{2}", dt.Year, dt.Month, dt.Day);  
+            return destDay;
         }
 
         public static string GetRecentDay()
@@ -106,6 +121,68 @@ namespace StockSync
             DateTime dt = _table[0].StockTradeDate;
             recentDay = string.Format("{0}/{1}/{2}", dt.Year, dt.Month, dt.Day);
             return recentDay;
+        }
+
+        public static void SyncTradeAllDate()
+        {
+            DateTime today = DateTime.Now;
+            //DateTime today = new DateTime(2014, 8, 8);
+            DbUtility util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+            for (DateTime dt = new DateTime(2013, 12, 30); dt <= today; dt = dt.AddDays(1))
+            {
+                if (WeekLogic.IsHoliday(dt) || WeekLogic.IsWeekend(dt))
+                {
+                    continue;
+                }
+                string date = string.Format("{0}/{1}/{2}", dt.Year, dt.Month, dt.Day);
+                string sql = string.Format("SELECT * FROM TRADEDATE WHERE STOCKTRADEDATE='{0}'", date);
+                DataTable table = util.ExecuteDataTable(sql, null);
+                List<TradeDates> values = EntityReader.GetEntities<TradeDates>(table);
+                if (values.Count == 1)
+                {
+                    return;
+                }
+                else if (values.Count ==0)
+                {
+                    string sqlInsert = string.Format("INSERT INTO TRADEDATE VALUES('{0}')", date);
+                    try
+                    {
+                        util.ExecuteNonQuery(sqlInsert, null);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }  
+            }
+        }
+
+        public static void SyncTradeCurrentDate()
+        {
+            DateTime today = DateTime.Now;
+            if (WeekLogic.IsHoliday(today) || WeekLogic.IsWeekend(today))
+            {
+                return;
+            }
+            DbUtility util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+            string date = string.Format("{0}/{1}/{2}", today.Year, today.Month, today.Day);
+            string sql = string.Format("SELECT * FROM TRADEDATE WHERE STOCKTRADEDATE='{0}'", date);
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<TradeDates> values = EntityReader.GetEntities<TradeDates>(table);
+            if (values.Count == 1)
+            {
+                return;
+            }
+            else if (values.Count == 0)
+            {
+                string sqlInsert = string.Format("INSERT INTO TRADEDATE VALUES('{0}')", date);
+                try
+                {
+                    util.ExecuteNonQuery(sqlInsert, null);
+                }
+                catch (Exception e)
+                {
+                }
+            } 
         }
     }
 }

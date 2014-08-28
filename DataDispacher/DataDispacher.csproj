@@ -72,6 +72,7 @@
     <Compile Include="Logic\SerializationHelper.cs" />
     <Compile Include="Logic\Stock.cs" />
     <Compile Include="Logic\StockItemResult.cs" />
+    <Compile Include="Logic\Stockitem_Changerate_Fluctuaterate.cs" />
     <Compile Include="Logic\Type.cs" />
     <Compile Include="Logic\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

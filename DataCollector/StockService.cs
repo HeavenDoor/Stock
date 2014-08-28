@@ -8,6 +8,7 @@ using System.ServiceProcess;
 using System.Text;
 
 using StockCommon;
+using StockSync;
 
 using Quartz.Impl;
 using Quartz.Job;
@@ -43,6 +44,8 @@ namespace DataCollector
 
             //ISimpleTrigger trigger = TriggerUtils.MakeMinutelyTrigger(1)
             ft = sched.ScheduleJob(job, trigger);
+
+            TransactionDate.SyncTradeAllDate();
         
         }
 

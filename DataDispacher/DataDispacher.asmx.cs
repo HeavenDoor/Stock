@@ -142,7 +142,69 @@ namespace DataDispacher
         }
         #endregion
 
+        #region [WebMethod] GetRecentDaysChangeRate
+        /// <summary>
+        /// 获取股票**个交易日换手率 
+        /// </summary>
+        [WebMethod]
+        public string GetRecentDaysChangeRate(string userName, string passWord, int days)
+        {
+            string result = string.Empty;
+            bool IsChangerateMain = true;
+            Stockitem_Changerate_FluctuaterateResult ItemResult = new Stockitem_Changerate_FluctuaterateResult();
+            if (!VerifyUser(userName, passWord))
+            {
+                ItemResult.ErrorID = (int)ErrorID.ValidateUserFailure;
+                ItemResult.ErrorType = (int)ErrorType.UserNameOrPWDError;
+                ItemResult.ReturnMessage = "User OR Password Error";
+                ItemResult.Stockitem_Changerate_Fluctuaterates = null;
+                result = SerializationHelper<Stockitem_Changerate_FluctuaterateResult>.Serialize(ItemResult);
+                return result;
+            }
+            string sql = string.Format("SELECT * FROM STOCKITEM_CHANGERATE_FLUCTUATERATE WHERE CHANGERATEMAIN={0} AND TRADEDAYS={1} ORDER BY CHANGERATE DESC", IsChangerateMain, days);
 
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<Stockitem_Changerate_Fluctuaterate> _table = EntityReader.GetEntities<Stockitem_Changerate_Fluctuaterate>(table);
+            ItemResult.Stockitem_Changerate_Fluctuaterates = _table;
+            ItemResult.ErrorID = (int)ErrorID.NoError;
+            ItemResult.ErrorType = (int)ErrorType.NoException;
+            ItemResult.ReturnMessage = "success";
+            result = SerializationHelper<Stockitem_Changerate_FluctuaterateResult>.Serialize(ItemResult);
+            return result;
+        }
+        #endregion
+
+        #region [WebMethod] GetRecentDaysFluctuateRate
+        /// <summary>
+        /// 获取股票**个交易日涨跌幅 
+        /// </summary>
+        [WebMethod]
+        public string GetRecentDaysFluctuateRate(string userName, string passWord, int days)
+        {
+            string result = string.Empty;
+            bool IsChangerateMain = false;
+            Stockitem_Changerate_FluctuaterateResult ItemResult = new Stockitem_Changerate_FluctuaterateResult();
+            if (!VerifyUser(userName, passWord))
+            {
+                ItemResult.ErrorID = (int)ErrorID.ValidateUserFailure;
+                ItemResult.ErrorType = (int)ErrorType.UserNameOrPWDError;
+                ItemResult.ReturnMessage = "User OR Password Error";
+                ItemResult.Stockitem_Changerate_Fluctuaterates = null;
+                result = SerializationHelper<Stockitem_Changerate_FluctuaterateResult>.Serialize(ItemResult);
+                return result;
+            }
+            string sql = string.Format("SELECT * FROM STOCKITEM_CHANGERATE_FLUCTUATERATE WHERE CHANGERATEMAIN={0} AND TRADEDAYS={1} ORDER BY FLUCTUATERATE DESC", IsChangerateMain, days);
+
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<Stockitem_Changerate_Fluctuaterate> _table = EntityReader.GetEntities<Stockitem_Changerate_Fluctuaterate>(table);
+            ItemResult.Stockitem_Changerate_Fluctuaterates = _table;
+            ItemResult.ErrorID = (int)ErrorID.NoError;
+            ItemResult.ErrorType = (int)ErrorType.NoException;
+            ItemResult.ReturnMessage = "success";
+            result = SerializationHelper<Stockitem_Changerate_FluctuaterateResult>.Serialize(ItemResult);
+            return result;
+        }
+        #endregion
 
         private bool VerifyUser(string userName, string passWord)
         {
