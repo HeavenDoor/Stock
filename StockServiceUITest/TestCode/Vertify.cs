@@ -43,6 +43,7 @@ namespace StockServiceUITest.TestCode
         public String ValidationCode
         {
             get { return validationCode; }
+            set { validationCode = value; }
         }
         private Int32 validationCodeCount = 4;
         /// <summary>
@@ -218,7 +219,7 @@ namespace StockServiceUITest.TestCode
             /// </summary>
             RoundRectangle
         }
-        private Int32 rotationAngle = 40;
+        private Int32 rotationAngle = 15;
         /// <summary>
         /// 验证码字符串随机转动的角度的最大值
         /// </summary>
@@ -297,7 +298,7 @@ namespace StockServiceUITest.TestCode
                 //对图片进行调暗处理
                 bit = AdjustBrightness(bit, brightnessValue);
             }
-            bit.Save(target, ImageFormat.Gif);
+            bit.Save(target, ImageFormat.Png);
             //brush.Dispose();
             bit.Dispose();
             dc.Dispose();
@@ -322,15 +323,15 @@ namespace StockServiceUITest.TestCode
             //画噪点
             if (isPixel)
             {
-                g.DrawImageUnscaled(DrawRandomPixel(30), 0, 0);
+                g.DrawImageUnscaled(DrawRandomPixel(90), 0, 0);
             }
-            g.DrawImageUnscaled(DrawRandBgString(), 0, 0);
- 
+            //g.DrawImageUnscaled(DrawRandBgString(), 0, 0);
+            
  
             //画曲线
-            g.DrawImageUnscaled(DrawRandomBezier(bezierCount), 0, 0);
+            //g.DrawImageUnscaled(DrawRandomBezier(bezierCount), 0, 0);
             //画直线
-            g.DrawImageUnscaled(DrawRandomLine(lineCount), 0, 0);
+           // g.DrawImageUnscaled(DrawRandomLine(lineCount), 0, 0);
  
             //dc.DrawImageUnscaled(DrawStringline(), 0, 0);
             if (Border == BorderStyle.Rectangle)
@@ -642,7 +643,12 @@ namespace StockServiceUITest.TestCode
             g.InterpolationMode = InterpolationMode.HighQualityBilinear;
  
             char[] chars = GetRandomString(validationCodeCount).ToCharArray();//拆散字符串成单字符数组
-            validationCode = chars.ToString();
+            //validationCode = chars.ToString();
+
+            foreach(char s in chars)
+            {
+                validationCode += s;
+            }
  
             //设置字体显示格式
             StringFormat format = new StringFormat(StringFormatFlags.NoClip);

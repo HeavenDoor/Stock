@@ -32,6 +32,7 @@ namespace StockServiceUITest
 {
     public partial class Form1 : Form
     {
+        public DrawValidationCode image;
         public Form1()
         {
             var config = new Configuration();
@@ -105,11 +106,32 @@ namespace StockServiceUITest
 
             //SyncTest.SyncTradeDate();
 
-            SyncTest.test();
+            //SyncTest.test();
 
-            DrawValidationCode aa = new DrawValidationCode();
-            string s = aa.Next(4);
-            
+            image = new DrawValidationCode();
+
+
+
+            byte[] byteArray = new byte[image.Width*image.Height];
+            Stream stream = new MemoryStream(byteArray);
+
+
+            //FileStream fs = new FileStream(@"D:\aab.png", FileMode.CreateNew); 
+            image.CreateImage(stream);
+            string kk = image.ValidationCode;
+            int m = kk.Length;
+            char a = kk[0];
+            char b = kk[1];
+            char c = kk[2];
+            char d = kk[3];
+
+            pictureBox1.Image = Image.FromStream(stream);
+            label1.Text = kk;
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 
