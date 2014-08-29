@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Services;
 using System.Data;
 using System.Data.Common;
+using System.IO;
+using System.IO.Compression;
 
 using StockCommon;
 using DataDispacher.Logic;
@@ -47,38 +49,136 @@ namespace DataDispacher
 
         #region [WebMethod] RegisterUser
         [WebMethod]
-        public string RegisterUser(string userName, string pwd, string email, string phone)
+        public string RegisterUser(string userName, string pwd, string email, string phone, string phoneID, string validationCode)
         {
-           
-
-           // list.Sort((a,b)=>a.CompareTo(b));
-
-
-
-
-            if (!TestConnection())
-            {
-                return "";
-            }
-
+            string result = string.Empty;
             LogicBase response = new LogicBase();
-            string identfySql = string.Format("select * from user where username='{0}'", userName);
+            string sqlVertify = string.Format("SELECT * FROM VALIDATION WHERE PHONEID='{0}'", phoneID);
+            DataTable table = util.ExecuteDataTable(sqlVertify, null);
+            List<ValidationSet> _table = EntityReader.GetEntities<ValidationSet>(table);
+            if ( _table.Count == 0 )
+            {
+                response.ErrorType = (int)Logic.ErrorType.ValidateCodeError;
+                response.ErrorID = (int)Logic.ErrorID.ValidateCodeFailure;
+                response.ReturnMessage = "No Phone No Way";
+                result = SerializationHelper<LogicBase>.Serialize(response);
+                return result;
+            }
+            else if (_table[0].ValidationCode != validationCode)
+            {
+                response.ErrorType = (int)Logic.ErrorType.ValidateCodeError;
+                response.ErrorID = (int)Logic.ErrorID.ValidateCodeFailure;
+                response.ReturnMessage = "验证码错误";
+                result = SerializationHelper<LogicBase>.Serialize(response);
+                return result;
+            }
+      
+            string identfySql = string.Format("SELECT * FROM USER WHERE USERNAME='{0}'", userName);
             int userCounts = EntityReader.GetEntities<User>(util.ExecuteDataTable(identfySql, null)).Count;
             if (userCounts > 0)
             {
                 response.ErrorType = (int)Logic.ErrorType.UserExists;
                 response.ErrorID = (int)Logic.ErrorID.UserExists;
                 response.ReturnMessage = "User has bin exists";
-                string s = SerializationHelper<LogicBase>.Serialize(response);
-                return s;
+                result = SerializationHelper<LogicBase>.Serialize(response);
+                return result;
             }
 
-            string sql = string.Format("insert into user values({0},{1},{2},{3})",userName, pwd,email,phone);
-            int value = util.ExecuteNonQuery(sql,null);
-            return "";
+            string sqlInsert = string.Format("INSERT INTO USER VALUES('{0}','{1}','{2}','{3}','{4}','{5}')", userName, pwd, email, phone, phoneID, DateTime.Now.ToString());
+            try
+            {
+                util.ExecuteNonQuery(sqlInsert, null);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            response.ErrorType = (int)Logic.ErrorType.NoException;
+            response.ErrorID = (int)Logic.ErrorID.NoError;
+            response.ReturnMessage = "success";
+            result = SerializationHelper<LogicBase>.Serialize(response);
+            return result;
         }
         #endregion
 
+        #region [WebMethod] GetValidationCode GetNextValidationCode
+        /// <summary>
+        /// 获得验证码
+        /// </summary>
+        [WebMethod]
+        public string GetValidationCode(string phoneID, string password)
+        {
+            string result = string.Empty;
+            string ValidationCode = string.Empty;
+
+            ValidationCodeResult ValidationResult = new ValidationCodeResult();
+            string ExValida = Configuration.ExValida;
+            if (!KBMd5.passWordCheck(ExValida + phoneID + ExValida, password))
+            {
+                ValidationResult.ErrorID = (int)ErrorID.ValidateCodeFailure;
+                ValidationResult.ErrorType = (int)ErrorType.ValidateCodeError;
+                ValidationResult.ReturnMessage = "请不要搞破坏好不!!!";
+                ValidationResult.Image = string.Empty;
+                result = SerializationHelper<ValidationCodeResult>.Serialize(ValidationResult);
+                return result;
+            }
+
+            DrawValidationCode image = new DrawValidationCode();
+            byte[] byteArray = new byte[image.Width * image.Height];
+            Stream stream = new MemoryStream(byteArray);
+            image.CreateImage(stream);
+            ValidationCode = image.ValidationCode;
+            {
+                string sql = string.Format("SELECT * FROM VALIDATION WHERE PHONEID='{0}' ORDER BY REGTIME DESC", phoneID);
+                DataTable table = util.ExecuteDataTable(sql, null);
+                List<ValidationSet> _table = EntityReader.GetEntities<ValidationSet>(table);
+                if (_table.Count >= 1)
+                {
+                    string sqlDelete = string.Format("DELETE FROM VALIDATION WHERE PHONEID='{0}'", phoneID);
+                    try
+                    {
+                        util.ExecuteNonQuery(sqlDelete, null);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+                else
+                {
+                    string sqlInsert = string.Format("INSERT INTO VALIDATION VALUES('{0}','{1}','{2}')", phoneID, ValidationCode, DateTime.Now.ToString());
+                    try
+                    {
+                        util.ExecuteNonQuery(sqlInsert, null);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+                
+            }
+            ValidationResult.ErrorID = (int)ErrorID.NoError;
+            ValidationResult.ErrorType = (int)ErrorType.NoException;
+            ValidationResult.ReturnMessage = "success";
+            ValidationResult.Image = Convert.ToBase64String(byteArray);
+            result = SerializationHelper<ValidationCodeResult>.Serialize(ValidationResult);
+            return result;
+        }
+
+        /// <summary>
+        /// 获得下一个验证码
+        /// </summary>
+        [WebMethod]
+        public string GetNextValidationCode(string phoneID, string password)
+        {
+            return GetValidationCode(phoneID, password);
+        }
+        #endregion
+
+
+        
         #region [WebMethod] GetTodayFluctuateRate
         /// <summary>
         /// 计算股票当天涨跌幅

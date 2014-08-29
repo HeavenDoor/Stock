@@ -108,6 +108,8 @@ namespace StockServiceUITest
 
             //SyncTest.test();
 
+
+            string time = DateTime.Now.ToString();
             image = new DrawValidationCode();
 
 

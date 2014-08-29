@@ -24,4 +24,14 @@ namespace DataDispacher.Logic
             set { m_Stockitem_Changerate_Fluctuaterates = value; }
         }
     }
+
+    public class ValidationCodeResult : LogicBase
+    {
+        private string m_Image;
+        public string Image
+        {
+            get { return m_Image; }
+            set { m_Image = value; }
+        }
+    }
 }

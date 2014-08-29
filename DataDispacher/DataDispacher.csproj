@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -69,12 +70,15 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Logic\FiltratedXmlTextWriter.cs" />
+    <Compile Include="Logic\MD5.cs" />
     <Compile Include="Logic\SerializationHelper.cs" />
     <Compile Include="Logic\Stock.cs" />
     <Compile Include="Logic\StockItemResult.cs" />
     <Compile Include="Logic\Stockitem_Changerate_Fluctuaterate.cs" />
     <Compile Include="Logic\Type.cs" />
     <Compile Include="Logic\User.cs" />
+    <Compile Include="Logic\ValidationCode.cs" />
+    <Compile Include="Logic\ValidationSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Logic\LogicBase.cs" />
     <Compile Include="Logic\StockItem.cs" />

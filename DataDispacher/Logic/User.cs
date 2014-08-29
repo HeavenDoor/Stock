@@ -28,11 +28,25 @@ namespace DataDispacher.Logic
             set { m_email = value; }
         }
 
-        private string m_phone;
-        public string Phone
+        private string m_phonenumber;
+        public string PhoneNumber
         {
-            get { return m_phone; }
-            set { m_phone = value; }
+            get { return m_phonenumber; }
+            set { m_phonenumber = value; }
+        }
+
+        private string m_phoneid;
+        public string PhoneID
+        {
+            get { return m_phoneid; }
+            set { m_phoneid = value; }
+        }
+
+        private DateTime m_regtime;
+        public DateTime RegTime
+        {
+            get { return m_regtime; }
+            set { m_regtime = value; }
         }
     }
 }
