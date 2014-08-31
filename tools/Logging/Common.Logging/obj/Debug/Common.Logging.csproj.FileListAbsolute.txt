@@ -12,3 +12,9 @@ C:\Users\shenghai\Desktop\Stock\tools\build\Debug\Common.Logging.pdb
 C:\Users\shenghai\Desktop\Stock\tools\build\Debug\Common.Logging.xml
 C:\Users\shenghai\Desktop\Stock\tools\Logging\Common.Logging\obj\Debug\Common.Logging.dll
 C:\Users\shenghai\Desktop\Stock\tools\Logging\Common.Logging\obj\Debug\Common.Logging.pdb
+G:\Users\shenghai\Desktop\Stock\tools\build\Debug\Common.Logging.dll
+G:\Users\shenghai\Desktop\Stock\tools\build\Debug\Common.Logging.pdb
+G:\Users\shenghai\Desktop\Stock\tools\build\Debug\Common.Logging.xml
+G:\Users\shenghai\Desktop\Stock\tools\Logging\Common.Logging\obj\Debug\ResolveAssemblyReference.cache
+G:\Users\shenghai\Desktop\Stock\tools\Logging\Common.Logging\obj\Debug\Common.Logging.dll
+G:\Users\shenghai\Desktop\Stock\tools\Logging\Common.Logging\obj\Debug\Common.Logging.pdb

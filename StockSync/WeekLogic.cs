@@ -128,6 +128,14 @@ namespace StockSync
             DateTime today = DateTime.Now;
             //DateTime today = new DateTime(2014, 8, 8);
             DbUtility util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+            string sqlDelete = string.Format("DELETE FROM TRADEDATE");
+            try
+            {
+                util.ExecuteNonQuery(sqlDelete, null);
+            }
+            catch (Exception e)
+            {
+            }
             for (DateTime dt = new DateTime(2013, 12, 30); dt <= today; dt = dt.AddDays(1))
             {
                 if (WeekLogic.IsHoliday(dt) || WeekLogic.IsWeekend(dt))

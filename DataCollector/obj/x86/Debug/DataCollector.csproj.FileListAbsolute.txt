@@ -19,3 +19,13 @@ C:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.StockS
 C:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.csproj.GenerateResource.Cache
 C:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.exe
 C:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.pdb
+G:\Users\shenghai\Desktop\Stock\StockServiceUITest\bin\Debug\StockService\DataCollector.exe.config
+G:\Users\shenghai\Desktop\Stock\StockServiceUITest\bin\Debug\StockService\DataCollector.exe
+G:\Users\shenghai\Desktop\Stock\StockServiceUITest\bin\Debug\StockService\DataCollector.pdb
+G:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\ResolveAssemblyReference.cache
+G:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.ProjectInstaller.resources
+G:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.StockService.resources
+G:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\GenerateResource.read.1.tlog
+G:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\GenerateResource.write.1.tlog
+G:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.exe
+G:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.pdb

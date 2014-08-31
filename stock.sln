@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stock", "stock\stock.vcxproj", "{32C3CADE-121C-4CF0-A983-63AEFC8A1077}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCollector", "DataCollector\DataCollector.csproj", "{378BACE1-8042-4480-9206-2F626F369D13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockServiceUITest", "StockServiceUITest\StockServiceUITest.csproj", "{18921D3B-0027-405D-85DF-D254D76B3B31}"
@@ -33,18 +31,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{32C3CADE-121C-4CF0-A983-63AEFC8A1077}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{32C3CADE-121C-4CF0-A983-63AEFC8A1077}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{32C3CADE-121C-4CF0-A983-63AEFC8A1077}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{32C3CADE-121C-4CF0-A983-63AEFC8A1077}.Debug|Win32.ActiveCfg = Debug|Win32
-		{32C3CADE-121C-4CF0-A983-63AEFC8A1077}.Debug|Win32.Build.0 = Debug|Win32
-		{32C3CADE-121C-4CF0-A983-63AEFC8A1077}.Debug|x86.ActiveCfg = Debug|Win32
-		{32C3CADE-121C-4CF0-A983-63AEFC8A1077}.Release|Any CPU.ActiveCfg = Release|Win32
-		{32C3CADE-121C-4CF0-A983-63AEFC8A1077}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{32C3CADE-121C-4CF0-A983-63AEFC8A1077}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{32C3CADE-121C-4CF0-A983-63AEFC8A1077}.Release|Win32.ActiveCfg = Release|Win32
-		{32C3CADE-121C-4CF0-A983-63AEFC8A1077}.Release|Win32.Build.0 = Release|Win32
-		{32C3CADE-121C-4CF0-A983-63AEFC8A1077}.Release|x86.ActiveCfg = Release|Win32
 		{378BACE1-8042-4480-9206-2F626F369D13}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{378BACE1-8042-4480-9206-2F626F369D13}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{378BACE1-8042-4480-9206-2F626F369D13}.Debug|Mixed Platforms.Build.0 = Debug|x86

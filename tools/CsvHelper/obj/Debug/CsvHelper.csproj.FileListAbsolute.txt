@@ -25,3 +25,9 @@ C:\Users\shenghai\Desktop\Stock\tools\build\Debug\CsvHelper.pdb
 C:\Users\shenghai\Desktop\Stock\tools\build\Debug\CsvHelper.XML
 C:\Users\shenghai\Desktop\Stock\tools\CsvHelper\obj\Debug\CsvHelper.dll
 C:\Users\shenghai\Desktop\Stock\tools\CsvHelper\obj\Debug\CsvHelper.pdb
+G:\Users\shenghai\Desktop\Stock\tools\build\Debug\CsvHelper.dll
+G:\Users\shenghai\Desktop\Stock\tools\build\Debug\CsvHelper.pdb
+G:\Users\shenghai\Desktop\Stock\tools\build\Debug\CsvHelper.XML
+G:\Users\shenghai\Desktop\Stock\tools\CsvHelper\obj\Debug\ResolveAssemblyReference.cache
+G:\Users\shenghai\Desktop\Stock\tools\CsvHelper\obj\Debug\CsvHelper.dll
+G:\Users\shenghai\Desktop\Stock\tools\CsvHelper\obj\Debug\CsvHelper.pdb

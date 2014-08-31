@@ -146,7 +146,7 @@ namespace StockServiceUITest.TestCode
 
         public static void SyncTradeDate()
         {
-            StockDataSync.SyncTradeCurrentDate();
+            StockDataSync.SyncTradeAllDate();
         }
 
         public static void test()
@@ -273,6 +273,14 @@ namespace StockServiceUITest.TestCode
         public static void SyncStockList()
         {
             StockDataSync.SyncStockList();
+        }
+    }
+
+    public class weekTest
+    {
+        public static string GetRecentDay()
+        {
+            return TransactionDate.GetRecentDay();
         }
     }
 

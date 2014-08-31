@@ -97,7 +97,7 @@ namespace StockServiceUITest
 
             //SyncTest.SyncLastUpdate();
 
-            //SyncTest.ComputeStockSide();
+            SyncTest.ComputeStockSide();
 
             //SyncTest.SyncStockDataDetaileList();
             //SyncTest.testQuery();
@@ -108,7 +108,7 @@ namespace StockServiceUITest
 
             //SyncTest.test();
 
-
+            string recentday = weekTest.GetRecentDay();
             string time = DateTime.Now.ToString();
             image = new DrawValidationCode();
 
