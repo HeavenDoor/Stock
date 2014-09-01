@@ -45,8 +45,6 @@ namespace DataCollector
             //ISimpleTrigger trigger = TriggerUtils.MakeMinutelyTrigger(1)
             ft = sched.ScheduleJob(job, trigger);
 
-            TransactionDate.SyncTradeAllDate();
-
             StockDataSync.SyncTradeAllDate();
         
         }
