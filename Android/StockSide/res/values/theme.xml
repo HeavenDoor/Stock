@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>  
+    <style name="ThemeBlack" parent="Theme.Base.AppCompat.Light.DarkActionBar">  
+        <item name="android:windowTitleSize">46dip</item>  
+        <item name="android:windowTitleBackgroundStyle">@+style/mywindowTitleBackground</item>  
+        <item name="android:windowBackground">@color/windowbackgroud</item>  
+        <item name="android:textColor">@color/black</item>  
+        <item name="actionMenuTextColor">@android:color/holo_green_light</item>
+        <item name="android:textColorPrimaryInverse">#4B7681</item>
+    </style> 
+</resources>  
