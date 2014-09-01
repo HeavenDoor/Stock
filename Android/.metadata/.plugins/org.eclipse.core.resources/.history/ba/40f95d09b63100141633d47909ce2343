@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.stockside"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="19" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/desk"
+        android:label="@string/null_name"
+        android:logo="@drawable/empty"
+        android:theme="@style/ThemeBlack" >
+        <activity
+            android:name=".StockSideActivity"
+            android:label="@string/app_name"
+            android:logo="@drawable/empty" >
+
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:logo="@drawable/empty" >
+
+            <!--
+       android:parentActivityName=".StockSideActivity" 
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.stockside.StockSideActivity" />
+            -->
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:label="@string/title_activity_register" >
+        </activity>
+    </application>
+
+</manifest>

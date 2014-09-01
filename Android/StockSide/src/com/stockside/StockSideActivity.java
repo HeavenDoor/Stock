@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.os.Build;
 import android.view.Window;
-import java.util.Date;
+
 
 public class StockSideActivity extends ActionBarActivity implements View.OnClickListener
 {
