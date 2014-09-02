@@ -25,28 +25,18 @@ import android.content.*;
 import android.widget.*;
 import android.view.*;
 
-public class LoginActivity extends ActionBarActivity implements View.OnClickListener
+public class LoginActivity extends Activity implements View.OnClickListener
 {
-	private ActionBar actionBar;
+	private ActionBar actionBar; //ActionBar
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
-		
-		getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+
 		setContentView(R.layout.activity_login);
-		getSupportActionBar().setCustomView(R.layout.title);
 		
-		//TextView view = (TextView) findViewById(R.id.textView1);
-		//view.setGravity(Gravity.CENTER);
-		
-		initView();
-		
-		initData();
-		
-		Button btn1 =(Button)findViewById(R.id.btn_login);
-		btn1.setOnClickListener(new View.OnClickListener(){    
+		/*Button btnLogin =(Button)findViewById(R.id.stockside_login);
+		btnLogin.setOnClickListener(new View.OnClickListener(){    
             @Override  
             public void onClick(View v) {  
                 Intent intent = new Intent();  
@@ -55,7 +45,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
                 finish();//停止当前的Activity,如果不写,则按返回键会跳转回原来的Activity        
             }  
               
-        }); 
+        }); */
 	}
 	
 	@Override
@@ -64,40 +54,18 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 		int ItemId = v.getId();//获取组件的id值
 		switch (ItemId) 
 		{
-		
+		case R.id.stockside_login:
+			Intent intent = new Intent();  
+            intent.setClass(LoginActivity.this, StockSideActivity.class);  
+            startActivity(intent);  
+            finish();//停止当前的Activity,如果不写,则按返回键会跳转回原来的Activity  
+            break;
+        default:
+        	break;
+            	
 		}
 	}
 	
-	private void initView()
-	{
-		//得到ActionBar
-		actionBar = getSupportActionBar();
-	}
-    
-    private void initData()
-	{
-    	//actionBar.setTitle("StockSide");
-    	actionBar.setDisplayShowHomeEnabled(false);
-    	actionBar.setDisplayHomeAsUpEnabled(false);
-		//设置ActionBar标题不显示
-		actionBar.setDisplayShowTitleEnabled(true);
-		
-		//设置ActionBar的背景
-		//actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_gradient_bg));
-		
-		//设置ActionBar左边默认的图标是否可用
-		actionBar.setDisplayUseLogoEnabled(false);
-		
-		//设置导航模式为Tab选项标签导航模式
-		//actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		
-		//设置ActinBar添加Tab选项标签
-		//actionBar.addTab(actionBar.newTab().setText("TAB1").setTabListener(new MyTabListener<FragmentPage1>(this,FragmentPage1.class)));
-		//actionBar.addTab(actionBar.newTab().setText("TAB2").setTabListener(new MyTabListener<FragmentPage2>(this,FragmentPage2.class)));
-		//actionBar.addTab(actionBar.newTab().setText("TAB3").setTabListener(new MyTabListener<FragmentPage3>(this,FragmentPage3.class)));
-				
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{

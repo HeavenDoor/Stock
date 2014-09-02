@@ -11,4 +11,5 @@
    <color name="singNameColor">#10808E</color>  
    <color name="btnClick">#EEE5DE</color>  
    <color name="listViewDivider">#30A1A5</color>   
+   <color name="login_but_bg">#3aadfd</color>
 </resources>  

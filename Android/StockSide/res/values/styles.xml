@@ -23,5 +23,6 @@
 	<style name="mywindowTitleBackground">       
      	<item name="android:background">@color/titleBgColor</item>   
 	</style>  
+	
     
 </resources>

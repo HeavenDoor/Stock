@@ -10,7 +10,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/desk"
+        android:icon="@drawable/stockside"
         android:label="@string/null_name"
         android:logo="@drawable/empty"
         android:theme="@style/ThemeBlack" >
@@ -30,8 +30,9 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/null_name"
-            android:logo="@drawable/empty" >
-
+            android:logo="@drawable/empty" 
+			android:theme="@android:style/Theme.Holo.NoActionBar"
+			>
             <!--
        android:parentActivityName=".StockSideActivity" 
             <meta-data
