@@ -25,14 +25,20 @@ namespace StockSync
     {
         public static DbUtility util;
         public static int ItemCount = 15; // 符合条件的单边股票数量
-
+        
         public StockDataSync()
         {
+            //StockCommon.LogManager.LogPath = System.AppDomain.CurrentDomain.BaseDirectory;
+
             InitDB();
         }
 
         public static void InitDB()
         {
+//             if ( StockCommon.LogManager.LogPath == string.Empty)
+//             {
+//                 StockCommon.LogManager.LogPath = System.AppDomain.CurrentDomain.BaseDirectory;
+//             }
             if (util == null)
             {
                 util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
@@ -105,7 +111,7 @@ namespace StockSync
                     }
                     catch (System.Exception e)
                     {
-                    	
+                        LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <SyncDatabase((ref List<Stock> datas))>, MSG : {0} ", e.Message));
                     }                   
                 }
                 else if (_table[0].StockName != stock.StockName)
@@ -117,7 +123,7 @@ namespace StockSync
                     }
                     catch (System.Exception e)
                     {
-
+                        LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <SyncDatabase((ref List<Stock> datas))>, MSG : {0} ", e.Message));
                     }  
                 }
             }
@@ -180,7 +186,7 @@ namespace StockSync
                             }
                             catch (System.Exception e)
                             {
-
+                                LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <SyncStockDataDetaileList()>, MSG : {0} ", e.Message));
                             }
                         }
                         else // insert
@@ -193,7 +199,7 @@ namespace StockSync
                             }
                             catch (System.Exception e)
                             {
-
+                                LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <SyncStockDataDetaileList()>, MSG : {0} ", e.Message));
                             }
                         }
                     }
@@ -238,25 +244,48 @@ namespace StockSync
         /// </summary>
         public static void ComputeStockSide()
         {
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, string.Format("path {0}", StockCommon.LogManager.LogPath));
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "ComputeStockSide start");
             SyncTodayFluctuateRate();
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "SyncTodayFluctuateRate");
+
             SyncTodayChangeRate();
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "SyncTodayChangeRate");
+
 
             SyncRecentDaysChangeRate(2);
             SyncRecentDaysFluctuateRate(2);
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "SyncRecentDays 2");
+
             SyncRecentDaysChangeRate(3);
             SyncRecentDaysFluctuateRate(3);
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "SyncRecentDays 3");
+
             SyncRecentDaysChangeRate(5);
             SyncRecentDaysFluctuateRate(5);
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "SyncRecentDays 5");
+
             SyncRecentDaysChangeRate(10);
             SyncRecentDaysFluctuateRate(10);
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "SyncRecentDays 10");
+
             SyncRecentDaysChangeRate(15);
             SyncRecentDaysFluctuateRate(15);
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "SyncRecentDays 15");
+
             SyncRecentDaysChangeRate(30);
             SyncRecentDaysFluctuateRate(30);
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "SyncRecentDays 30");
+
             SyncRecentDaysChangeRate(45);
             SyncRecentDaysFluctuateRate(45);
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "SyncRecentDays 45");
+
             SyncRecentDaysChangeRate(60);
             SyncRecentDaysFluctuateRate(60);
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "SyncRecentDays 60");
+
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "ComputeStockSide end");
         }
 
         #region 
@@ -265,16 +294,19 @@ namespace StockSync
         /// </summary>
         private static void SyncTodayFluctuateRate()
         {
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "计算股票当天涨跌幅 ");
             InitDB();//
             string recentday = TransactionDate.GetRecentDay();
             string tableName = "STOCKITEM_DAILYFLUCTUATERATE";
             string sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='{0}' ORDER BY FLUCTUATERATE DESC LIMIT 0,{1}", recentday, ItemCount);
             DataTable table = util.ExecuteDataTable(sql, null);
             List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, string.Format("涨幅最大 _Table.count{0} ", _table.Count));
 
             string _sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='2014/8/8' ORDER BY FLUCTUATERATE ASC LIMIT 0,{0}", ItemCount);
             DataTable table_E = util.ExecuteDataTable(_sql, null);
             List<StockItem> _table_E = EntityReader.GetEntities<StockItem>(table_E);
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, string.Format("跌幅最大 _Table_E.count{0} ", _table_E.Count));
 
             if (!IsStockItemTableEmpty(tableName))
             {
@@ -282,6 +314,7 @@ namespace StockSync
             }
             FillStockItemTable(tableName, ref _table);
             FillStockItemTable(tableName, ref _table_E);
+            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "计算股票当天涨跌幅 结束");
         }
 
         /// <summary>
@@ -423,7 +456,7 @@ namespace StockSync
             }
             catch (Exception e)
             {
-
+                LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <EmptyStockItemTable(string tableName)>, MSG : {0} ", e.Message));
             }
         }
 
@@ -436,7 +469,7 @@ namespace StockSync
             }
             catch (Exception e)
             {
-
+                LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <EmptyStockitem_Changerate_FluctuaterateTable(string tableName, bool IsChangerateMain, int Days)>, MSG : {0} ", e.Message));
             }
         }
 
@@ -452,7 +485,7 @@ namespace StockSync
                 }
                 catch (System.Exception e)
                 {
-
+                    LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <FillStockitem_Changerate_FluctuaterateTable(string tableName, ref List<Stockitem_Changerate_Fluctuaterate> items, bool IsChangerateMain, int Days)>, MSG : {0} ", e.Message));
                 }
 
             }
@@ -462,15 +495,16 @@ namespace StockSync
         {
             foreach (StockItem item in items)
             {
+                string date = string.Format("{0}/{1}/{2}", item.StockDate.Year, item.StockDate.Month, item.StockDate.Day);
                 string sqlInsert = string.Format("insert into {0} values('{1}','{2}','{3}',{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14})",
-                                    tableName, item.StockDate, item.StockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap);
+                                    tableName, date, item.StockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap);
                 try
                 {
                     int reCount = util.ExecuteNonQuery(sqlInsert, null);
                 }
                 catch (System.Exception e)
                 {
-
+                    LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <FillStockItemTable(string tableName, ref List<StockItem> items)>, MSG : {0} ", e.Message));
                 }
 
             }
@@ -498,7 +532,7 @@ namespace StockSync
                 }
                 catch(Exception e)
                 {
-
+                    LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : < SyncLastUpdate()>, MSG : {0} ", e.Message));
                 }
             }
             else if (values.Count > 1)  // delete and insert
@@ -510,7 +544,7 @@ namespace StockSync
                 }
                 catch (Exception e)
                 {
-
+                    LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : < SyncLastUpdate()>, MSG : {0} ", e.Message));
                 }
 
                 DateTime today = DateTime.Now;
@@ -522,7 +556,7 @@ namespace StockSync
                 }
                 catch (Exception e)
                 {
-
+                    LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : < SyncLastUpdate()>, MSG : {0} ", e.Message));
                 }
             }
             else // update
@@ -536,7 +570,7 @@ namespace StockSync
                 }
                 catch (Exception e)
                 {
-
+                    LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : < SyncLastUpdate()>, MSG : {0} ", e.Message));
                 }
             }
         }

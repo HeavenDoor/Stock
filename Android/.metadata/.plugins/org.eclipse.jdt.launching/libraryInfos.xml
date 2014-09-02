@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <libraryInfos>
+<libraryInfo home="G:\Java\jdk1.7.0_03\jre" version="1.7.0_03">
+<bootpath>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\resources.jar"/>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\rt.jar"/>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\sunrsasign.jar"/>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\jsse.jar"/>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\jce.jar"/>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\charsets.jar"/>
+<entry path="G:\Java\jdk1.7.0_03\jre\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\ext"/>
+<entry path="G:\Windows\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
 <libraryInfo home="E:\Program Files\Java\jre7" version="1.7.0_55">
 <bootpath>
 <entry path="E:\Program Files\Java\jre7\lib\resources.jar"/>
@@ -17,6 +35,24 @@
 </extensionDirs>
 <endorsedDirs>
 <entry path="E:\Program Files\Java\jre7\lib\endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+<libraryInfo home="G:\Java\jdk1.7.0_03" version="1.7.0_03">
+<bootpath>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\resources.jar"/>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\rt.jar"/>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\sunrsasign.jar"/>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\jsse.jar"/>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\jce.jar"/>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\charsets.jar"/>
+<entry path="G:\Java\jdk1.7.0_03\jre\classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\ext"/>
+<entry path="G:\Windows\Sun\Java\lib\ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="G:\Java\jdk1.7.0_03\jre\lib\endorsed"/>
 </endorsedDirs>
 </libraryInfo>
 </libraryInfos>

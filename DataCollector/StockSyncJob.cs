@@ -21,10 +21,10 @@ namespace DataCollector
             StockDataSync.SyncTradeCurrentDate(); // 更新同步交易日期
             LogManager.WriteLog(LogManager.LogFile.Trace, "********** finish SyncTradeCurrentDate ***************");
 
-            //StockDataSync.SyncStockList(); // 更新同步股票列表
+            StockDataSync.SyncStockList(); // 更新同步股票列表
             LogManager.WriteLog(LogManager.LogFile.Trace, "********** finish SyncStockList ***************");
 
-            //StockDataSync.SyncStockDataDetaileList(); // 更新同步股票日交易数据
+            StockDataSync.SyncStockDataDetaileList(); // 更新同步股票日交易数据
             LogManager.WriteLog(LogManager.LogFile.Trace, "********** finish SyncStockDataDetaileList ***************");
 
             StockDataSync.ComputeStockSide(); // 股票边界数据逻辑处理

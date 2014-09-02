@@ -135,6 +135,7 @@ namespace StockSync
             }
             catch (Exception e)
             {
+                LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <SyncTradeAllDate()>, MSG : {0} ", e.Message));
             }
             for (DateTime dt = new DateTime(2013, 12, 30); dt <= today; dt = dt.AddDays(1))
             {
@@ -159,6 +160,7 @@ namespace StockSync
                     }
                     catch (Exception e)
                     {
+                        LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <SyncTradeAllDate()>, MSG : {0} ", e.Message));
                     }
                 }  
             }
@@ -189,6 +191,7 @@ namespace StockSync
                 }
                 catch (Exception e)
                 {
+                    LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <SyncTradeCurrentDate()>, MSG : {0} ", e.Message));
                 }
             } 
         }
