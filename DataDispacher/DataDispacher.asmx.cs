@@ -35,7 +35,29 @@ namespace DataDispacher
             string strConfig = System.AppDomain.CurrentDomain.BaseDirectory + "Setting.config";
             ConfigLoader.Load(strConfig, config);
             util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
-        }  
+        }
+        #region [WebMethod] TestConnection
+        [WebMethod]
+        public string Login(string userName, string passWord)
+        {
+            bool vergify = VerifyUser(userName, passWord);
+            string result = string.Empty;
+            LogicBase response = new LogicBase();
+            if (!vergify)
+            {
+                response.ErrorType = (int)Logic.ErrorType.UserNameOrPWDError;
+                response.ErrorID = (int)Logic.ErrorID.ValidateUserFailure;
+                response.ReturnMessage = "用户名或密码错误";
+                result = SerializationHelper<LogicBase>.Serialize(response);
+                return result;
+            }
+            response.ErrorType = (int)Logic.ErrorType.NoException;
+            response.ErrorID = (int)Logic.ErrorID.NoError;
+            response.ReturnMessage = "success";
+            result = SerializationHelper<LogicBase>.Serialize(response);
+            return result;
+        }
+        #endregion
 
         #region [WebMethod] TestConnection
         [WebMethod]
@@ -318,6 +340,8 @@ namespace DataDispacher
             }
             return vertified;
         }
+
+
 
         private void InitConnection()
         {

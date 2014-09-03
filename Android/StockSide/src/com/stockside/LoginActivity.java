@@ -27,7 +27,7 @@ import android.view.*;
 
 public class LoginActivity extends Activity implements View.OnClickListener
 {
-	private ActionBar actionBar; //ActionBar
+	private TextView register; //ActionBar
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -35,6 +35,24 @@ public class LoginActivity extends Activity implements View.OnClickListener
 
 		setContentView(R.layout.activity_login);
 		
+		register=(TextView)this.findViewById(R.id.registUser);
+		register.setOnClickListener(new View.OnClickListener(){    
+            @Override  
+            public void onClick(View v) {  
+                Intent intent = new Intent();  
+                intent.setClass(LoginActivity.this, RegisterActivity.class);  
+                startActivity(intent);  
+                finish();//停止当前的Activity,如果不写,则按返回键会跳转回原来的Activity        
+            }  
+              
+        });
+		if (true)
+		{
+			/*Intent intent = new Intent();  
+	        intent.setClass(LoginActivity.this, StockSideActivity.class);  
+	        startActivity(intent);  
+	        finish();*/
+		}
 		/*Button btnLogin =(Button)findViewById(R.id.stockside_login);
 		btnLogin.setOnClickListener(new View.OnClickListener(){    
             @Override  
@@ -48,14 +66,30 @@ public class LoginActivity extends Activity implements View.OnClickListener
         }); */
 	}
 	
-	@Override
+	public void onLoginClicked(View v)
+	{
+		Intent intent = new Intent();  
+        intent.setClass(LoginActivity.this, StockSideActivity.class);  
+        startActivity(intent);  
+        finish();//停止当前的Activity,如果不写,则按返回键会跳转回原来的Activity 
+	}
+	
+	public void onRegisterClicked(View v)
+	{
+		Intent intent = new Intent();  
+        intent.setClass(LoginActivity.this, RegisterActivity.class);  
+        startActivity(intent);  
+        finish();//停止当前的Activity,如果不写,则按返回键会跳转回原来的Activity 
+	}
+	
 	public void onClick(View v) 
 	{
 		int ItemId = v.getId();//获取组件的id值
+		Intent intent = new Intent();
 		switch (ItemId) 
 		{
 		case R.id.stockside_login:
-			Intent intent = new Intent();  
+			  
             intent.setClass(LoginActivity.this, StockSideActivity.class);  
             startActivity(intent);  
             finish();//停止当前的Activity,如果不写,则按返回键会跳转回原来的Activity  

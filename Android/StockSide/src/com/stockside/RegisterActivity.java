@@ -2,10 +2,30 @@ package com.stockside;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class RegisterActivity extends Activity
+
+import java.util.Date;
+
+import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
+import android.R.integer;
+import android.R.string;
+import android.database.DatabaseUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.os.Build;
+import android.view.Window;
+import android.content.*;
+import android.widget.*;
+import android.view.*;
+
+public class RegisterActivity extends Activity implements View.OnClickListener
 {
 
 	@Override
@@ -35,5 +55,18 @@ public class RegisterActivity extends Activity
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void onClick(View v)
+	{
+		
+	}
+	
+	public void onRegisterClicked(View v)
+	{
+		Intent intent = new Intent();  
+        intent.setClass(RegisterActivity.this, StockSideActivity.class);  
+        startActivity(intent);  
+        finish();//停止当前的Activity,如果不写,则按返回键会跳转回原来的Activity
 	}
 }

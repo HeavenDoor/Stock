@@ -12,8 +12,7 @@
     <LinearLayout
     	android:layout_width="match_parent"
     	android:layout_height="wrap_content"
-        android:layout_above="@+id/login_data_layout"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="0dp"
         android:gravity="center"
         android:orientation="horizontal" >
  
@@ -24,7 +23,7 @@
 	</LinearLayout>
     
     <LinearLayout
-        android:id="@+id/login_data_layout"
+        android:id="@+id/login_data_layout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"        
@@ -33,70 +32,80 @@
         <LinearLayout
             android:id="@+id/username_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
    
          	<EditText 
         		android:id="@+id/edit_mailbox"
-        		android:layout_width="fill_parent"
-        		android:layout_height="100dip"
+        		android:singleLine="true"
+        		android:layout_width="match_parent"
+        		android:layout_height="40dp"
         		android:layout_marginTop="20dip"    
-        		android:layout_marginLeft="10dip"
-        		android:layout_marginRight="10dip"
+        		android:layout_marginLeft="0dip"
+        		android:layout_marginRight="0dip"
         		android:background="@drawable/loginedit"
-        		android:hint="邮箱"
+        		android:hint="@string/mailbox"
         	/>
 
 
         </LinearLayout>
 
-        <!-- <LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="10dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="密 码"
-                android:textColor="#b3b3b3"
-                android:textSize="16dp" />
-
             <EditText
                 android:id="@+id/login_edit_password"
+                android:singleLine="true" 
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@null"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:background="@drawable/loginedit"
                 android:inputType="textPassword"
-                android:singleLine="true" />
-        </LinearLayout>-->
+                android:hint="@string/secret"
+            />
+        </LinearLayout>
     </LinearLayout> 
 
     <Button
         android:id="@+id/stockside_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/login_data_layout"
+        android:layout_below="@+id/login_data_layout1"
         android:layout_marginTop="30dp"       
         android:layout_marginLeft="0dip"
         android:layout_marginRight="0dip"       
-        android:background="@color/login_but_bg"
-        android:text="登 录"
+        android:background="@drawable/loginbtn_selector"
+        android:text="@string/login"
         android:textColor="#ffffff"
-        android:textSize="18dp" 
+        android:textSize="18sp" 
+        android:onClick="onLoginClicked"
         />
 
-
+	<TextView 
+         android:id="@+id/registUser"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/stockside_login"
+         android:layout_alignParentBottom="true"
+         android:layout_alignParentRight="true"
+         android:layout_marginRight="45dip"
+         android:layout_marginTop="5dip"
+         android:text="@string/registeruser"
+         android:textSize="7pt"
+         android:textColor="#333355"
+         android:gravity="bottom"
+         android:onClick="onRegisterClicked"
+         />
 </RelativeLayout>
