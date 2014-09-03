@@ -95,7 +95,7 @@ namespace StockServiceUITest
 
             //Test.testEqual();
 
-            //SyncTest.SyncLastUpdate();
+            SyncTest.SyncLastUpdate();
 
             SyncTest.ComputeStockSide();
 
