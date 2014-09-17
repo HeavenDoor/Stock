@@ -38,9 +38,9 @@ namespace DataDispacher
         }
         #region [WebMethod] TestConnection
         [WebMethod]
-        public string Login(string userName, string passWord)
+        public string Login(string email, string passWord)
         {
-            bool vergify = VerifyUser(userName, passWord);
+            bool vergify = VerifyUser(email, passWord);
             string result = string.Empty;
             LogicBase response = new LogicBase();
             if (!vergify)
@@ -71,7 +71,7 @@ namespace DataDispacher
 
         #region [WebMethod] RegisterUser
         [WebMethod]
-        public string RegisterUser(string userName, string pwd, string email, string phone, string phoneID, string validationCode)
+        public string RegisterUser(string email, string userName, string pwd, string phone, string phoneID, string validationCode)
         {
             string result = string.Empty;
             LogicBase response = new LogicBase();
@@ -86,7 +86,7 @@ namespace DataDispacher
                 result = SerializationHelper<LogicBase>.Serialize(response);
                 return result;
             }
-            else if (_table[0].ValidationCode != validationCode)
+            else if (_table[0].ValidationCode != validationCode.ToLower())
             {
                 response.ErrorType = (int)Logic.ErrorType.ValidateCodeError;
                 response.ErrorID = (int)Logic.ErrorID.ValidateCodeFailure;
@@ -94,26 +94,27 @@ namespace DataDispacher
                 result = SerializationHelper<LogicBase>.Serialize(response);
                 return result;
             }
-      
-            string identfySql = string.Format("SELECT * FROM USER WHERE USERNAME='{0}'", userName);
+
+            string identfySql = string.Format("SELECT * FROM USER WHERE EMAIL='{0}'", email);
             int userCounts = EntityReader.GetEntities<User>(util.ExecuteDataTable(identfySql, null)).Count;
             if (userCounts > 0)
             {
                 response.ErrorType = (int)Logic.ErrorType.UserExists;
                 response.ErrorID = (int)Logic.ErrorID.UserExists;
-                response.ReturnMessage = "User has bin exists";
+                response.ReturnMessage = "邮箱地址已注册";
                 result = SerializationHelper<LogicBase>.Serialize(response);
                 return result;
             }
 
-            string sqlInsert = string.Format("INSERT INTO USER VALUES('{0}','{1}','{2}','{3}','{4}','{5}')", userName, pwd, email, phone, phoneID, DateTime.Now.ToString());
+            string time = string.Format("{0}/{1}/{2} {3}:{4}:{5}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            string sqlInsert = string.Format("INSERT INTO USER VALUES('{0}','{1}','{2}','{3}','{4}','{5}')", email, userName, pwd, phone, phoneID, time);
             try
             {
                 util.ExecuteNonQuery(sqlInsert, null);
             }
             catch (Exception e)
             {
-
+                LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : < RegisterUser()>, MSG : {0} ", e.Message));
             }
 
             response.ErrorType = (int)Logic.ErrorType.NoException;
@@ -150,8 +151,9 @@ namespace DataDispacher
             byte[] byteArray = new byte[image.Width * image.Height];
             Stream stream = new MemoryStream(byteArray);
             image.CreateImage(stream);
-            ValidationCode = image.ValidationCode;
+            ValidationCode = image.ValidationCode.ToLower();
             {
+                string time = string.Format("{0}/{1}/{2} {3}:{4}:{5}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
                 string sql = string.Format("SELECT * FROM VALIDATION WHERE PHONEID='{0}' ORDER BY REGTIME DESC", phoneID);
                 DataTable table = util.ExecuteDataTable(sql, null);
                 List<ValidationSet> _table = EntityReader.GetEntities<ValidationSet>(table);
@@ -164,19 +166,29 @@ namespace DataDispacher
                     }
                     catch (Exception e)
                     {
-
+                        LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : < GetValidationCode()>, MSG : {0} ", e.Message));
                     }
-                }
-                else
-                {
-                    string sqlInsert = string.Format("INSERT INTO VALIDATION VALUES('{0}','{1}','{2}')", phoneID, ValidationCode, DateTime.Now.ToString());
+
+                    string sqlInsert = string.Format("INSERT INTO VALIDATION VALUES('{0}','{1}','{2}')", phoneID, ValidationCode, time);
                     try
                     {
                         util.ExecuteNonQuery(sqlInsert, null);
                     }
                     catch (Exception e)
                     {
-
+                        LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : < GetValidationCode()>, MSG : {0} ", e.Message));
+                    }
+                }
+                else
+                {
+                    string sqlInsert = string.Format("INSERT INTO VALIDATION VALUES('{0}','{1}','{2}')", phoneID, ValidationCode, time);
+                    try
+                    {
+                        util.ExecuteNonQuery(sqlInsert, null);
+                    }
+                    catch (Exception e)
+                    {
+                        LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : < GetValidationCode()>, MSG : {0} ", e.Message));
                     }
                 }
                 
@@ -328,10 +340,10 @@ namespace DataDispacher
         }
         #endregion
 
-        private bool VerifyUser(string userName, string passWord)
+        private bool VerifyUser(string email, string passWord)
         {
             bool vertified = false;
-            string sql = string.Format("SELECT * from USER where USERNAME='{0}' and PASSWORD='{1}'", userName, passWord);
+            string sql = string.Format("SELECT * from USER where EMAIL='{0}' and PASSWORD='{1}'", email, passWord);
             DataTable table = util.ExecuteDataTable(sql, null);
             List<User> _table = EntityReader.GetEntities<User>(table);
             if (_table.Count == 1)
@@ -347,6 +359,17 @@ namespace DataDispacher
         {
 
         }
+
+        #region [WebMethod] TestService
+        /// <summary>
+        /// 获取股票**个交易日涨跌幅 
+        /// </summary>
+        [WebMethod]
+        public string TestService(string Name)
+        {
+            return Name + "visit success";
+        }
+        #endregion
 
     }
 }

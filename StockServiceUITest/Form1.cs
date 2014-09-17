@@ -93,11 +93,12 @@ namespace StockServiceUITest
 //             DateTime dt = DateTime.Now;
 //             string day = dt.DayOfWeek.ToString();
 
+            HttpTest.testHttpPost();
             //Test.testEqual();
 
-            SyncTest.SyncLastUpdate();
+            //SyncTest.SyncLastUpdate();
 
-            SyncTest.ComputeStockSide();
+            //SyncTest.ComputeStockSide();
 
             //SyncTest.SyncStockDataDetaileList();
             //SyncTest.testQuery();

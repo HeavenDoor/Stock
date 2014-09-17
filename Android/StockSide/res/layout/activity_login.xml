@@ -107,5 +107,6 @@
          android:textColor="#333355"
          android:gravity="bottom"
          android:onClick="onRegisterClicked"
+         android:clickable="true"
          />
 </RelativeLayout>
