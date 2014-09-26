@@ -119,14 +119,28 @@ namespace StockSync
                 return recentDay;
             }
             DateTime dt = _table[0].StockTradeDate;
-            recentDay = string.Format("{0}/{1}/{2}", dt.Year, dt.Month, dt.Day);
+            string month = Convert.ToString(dt.Month);
+            string day = Convert.ToString(dt.Day);
+
+            if (dt.Month < 10)
+            {
+                month = "0" + Convert.ToString(dt.Month);
+            }
+            if (dt.Day < 10)
+            {
+                day = "0" + Convert.ToString(dt.Day);
+            }
+            recentDay = string.Format("{0}/{1}/{2}", dt.Year, month, day);
             return recentDay;
         }
 
         public static void SyncTradeAllDate()
         {
             DateTime today = DateTime.Now;
-            //DateTime today = new DateTime(2014, 8, 8);
+            if (today.Hour < 17) // 17点开始更新
+            {
+                today = today.AddDays(-1);
+            }
             DbUtility util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
             string sqlDelete = string.Format("DELETE FROM TRADEDATE");
             try
@@ -137,6 +151,7 @@ namespace StockSync
             {
                 LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <SyncTradeAllDate()>, MSG : {0} ", e.Message));
             }
+           
             for (DateTime dt = new DateTime(2013, 12, 30); dt <= today; dt = dt.AddDays(1))
             {
                 if (WeekLogic.IsHoliday(dt) || WeekLogic.IsWeekend(dt))
@@ -169,6 +184,10 @@ namespace StockSync
         public static void SyncTradeCurrentDate()
         {
             DateTime today = DateTime.Now;
+            if (today.Hour < 17) // 17点开始更新
+            {
+                today = today.AddDays(-1);
+            }
             if (WeekLogic.IsHoliday(today) || WeekLogic.IsWeekend(today))
             {
                 return;

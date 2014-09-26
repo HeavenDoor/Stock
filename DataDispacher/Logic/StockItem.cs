@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.Globalization;
+using System.Runtime;
+using System.Runtime.Serialization;
+using System.Security;
+
 namespace DataDispacher.Logic
 {
     public class StockItem
@@ -10,11 +15,12 @@ namespace DataDispacher.Logic
         /// <summary>
         /// 股票交易时间  唯一 
         /// </summary>
-        private DateTime m_StockDate;
-        public DateTime StockDate
+        private string m_StockDate;
+        public string StockDate
         {
             get { return m_StockDate; }
             set { m_StockDate = value; }
+            
         }
 
         /// <summary>
@@ -209,4 +215,6 @@ namespace DataDispacher.Logic
             return true;
         }
     }
+
+
 }

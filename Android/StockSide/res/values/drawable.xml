@@ -12,4 +12,5 @@
    <color name="btnClick">#EEE5DE</color>  
    <color name="listViewDivider">#30A1A5</color>   
    <color name="login_but_bg">#3aadfd</color>
+   <color name="halftrans">#a0000000</color>
 </resources>  

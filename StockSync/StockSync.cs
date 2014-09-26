@@ -136,7 +136,7 @@ namespace StockSync
         /// 新增每日交易信息
         /// 同步3个月 之内所有股票日交易详细信息
         /// </summary>
-        public static void SyncStockDataDetaileList()
+        public static void SyncStockDataDetaileList(bool sync3month = true)
         {
             InitDB();    
             string sql = string.Format("select * from STOCK");
@@ -144,7 +144,7 @@ namespace StockSync
             List<Stock> _table = EntityReader.GetEntities<Stock>(table);
             foreach ( Stock stock in _table )
             {
-                string resUrl = StockLogic.GenetateStockUrl(stock.StockCode, true);
+                string resUrl = StockLogic.GenetateStockUrl(stock.StockCode, sync3month);
                 string strHtml = GetHtmlString(resUrl);
                 int pos = strHtml.IndexOf("\r\n");
                 string strCsv = strHtml.Remove(0, pos);
@@ -163,10 +163,21 @@ namespace StockSync
                 using (var reader = new CsvReader(rea))
                 {
                     var records = reader.GetRecords<StockItem>();
-
+                    int m = 0;
                     foreach (StockItem item in records)//var record
                     {
+                        
                         string date = string.Format("{0}/{1}/{2}", item.StockDate.Year, item.StockDate.Month, item.StockDate.Day);
+                        
+                        /*{
+                            if (m == 0 && date != "2014/9/24")
+                            {
+                                string cc = _strCsv;
+                                int yy = 0;
+                                yy++;
+                            }
+                        }
+                        m++;*/
                         pos = item.StockCode.IndexOf("'");
                         string stockCode = item.StockCode.Remove(pos,1);  // 去除 " csv文件中股票代码前面的 '  如 '002560 "
                         item.StockCode = stockCode;
@@ -244,6 +255,10 @@ namespace StockSync
         /// </summary>
         public static void ComputeStockSide()
         {
+           // GetLastClosePrice("300389");
+           // SyncRecentDaysFluctuateRate(15);
+
+
             StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, string.Format("path {0}", StockCommon.LogManager.LogPath));
             StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "ComputeStockSide start");
             SyncTodayFluctuateRate();
@@ -303,7 +318,7 @@ namespace StockSync
             List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
             StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, string.Format("涨幅最大 _Table.count{0} ", _table.Count));
 
-            string _sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='2014/8/8' ORDER BY FLUCTUATERATE ASC LIMIT 0,{0}", ItemCount);
+            string _sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='{0}' ORDER BY FLUCTUATERATE ASC LIMIT 0,{1}", recentday, ItemCount);
             DataTable table_E = util.ExecuteDataTable(_sql, null);
             List<StockItem> _table_E = EntityReader.GetEntities<StockItem>(table_E);
             StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, string.Format("跌幅最大 _Table_E.count{0} ", _table_E.Count));
@@ -362,6 +377,10 @@ namespace StockSync
             foreach (TEMP_Stockitem_Changerate_Fluctuaterate item in _table)
             {
                 Stockitem_Changerate_Fluctuaterate _item = new Stockitem_Changerate_Fluctuaterate(item);
+                if (_item.ClosePrice == 0)
+                {
+                    _item.ClosePrice = GetLastClosePrice(_item.StockCode);
+                }
                 _item.ChangerateMain = IsChangerateMain;
                 _item.TradeDays = days;
                 UpStockitems.Add(_item);
@@ -391,6 +410,10 @@ namespace StockSync
             foreach(TEMP_Stockitem_Changerate_Fluctuaterate item in _table)
             {
                 Stockitem_Changerate_Fluctuaterate _item = new Stockitem_Changerate_Fluctuaterate(item);
+                if (_item.ClosePrice == 0)
+                {
+                    _item.ClosePrice = GetLastClosePrice(_item.StockCode);
+                }
                 _item.ChangerateMain = IsChangerateMain;
                 _item.TradeDays = days;
                 UpStockitems.Add(_item);
@@ -404,6 +427,10 @@ namespace StockSync
             foreach (TEMP_Stockitem_Changerate_Fluctuaterate item in _table_E)
             {
                 Stockitem_Changerate_Fluctuaterate _item = new Stockitem_Changerate_Fluctuaterate(item);
+                if (_item.ClosePrice == 0)
+                {
+                    _item.ClosePrice = GetLastClosePrice(_item.StockCode);
+                }
                 _item.ChangerateMain = IsChangerateMain;
                 _item.TradeDays = days;
                 DownStockitems.Add(_item);
@@ -591,6 +618,32 @@ namespace StockSync
         public static void SyncTradeCurrentDate()
         {
             TransactionDate.SyncTradeCurrentDate();
+        }
+        #endregion
+
+        #region
+        /// <summary>
+        /// 获得股票最后一个交易日收盘价
+        /// 对应情况  最近几个交易日停牌  得到的收盘价是0
+        /// </summary>
+        private static double GetLastClosePrice(string stockcode)
+        {
+            double closeprice = 0;
+            InitDB();
+            string recentDay = TransactionDate.GetRecentDay();
+            string destDay = TransactionDate.GetDatesOfTransaction(200);
+            string sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE > '{0}' AND STOCKDATE <= '{1}' AND STOCKCODE='{2}' ORDER BY STOCKDATE DESC", destDay, recentDay, stockcode);
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
+            foreach( StockItem item in _table)
+            {
+                if (item.ClosePrice !=0)
+                {
+                    closeprice = item.ClosePrice;
+                    break;
+                }
+            }
+            return closeprice;
         }
         #endregion
 

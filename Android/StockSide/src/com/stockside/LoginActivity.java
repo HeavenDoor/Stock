@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.support.v7.app.ActionBarActivity;
@@ -30,6 +31,7 @@ import android.view.*;
 
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -67,6 +69,7 @@ public class LoginActivity extends Activity implements View.OnClickListener
 	private Button btn;
 	private EditText mail;
 	private EditText secret;
+	private DbUtils db;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -85,31 +88,10 @@ public class LoginActivity extends Activity implements View.OnClickListener
 		secret = (EditText)this.findViewById(R.id.login_edit_password);
 		btn = (Button)this.findViewById(R.id.stockside_login);		
 		register = (TextView)this.findViewById(R.id.registUser);
+		db = DbUtils.create(this);
 		
 		String url =this.getString(R.string.service);
 		
-		
-		{
-			DbUtils db = DbUtils.create(this);
-			
-	    	User user = new User(); //这里需要注意的是User对象必须有id属性，或者有通过@ID注解的属性
-	    	user.setDefault(true);
-	    	user.setEmail("866058573@qq.com");
-	    	user.setPassword("123465");
-	    	
-	    	//user.setId(20);
-	    	try
-	    	{
-	    		//db.dropDb();
-	    		db.save(user); // 使用saveBindingId保存实体时会为实体的id赋值
-	    	} 
-	    	catch (DbException e) 
-	    	{  
-	    		e.printStackTrace();  
-	    	} 
-	    	
-
-		}
 	}
 		
 	public void onLoginClicked(View v)
@@ -118,7 +100,7 @@ public class LoginActivity extends Activity implements View.OnClickListener
 		HttpUtils http = new HttpUtils();
 		RequestParams params = new RequestParams();
 		
-		String md5PWD = MD5.GenMD5(secret.getText().toString());
+		final String md5PWD = MD5.GenMD5(secret.getText().toString());
 		
         params.addBodyParameter("email", mail.getText().toString());
         params.addBodyParameter("passWord", md5PWD);
@@ -151,6 +133,22 @@ public class LoginActivity extends Activity implements View.OnClickListener
                     		register.setText(result.get_LogicBase().getReturnMessage());
                     		return;
                     	}
+                    	{
+                	    	User user = new User();
+                	    	user.setDefault(true);
+                	    	user.setEmail(mail.getText().toString());
+                	    	user.setPassword(md5PWD);
+                	    	try
+                	    	{
+                	    		List<User> users = db.findAll(Selector.from(User.class)); 
+                	    		db.deleteAll(users);
+                	    		db.save(user);
+                	    	} 
+                	    	catch (DbException e) 
+                	    	{  
+                	    		e.printStackTrace();  
+                	    	}                	    	
+                		}
                     	
                     	Intent intent = new Intent();  
                         intent.setClass(LoginActivity.this, StockSideActivity.class);  
@@ -158,7 +156,6 @@ public class LoginActivity extends Activity implements View.OnClickListener
                         finish();
                     	
                     }
-
 
                     @Override
                     public void onFailure(HttpException error, String msg) 

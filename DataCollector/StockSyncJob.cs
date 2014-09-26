@@ -24,9 +24,12 @@ namespace DataCollector
             StockDataSync.SyncStockList(); // 更新同步股票列表
             LogManager.WriteLog(LogManager.LogFile.Trace, "********** finish SyncStockList ***************");
 
-            StockDataSync.SyncStockDataDetaileList(); // 更新同步股票日交易数据
+            StockDataSync.SyncStockDataDetaileList(true); // 更新同步3个月股票日交易数据
             LogManager.WriteLog(LogManager.LogFile.Trace, "********** finish SyncStockDataDetaileList ***************");
 
+            StockDataSync.SyncStockDataDetaileList(false); // 更新同步当日股票日交易数据
+            LogManager.WriteLog(LogManager.LogFile.Trace, "********** finish SyncStockDataDetaileList ***************");         
+            
             StockDataSync.ComputeStockSide(); // 股票边界数据逻辑处理
             LogManager.WriteLog(LogManager.LogFile.Trace, "********** finish ComputeStockSide ***************");
 

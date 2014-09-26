@@ -70,6 +70,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Logic\FiltratedXmlTextWriter.cs" />
+    <Compile Include="Logic\LastUpdate.cs" />
     <Compile Include="Logic\MD5.cs" />
     <Compile Include="Logic\SerializationHelper.cs" />
     <Compile Include="Logic\Stock.cs" />

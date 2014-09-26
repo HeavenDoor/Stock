@@ -1,6 +1,7 @@
 package com.stockside.common;
 
 import com.stockside.entity.ValidationCode.ValidationCodeResult;
+import com.stockside.entity.StockItemEntity;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
@@ -44,11 +45,13 @@ public class XmlUtil
      * 
      * 调用的方法实例：PersonBean person=XmlUtil.toBean(xmlStr, PersonBean.class);
      */
-    public static <T> T  toBean(String xmlStr,Class<T> cls){
+    public static <T> T  toBean(String xmlStr,Class<T> cls)
+    {
         //注意：不是new Xstream(); 否则报错：java.lang.NoClassDefFoundError: org/xmlpull/v1/XmlPullParserFactory
         XStream xstream=new XStream(new DomDriver());
         xstream.processAnnotations(cls);
-        T obj=(T)xstream.fromXML(xmlStr);
+        //@SuppressWarnings("unchecked")
+		T obj=(T)xstream.fromXML(xmlStr);
         return obj;         
     } 
 

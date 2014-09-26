@@ -1,6 +1,8 @@
 package com.stockside;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -71,6 +73,9 @@ public class RegisterActivity extends Activity implements View.OnClickListener
 	private EditText secret;
 	private EditText vertify;
 	private TextView errorText;
+	private Boolean wait;
+	private WaitDialog progressDialog;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -82,8 +87,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener
 		vertify = (EditText)this.findViewById(R.id.register_edit_vertify);	
 		image = (ImageView)this.findViewById(R.id.register_img);
 		errorText = (TextView)this.findViewById(R.id.error_register);
-		
+		wait = true;
 		onNextImgClicked(null); // 获得验证码
+		
+		new LoadViewTask().execute();
 	}
 	
 	@Override
@@ -223,6 +230,13 @@ public class RegisterActivity extends Activity implements View.OnClickListener
                     	Bitmap bmp = BitmapConvert.stringtoBitmap(bb.get_ValidationCodeResult().getImage());
                     	image.setImageBitmap(bmp);
                     	
+                    	wait = false;
+                    	
+                    	
+                    	//progressDialog.dismiss();
+            			//initialize the View
+            			//setContentView(R.layout.activity_register);
+            			//wait = true;
                     	//btn.setText(phoneNumber);
                     	
                     	/*Intent intent = new Intent();  
@@ -243,4 +257,62 @@ public class RegisterActivity extends Activity implements View.OnClickListener
                 });
 	
 	}
+	
+	private class LoadViewTask extends AsyncTask<Void, Integer, Void>
+    {
+    	//Before running code in the separate thread
+		@Override
+		protected void onPreExecute() 
+		{
+			progressDialog = new WaitDialog(RegisterActivity.this, R.style.CustomProgressDialog);
+			progressDialog.show();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) 
+		{
+			try 
+			{
+				//Get the current thread's token
+				synchronized (this) 
+				{
+					//Initialize an integer (that will act as a counter) to zero
+					int counter = 0;
+					//While the counter is smaller than four
+					while(wait)
+					{
+						//Wait 850 milliseconds
+						this.wait(850);
+						//Increment the counter 
+						counter++;
+						//Set the current progress. 
+						//This value is going to be passed to the onProgressUpdate() method.
+						publishProgress(counter*25);
+					}
+				}
+			} 
+			catch (InterruptedException e) 
+			{
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		//Update the progress
+		@Override
+		protected void onProgressUpdate(Integer... values) 
+		{
+			//set the current progress of the progress dialog
+			//progressDialog.setProgress(values[0]);
+		}
+
+		//after executing the code in the thread
+		@Override
+		protected void onPostExecute(Void result) 
+		{
+			progressDialog.dismiss();
+			//setContentView(R.layout.activity_register);
+			wait = true;
+		} 	
+    }
 }

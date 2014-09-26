@@ -82,7 +82,7 @@ namespace StockServiceUITest
             //Test.SyncStockList();
 
 
-//             StockSync.StockDataSync.SyncStockList();
+            // StockSync.StockDataSync.SyncStockList();
 // 
 //             DateTime currenttime = System.DateTime.Now;
 //             if (currenttime.Hour == 16 && currenttime.Minute == 5 /*&& currenttime.Second == 0*/)
@@ -93,7 +93,7 @@ namespace StockServiceUITest
 //             DateTime dt = DateTime.Now;
 //             string day = dt.DayOfWeek.ToString();
 
-            HttpTest.testHttpPost();
+            //HttpTest.testHttpPost();
             //Test.testEqual();
 
             //SyncTest.SyncLastUpdate();
@@ -101,6 +101,7 @@ namespace StockServiceUITest
             //SyncTest.ComputeStockSide();
 
             //SyncTest.SyncStockDataDetaileList();
+
             //SyncTest.testQuery();
 
             //CSVTest.ReadAllRecords();
@@ -108,13 +109,15 @@ namespace StockServiceUITest
             //SyncTest.SyncTradeDate();
 
             //SyncTest.test();
+            string yy = "2014/03/05";
+            string strToday = yy.Replace("/", "");
 
             string recentday = weekTest.GetRecentDay();
             string time = DateTime.Now.ToString();
             image = new DrawValidationCode();
 
-
-
+            DateTime today = DateTime.Now;
+            DateTime pre = DateTime.Now.AddDays(-1000);
             byte[] byteArray = new byte[image.Width*image.Height];
             Stream stream = new MemoryStream(byteArray);
 

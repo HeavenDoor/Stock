@@ -47,18 +47,9 @@ namespace StockSync
             CodeType type = GetCodeType(strStockCode);
             string strCode = Convert.ToString((int)type) + strStockCode;
             DateTime today = DateTime.Now;
-            int month = 0, day = 0;
-            string strmonth = Convert.ToString(today.Month);
-            string strday = Convert.ToString(today.Day);
-            if (month < 10)
-            {
-                strmonth = "0" + strmonth; 
-            }
-            if (day < 10)
-            {
-                strday = 0 + strday;
-            }
-            string strToday = Convert.ToString(today.Year) + strmonth + strday;
+            string recentday = TransactionDate.GetRecentDay();
+
+            string strToday = recentday.Replace("/", "");//Convert.ToString(today.Year) + strmonth + strday;
             string strOtherDay = "";
             if (!isSync)
             {

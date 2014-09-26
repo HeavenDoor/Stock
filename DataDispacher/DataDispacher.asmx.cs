@@ -36,7 +36,7 @@ namespace DataDispacher
             ConfigLoader.Load(strConfig, config);
             util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
         }
-        #region [WebMethod] TestConnection
+        #region [WebMethod] Login
         [WebMethod]
         public string Login(string email, string passWord)
         {
@@ -66,6 +66,37 @@ namespace DataDispacher
             string path = System.AppDomain.CurrentDomain.BaseDirectory;
             //ConfigLoader.Load(System.Windows.Forms.Application.StartupPath + "\\Setting.config", config);
             return true;
+        }
+        #endregion
+
+        #region [WebMethod] GetLastUpdate
+        [WebMethod]
+        public string GetLastUpdate(string email,  string passWord)
+        {
+            bool vergify = VerifyUser(email, passWord);
+            string result = string.Empty;
+            LogicBase response = new LogicBase();
+            if (!vergify)
+            {
+                response.ErrorType = (int)Logic.ErrorType.UserNameOrPWDError;
+                response.ErrorID = (int)Logic.ErrorID.ValidateUserFailure;
+                response.ReturnMessage = "用户名或密码错误";
+                result = SerializationHelper<LogicBase>.Serialize(response);
+                return result;
+            }
+            string sql = string.Format("SELECT * FROM LASTUPDATE");
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<LastUpdate> _table = EntityReader.GetEntities<LastUpdate>(table);
+
+            string dt = _table[0].LASTUPDATETIME;
+            DateTime dateEx = Convert.ToDateTime(dt);
+            string date = string.Format("{0}/{1}/{2}", dateEx.Year, dateEx.Month, dateEx.Day);
+            
+            response.ErrorType = (int)Logic.ErrorType.NoException;
+            response.ErrorID = (int)Logic.ErrorID.NoError;
+            response.ReturnMessage = date;
+            result = SerializationHelper<LogicBase>.Serialize(response);
+            return result;
         }
         #endregion
 
@@ -210,19 +241,17 @@ namespace DataDispacher
             return GetValidationCode(phoneID, password);
         }
         #endregion
-
-
-        
+      
         #region [WebMethod] GetTodayFluctuateRate
         /// <summary>
         /// 计算股票当天涨跌幅
         /// </summary>
         [WebMethod]
-        public string GetTodayFluctuateRate(string userName, string passWord)
+        public string GetTodayFluctuateRate(string email, string passWord)
         {
             string result = string.Empty;
             StockItemResult stockItemR = new StockItemResult();
-            if (!VerifyUser(userName, passWord))
+            if (!VerifyUser(email, passWord))
             {
                 stockItemR.ErrorID = (int)ErrorID.ValidateUserFailure;
                 stockItemR.ErrorType = (int)ErrorType.UserNameOrPWDError;
@@ -235,8 +264,17 @@ namespace DataDispacher
             string sql = string.Format("SELECT * FROM STOCKITEM_DAILYFLUCTUATERATE");
             DataTable table = util.ExecuteDataTable(sql, null);
             List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
-            
-            stockItemR.StockItems = _table;
+            List<StockItem> _tableEx = new List<StockItem>();
+            foreach (StockItem item in _table)
+            {
+                StockItem tmp = item;
+                string dt = item.StockDate;
+                DateTime dateEx = Convert.ToDateTime(dt);
+                string date = string.Format("{0}/{1}/{2}", dateEx.Year, dateEx.Month, dateEx.Day);
+                tmp.StockDate = date;
+                _tableEx.Add(tmp);
+            }
+            stockItemR.StockItems = _tableEx;
             stockItemR.ErrorID = (int)ErrorID.NoError;
             stockItemR.ErrorType = (int)ErrorType.NoException;
             stockItemR.ReturnMessage = "success";
@@ -250,11 +288,11 @@ namespace DataDispacher
         /// 计算股票当天换手率
         /// </summary>
         [WebMethod]
-        public string GetTodayChangeRate(string userName, string passWord)
+        public string GetTodayChangeRate(string email, string passWord)
         {
             string result = string.Empty;
             StockItemResult stockItemR = new StockItemResult();
-            if (!VerifyUser(userName, passWord))
+            if (!VerifyUser(email, passWord))
             {
                 stockItemR.ErrorID = (int)ErrorID.ValidateUserFailure;
                 stockItemR.ErrorType = (int)ErrorType.UserNameOrPWDError;
@@ -267,7 +305,17 @@ namespace DataDispacher
             string sql = string.Format("SELECT * FROM STOCKITEM_DAILYCHANGERATE");
             DataTable table = util.ExecuteDataTable(sql, null);
             List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
-            stockItemR.StockItems = _table;
+            List<StockItem> _tableEx = new List<StockItem>();
+            foreach (StockItem item in _table)
+            {
+                StockItem tmp = item;
+                string dt = item.StockDate;
+                DateTime dateEx = Convert.ToDateTime(dt);
+                string date = string.Format("{0}/{1}/{2}", dateEx.Year, dateEx.Month, dateEx.Day);
+                tmp.StockDate = date;
+                _tableEx.Add(tmp);
+            }
+            stockItemR.StockItems = _tableEx;
             stockItemR.ErrorID = (int)ErrorID.NoError;
             stockItemR.ErrorType = (int)ErrorType.NoException;
             stockItemR.ReturnMessage = "success";
@@ -281,12 +329,12 @@ namespace DataDispacher
         /// 获取股票**个交易日换手率 
         /// </summary>
         [WebMethod]
-        public string GetRecentDaysChangeRate(string userName, string passWord, int days)
+        public string GetRecentDaysChangeRate(string email, string passWord, int days)
         {
             string result = string.Empty;
             bool IsChangerateMain = true;
             Stockitem_Changerate_FluctuaterateResult ItemResult = new Stockitem_Changerate_FluctuaterateResult();
-            if (!VerifyUser(userName, passWord))
+            if (!VerifyUser(email, passWord))
             {
                 ItemResult.ErrorID = (int)ErrorID.ValidateUserFailure;
                 ItemResult.ErrorType = (int)ErrorType.UserNameOrPWDError;
@@ -313,12 +361,12 @@ namespace DataDispacher
         /// 获取股票**个交易日涨跌幅 
         /// </summary>
         [WebMethod]
-        public string GetRecentDaysFluctuateRate(string userName, string passWord, int days)
+        public string GetRecentDaysFluctuateRate(string email, string passWord, int days)
         {
             string result = string.Empty;
             bool IsChangerateMain = false;
             Stockitem_Changerate_FluctuaterateResult ItemResult = new Stockitem_Changerate_FluctuaterateResult();
-            if (!VerifyUser(userName, passWord))
+            if (!VerifyUser(email, passWord))
             {
                 ItemResult.ErrorID = (int)ErrorID.ValidateUserFailure;
                 ItemResult.ErrorType = (int)ErrorType.UserNameOrPWDError;
