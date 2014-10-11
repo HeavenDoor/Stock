@@ -9,7 +9,7 @@ import com.lidroid.xutils.db.annotation.Transient;
 import com.stockside.entity.*;
 
 @Table(name = "DaysChangeRate")
-public class DaysChangeRate
+public class DaysChangeRate extends EntityBase
 {
 	@Column(column = "StockCode")
 	private String StockCode;

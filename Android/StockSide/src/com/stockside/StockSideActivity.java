@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.database.DatabaseUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,23 +62,25 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 	private String email;
 	private String pwd;
 	private boolean hasLogin;
-	
+	private boolean hasUpdate;
 	private WaitDialog progressDialog;
 	private JobState jobState;
 	private final int tradeDays[] = {2, 3, 5, 10, 15, 30, 45, 60};
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stock_side); 	
 		hasLogin = false;
+		hasUpdate = true;
+		jobState = new JobState();
 		db = DbUtils.create(this);
-		
+
 		try
     	{
     		List<User> users = db.findAll(Selector.from(User.class)); 
-    		if( users.size() != 1)
+    		if( users == null || users.size() != 1)
     		{
     			hasLogin = false;
     		}
@@ -104,8 +107,9 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 		}
 		else
 		{
+			//jobState.set_loadFinish();
 			autoLogin();
-			loadProgramData();
+			loadLastUpdate();
 		}
 		new LoadViewTask().execute();
 		
@@ -116,17 +120,21 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 		
 	}
 	
+	private void loadDbData()
+	{
+		DataControl.LoadDataFromDB(db);
+	}
+	
 	private void loadProgramData()
 	{
 		loadDailyChangeRate();
 		loadDailyFluctuateRate();
 		for(int trade : tradeDays)
 		{
-			loadDaysChangeRate(trade, true);
-			loadDaysChangeRate(trade, false);
-			//loadDaysFluctuateRate(trade);
+			loadDaysChangeRateAndFluctuateRate(trade, true);
+			loadDaysChangeRateAndFluctuateRate(trade, false);
 		}
-		loadLastUpdate();
+		
 	}
 	
 	private void loadLastUpdate()
@@ -171,14 +179,36 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
                     	try
             	    	{
                     		List<LastUpdate> list = db.findAll(Selector.from(LastUpdate.class));
-                    		db.deleteAll(list);
-                			db.save(lastUpdate);
+                    		if(list == null)
+                    		{
+                    			hasUpdate = true;
+                    			db.save(lastUpdate);
+                    		}
+                    		else
+                    		{
+                    			if(list.size() == 0) 
+                    				hasUpdate = true;
+                    			else if(list.get(0).getLastUpdate() != result.get_LogicBase().getReturnMessage())
+                    				hasUpdate = true;
+                    			else hasUpdate = false;
+                    		
+                    			db.deleteAll(list);
+                    			db.save(lastUpdate);
+                    		}
             	    	}
                 		catch (DbException e) 
             	    	{  
             	    		e.printStackTrace();  
             	    	}
-                    	
+                    	if(hasUpdate)
+                    	{
+                    		loadProgramData();
+                    	}
+                    	else
+                    	{
+                    		loadDbData();
+                    		jobState.set_loadFinish();
+                    	}
                     	jobState.set_lastUpdateFinish(true);
                     }
 
@@ -190,7 +220,7 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
                 });
 	}
 	
-	private void loadDaysChangeRate(int days, boolean ischangerate)
+	private void loadDaysChangeRateAndFluctuateRate(int days, boolean ischangerate)
 	{
 		HttpUtils http = new HttpUtils();
 		final int tradedays = days;
@@ -209,17 +239,18 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
                 params,
                 new RequestCallBack<String>() {
                     @Override
-                    public void onStart() 
+                    public synchronized void onStart() 
                     {
                     } 
                     @Override
-                    public void onLoading(long total, long current, boolean isUploading) 
+                    public synchronized void onLoading(long total, long current, boolean isUploading) 
                     {
                     }
                     @Override
-                    public void onSuccess(ResponseInfo<String> responseInfo) 
-                    {
+                    public synchronized void onSuccess(ResponseInfo<String> responseInfo) 
+                    {                    
                     	String kkString = XmlDeal.DealXml(responseInfo.result);
+                    	//Log.i("days"+tradedays,kkString);
                     	StockTradeEntity result = XmlUtil.toBean(kkString, StockTradeEntity.class);
                     	if(result.get_StockTradeResult().get_ErrorID() != 0 || result.get_StockTradeResult().get_ErrorType() != 0 )
                     	{
@@ -229,7 +260,8 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
                 		    startActivity(intent);  
                 		    finish();
                     	}
-                    	clearDaysTradeData(tradedays, true);
+                    	clearDaysTradeData(tradedays, changerate);
+                    	Log.i("clearDaysTradeData "+tradedays,"changerate" + changerate );
                     	
                     	List<DaysChangeRate> changeRates = new ArrayList<DaysChangeRate>(); 
                     	DaysChangeRate rate;
@@ -348,34 +380,32 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
                     		  break;
                     	  }
 
-                    	jobState.set_loadDailyChangeRate(true);
                     }
 
                     @Override
-                    public void onFailure(HttpException error, String msg) 
+                    public synchronized void onFailure(HttpException error, String msg) 
                     {
                     	//btn.setText(msg);
                     }
                 });
 	}
 	
-	private void loadDaysFluctuateRate(int days)
-	{
-		clearDaysTradeData(days, true);
-	}
-	
 	private void clearDaysTradeData(int days, boolean ischangerate)
 	{
 		try
 		{
-			List<DaysChangeRate> list = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",ischangerate)).where(WhereBuilder.b("TradeDays","=",days)));
-			db.deleteAll(list);
+			List<DaysChangeRate> list = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",ischangerate).and("TradeDays","=",days)));
+			if(list != null)
+			{
+				db.deleteAll(list);
+			}
 		}
 		catch (DbException e) 
     	{  
     		e.printStackTrace();  
     	} 
 	}
+	
 	private void loadDailyChangeRate()
 	{
 		HttpUtils http = new HttpUtils();
@@ -412,7 +442,10 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
                     	try
             	    	{
                     		List<DailyChangeRate> list = db.findAll(Selector.from(DailyChangeRate.class));
-                    		db.deleteAll(list);
+                    		if(list != null)
+                    		{
+                    			db.deleteAll(list);
+                    		}
             	    	}
                 		catch (DbException e) 
             	    	{  
@@ -481,7 +514,10 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
                     	try
             	    	{
                     		List<DailyFluctuateRate> list = db.findAll(Selector.from(DailyFluctuateRate.class));
-                    		db.deleteAll(list);
+                    		if(list != null)
+                    		{
+                    			db.deleteAll(list);
+                    		}
             	    	}
                 		catch (DbException e) 
             	    	{  
@@ -580,7 +616,9 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 				synchronized (this) 
 				{
 					int counter = 0;
-					while(!jobState.getFinish())//!(loginfinish && loadfinish)
+					
+					//boolean log = jobState.get_loginFinish();
+					while(!jobState.getFinish())//  !jobState.get_loginFinish()
 					{
 						this.wait(850);
 						counter++;
@@ -790,6 +828,27 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 			lastUpdateFinish = true;
 			loaddailychangerate = true;
 			loaddailyfluctuaterate = true;
+			loaddayschangerate2 = true;
+			loaddayschangerate3 = true;
+			loaddayschangerate5 = true;
+			loaddayschangerate10 = true;
+			loaddayschangerate15 = true;
+			loaddayschangerate30 = true;
+			loaddayschangerate45 = true;
+			loaddayschangerate60 = true;
+			
+			loaddaysfluctuaterate2 = true;
+			loaddaysfluctuaterate3 = true;
+			loaddaysfluctuaterate5 = true;
+			loaddaysfluctuaterate10 = true;
+			loaddaysfluctuaterate15 = true;
+			loaddaysfluctuaterate30 = true;
+			loaddaysfluctuaterate45 = true;
+			loaddaysfluctuaterate60 = true;
+		}
+		
+		public void set_loadFinish()
+		{
 			loaddayschangerate2 = true;
 			loaddayschangerate3 = true;
 			loaddayschangerate5 = true;

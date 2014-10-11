@@ -65,6 +65,18 @@ namespace StockSync
             return stockUrlFormat;
         }
 
+        /// <summary>
+        /// 参数1 strStockCode  股票代码  如002560
+        /// </summary>
+        public static string GenetateStockUrlEx(string strStockCode)
+        {
+            string stockUrlFormat = Configuration.StockItemUrlEx;
+            CodeType type = GetCodeType(strStockCode);
+            string strCode = Convert.ToString((int)type) + strStockCode;
+            stockUrlFormat = stockUrlFormat.Replace(strStockCodeFormat, strCode);
+            return stockUrlFormat;
+        }
+
         private static string GetThreeMonthToday()
         {
             DateTime today = DateTime.Now;

@@ -37,6 +37,9 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\..\Net40-client\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\Users\shenghai\Desktop\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="StockCommon">
       <HintPath>..\StockCommon\bin\Debug\StockCommon.dll</HintPath>
     </Reference>

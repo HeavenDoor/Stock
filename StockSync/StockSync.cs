@@ -18,6 +18,8 @@ using System.Data.Common;
 using StockCommon;
 using HtmlAgilityPack;
 using CsvHelper;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace StockSync
 {
@@ -247,6 +249,52 @@ namespace StockSync
         }
         #endregion
 
+        #region
+        /// <summary>
+        /// 同步常规方法更新不到的股票日交易数据
+        /// </summary>
+        public static void SyncStockDataDetaileListExt()
+        {
+            InitDB();
+            string recentday = TransactionDate.GetRecentDay();
+            string sql = string.Format("SELECT * FROM STOCK WHERE STOCKCODE NOT IN (SELECT STOCKCODE FROM  STOCKITEM WHERE STOCKDATE='{0}')", recentday);
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<Stock> _table = EntityReader.GetEntities<Stock>(table);
+            foreach (Stock stock in _table)
+            {
+                string resUrl = StockLogic.GenetateStockUrlEx(stock.StockCode);
+
+                CookieCollection cookies = new CookieCollection();
+                HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(resUrl, null, null, cookies);
+                Stream stream = response.GetResponseStream();
+                stream.ReadTimeout = 15 * 1000; //读取超时
+                StreamReader sr = new StreamReader(stream, Encoding.GetEncoding("utf-8"));
+                string strWebData = sr.ReadToEnd();
+                strWebData = strWebData.Replace("_ntes_quote_callback(", "");
+                strWebData = strWebData.Replace(");", "");
+                Newtonsoft.Json.Linq.JObject obj = JsonConvert.DeserializeObject(strWebData, typeof(Newtonsoft.Json.Linq.JObject)) as Newtonsoft.Json.Linq.JObject;
+                if (obj == null)
+                {
+                    continue;
+                }
+                List<StockItem> items = new List<StockItem>();
+                StockItem item = new StockItem();
+                item.StockCode = stock.StockCode;
+                item.StockName = stock.StockName;
+
+                JToken token = obj.First.First;
+                double openprice = Convert.ToDouble(token["open"].ToString());
+                double closeprice = Convert.ToDouble(token["price"].ToString());
+                double highestprice = Convert.ToDouble(token["high"].ToString());
+                double lowestprice = Convert.ToDouble(token["low"].ToString());
+                double fluctuatemount = Convert.ToDouble(token["updown"].ToString());
+                double fluctuaterate = Convert.ToDouble(token["percent"].ToString())*100;
+
+                items.Add(item);
+                FillStockItemTable("STOCKITEM", ref items);
+            }
+        }
+        #endregion
 
         /// <summary>
         /// 计算股票边界值 保存到数据库

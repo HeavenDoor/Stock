@@ -141,7 +141,8 @@ public class LoginActivity extends Activity implements View.OnClickListener
                 	    	try
                 	    	{
                 	    		List<User> users = db.findAll(Selector.from(User.class)); 
-                	    		db.deleteAll(users);
+                	    		if(users != null)
+                	    			db.deleteAll(users);
                 	    		db.save(user);
                 	    	} 
                 	    	catch (DbException e) 

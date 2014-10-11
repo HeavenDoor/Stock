@@ -23,6 +23,10 @@ using StockCommon;
 using HtmlAgilityPack;
 using CsvHelper;
 using StockSync;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+//using Newtonsoft.Json.JsonConvert;
+
 
 namespace StockServiceUITest.TestCode
 {
@@ -175,6 +179,11 @@ namespace StockServiceUITest.TestCode
         {
             StockDataSync.test();
         }
+
+        public static void SyncStockDataDetaileListExt()
+        {
+            StockDataSync.SyncStockDataDetaileListExt();
+        }
     }
 
     public class Test
@@ -292,9 +301,165 @@ namespace StockServiceUITest.TestCode
             }
         }
 
+        public static void kk()
+        {
+            //string resUrl = "http://quotes.money.163.com/1002560.html";
+            //string resUrl = "http://quote.cfi.cn/quote.aspx?actcode=&actstockid=11601&searchcode=002560&x=0&y=0";
+            string resUrl = "http://api.money.126.net/data/feed/1002560,money.api";
+            CookieCollection cookies = new CookieCollection();
+            HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(resUrl, null, null, cookies);
+            Stream stream = response.GetResponseStream();
+            stream.ReadTimeout = 15 * 1000; //读取超时
+            StreamReader sr = new StreamReader(stream, Encoding.GetEncoding("utf-8"));//gb2312
+            string strWebData = sr.ReadToEnd();
+            strWebData = strWebData.Replace("_ntes_quote_callback(", "");
+            strWebData = strWebData.Replace(");", "");
+           string kk = "{\"1002560\":{\"code\": \"1002560\", \"percent\": -0.000502, \"price\": 19.91}}";
+
+            Newtonsoft.Json.Linq.JObject p = JsonConvert.DeserializeObject(strWebData, typeof(Newtonsoft.Json.Linq.JObject)) as Newtonsoft.Json.Linq.JObject;
+            string y = p.Path;
+            string t = p.First.First.ToString();
+            JToken ee = p.First.First;
+            string aa = ee["code"].ToString();
+            double bb = Convert.ToDouble(ee["percent"].ToString());
+            
+            //Dictionary<string, string> hh = p.First.ToDictionary<string, string>();
+           // string kk =  "{\"employees\": [{\"firstName\": \"Bill\",\"lastName\": \"Gates\"},{\"firstName\": \"George\",\"lastName\": \"Bush\"}]}";
+            JsonReader reader = new JsonTextReader(new StringReader(kk));
+
+            while (reader.Read())
+            {
+                Console.WriteLine(reader.TokenType + "\t\t" + reader.ValueType + "\t\t" + reader.Value);
+            }
+
+
+            HtmlDocument htmlDocument = new HtmlAgilityPack.HtmlDocument();
+            htmlDocument.LoadHtml(strWebData);//加载HTML字符串，如果是文件可以用htmlDocument.Load方法加载  
+            HtmlNode nodes = htmlDocument.DocumentNode;
+            string CategoryListXPath = "//body/div[2]/div[1]/div[3]/table[1]";///div[0]/div[2]/table/tbody/tr/td[1]
+            HtmlNodeCollection collection = nodes.SelectNodes(CategoryListXPath); ///"//body/div/div/div/table/tbody/tr/td/div"td/div/table/tbody
+            HtmlNode temp = null;  
+            foreach (HtmlNode node in collection)
+            {
+                string innertext = node.InnerHtml;
+                temp = HtmlNode.CreateNode(node.InnerHtml);
+                string CategoryNameXPath = "//table/tbody[1]";
+                HtmlNodeCollection cc = temp.SelectNodes(CategoryNameXPath);
+                foreach (HtmlNode n in cc)
+                {
+
+                }
+            }
+        }
+
         public static void SyncStockList()
         {
             StockDataSync.SyncStockList();
+        }
+
+        public static void cc()
+        {
+            string filePath = @"E:\同花顺软件\同花顺\history\sznse\day\002560.day";//同花顺目录下history目录是历史日线数据，我例子打开的是平安银行000001的
+            byte[] stockFileBytes = System.IO.File.ReadAllBytes(filePath);
+            int recordStartPos = readByteToInt(stockFileBytes, 10, 2);//记录开始位置
+            int recordLength = readByteToInt(stockFileBytes, 12, 2);//记录长度
+            int recordCount = readByteToInt(stockFileBytes, 14, 2);//文件中记录条数
+            int fileBytesLength = stockFileBytes.Length;
+            int pos = recordStartPos;
+            List<StockDay> stockDayList = new List<StockDay>();//日线数据暂时读到List中
+            do
+            {
+                StockDay sd = new StockDay();
+                sd.DateInt = readByteToInt(stockFileBytes, pos, 4);//时间，整形表示的，可转为日期型
+                sd.OpenPrice = readByteToInt(stockFileBytes, pos + 4, 2) * 0.001f;//开盘价
+                sd.HighPrice = readByteToInt(stockFileBytes, pos + 8, 2) * 0.001f;//最高价
+                sd.LowPrice = readByteToInt(stockFileBytes, pos + 12, 2) * 0.001f;//最低价
+                sd.ClosePrice = readByteToInt(stockFileBytes, pos + 16, 2) * 0.001f;//收盘价
+                sd.VolumeValue = readByteToInt(stockFileBytes, pos + 20, 4);//成交额
+                sd.Volume = readByteToInt(stockFileBytes, pos + 24, 4);//成交量
+                stockDayList.Add(sd);
+                pos = pos + recordLength;
+            } while (pos < fileBytesLength);
+        }
+
+        ///  读取某位置开始的byte转换为16进制字符串
+        ///
+        ///
+        ///
+        ///
+        private static string readByteToHex(byte[] stockFileBytes, int startPos, int length)
+        {
+            string r = "";
+            for (int i = startPos + length - 1; i >= startPos; i--)
+            {
+                r += stockFileBytes[i].ToString("X2");
+            }
+            return r;
+        }
+        ///
+        ///  读取某位置开始的byte转换为16进制字符串
+        ///
+        ///
+        ///
+        ///
+        private static int readByteToInt(byte[] stockFileBytes, int startPos, int length)
+        {
+            string r = readByteToHex(stockFileBytes, startPos, length);
+            int v = Convert.ToInt32(r, 16);
+            return v;
+        }
+    }
+
+    public class StockDay
+    {
+        int dateInt;
+        public int DateInt
+        {
+            get { return dateInt; }
+            set { dateInt = value; }
+        }
+
+        DateTime date;//日期
+        public DateTime Date
+        {
+            get { return date; }
+            set { date = value; }
+        }
+        float openPrice;//开盘价
+        public float OpenPrice
+        {
+            get { return openPrice; }
+            set { openPrice = value; }
+        }
+        float closePrice;//收盘价
+        public float ClosePrice
+        {
+            get { return closePrice; }
+            set { closePrice = value; }
+        }
+        float highPrice;//最高价
+        public float HighPrice
+        {
+            get { return highPrice; }
+            set { highPrice = value; }
+        }
+        float lowPrice;//最低价
+        public float LowPrice
+        {
+            get { return lowPrice; }
+            set { lowPrice = value; }
+        }
+        float volume;//成交量
+        public float Volume
+        {
+            get { return volume; }
+            set { volume = value; }
+        }
+        float volumeValue;//成交额
+        public float VolumeValue
+        {
+            get { return volumeValue; }
+            set { volumeValue = value; }
         }
     }
 

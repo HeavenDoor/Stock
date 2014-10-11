@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.security.MessageDigest"/>
-<fullyQualifiedTypeName name="java.security.NoSuchAlgorithmException"/>
 <fullyQualifiedTypeName name="com.stockside.common.XmlDeal"/>
 <fullyQualifiedTypeName name="com.stockside.common.MD5"/>
 <fullyQualifiedTypeName name="android.app.Activity"/>
@@ -49,7 +47,6 @@
 <fullyQualifiedTypeName name="com.stockside.StockSideActivity.Jobs"/>
 <fullyQualifiedTypeName name="com.stockside.StockSideActivity.JobState"/>
 <fullyQualifiedTypeName name="com.stockside.R.color"/>
-<fullyQualifiedTypeName name="com.stockside.data.DataControl"/>
 <fullyQualifiedTypeName name="android.R.integer"/>
 <fullyQualifiedTypeName name="java.lang.Boolean"/>
 <fullyQualifiedTypeName name="com.lidroid.xutils.db.sqlite.WhereBuilder"/>
@@ -57,7 +54,10 @@
 <fullyQualifiedTypeName name="com.stockside.entity.StockTradeEntity.StockTradeResult.StockTrade"/>
 <fullyQualifiedTypeName name="com.stockside.entity.StockTradeEntity"/>
 <fullyQualifiedTypeName name="java.util.List"/>
-<fullyQualifiedTypeName name="com.stockside.model.DaysChangeRate"/>
 <fullyQualifiedTypeName name="java.lang.String"/>
 <fullyQualifiedTypeName name="com.stockside.model.LastUpdate"/>
+<fullyQualifiedTypeName name="com.stockside.data.DataControl"/>
+<fullyQualifiedTypeName name="com.stockside.model.DailyFluctuateRate"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="com.stockside.model.DaysChangeRate"/>
 </qualifiedTypeNameHistroy>

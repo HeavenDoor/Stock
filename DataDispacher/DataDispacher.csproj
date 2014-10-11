@@ -38,6 +38,9 @@
     <Reference Include="StockCommon">
       <HintPath>..\StockCommon\bin\Debug\StockCommon.dll</HintPath>
     </Reference>
+    <Reference Include="StockSync">
+      <HintPath>..\StockSync\bin\Debug\StockSync.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />

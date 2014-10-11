@@ -80,8 +80,8 @@ namespace StockServiceUITest
             //Test.testlist();
 
             //Test.SyncStockList();
-
-
+            Test.cc();
+            Test.kk();
             // StockSync.StockDataSync.SyncStockList();
 // 
 //             DateTime currenttime = System.DateTime.Now;
@@ -109,6 +109,9 @@ namespace StockServiceUITest
             //SyncTest.SyncTradeDate();
 
             //SyncTest.test();
+
+            SyncTest.SyncStockDataDetaileListExt();
+
             string yy = "2014/03/05";
             string strToday = yy.Replace("/", "");
 
@@ -133,6 +136,12 @@ namespace StockServiceUITest
 
             pictureBox1.Image = Image.FromStream(stream);
             label1.Text = kk;
+        }
+
+        public void test()
+        {
+
+            
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)

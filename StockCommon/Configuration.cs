@@ -13,6 +13,7 @@ namespace StockCommon
         public static string StockList { get; set; }
         public static string StockCSVHeader { get; set; }
         public static string StockItemUrl { get; set; }
+        public static string StockItemUrlEx { get; set; }
         public static string ExValida { get;set; }
         static Configuration()
         {

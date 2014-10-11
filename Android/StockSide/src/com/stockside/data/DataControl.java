@@ -2,6 +2,11 @@ package com.stockside.data;
 
 import java.util.List;
 
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
+import com.lidroid.xutils.exception.DbException;
+
 import com.stockside.model.*;
 
 public class DataControl
@@ -39,6 +44,42 @@ public class DataControl
            uniqueInstance = new DataControl();
        }
        return uniqueInstance;
+    }
+    
+    public static void LoadDataFromDB(DbUtils db)
+    {
+    	try
+    	{
+    		dailyChangeRates = db.findAll(Selector.from(DailyChangeRate.class));
+    		dailyFluctuateRates = db.findAll(Selector.from(DailyFluctuateRate.class));
+    		daysChangeRates2 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",true)).where(WhereBuilder.b("TradeDays","=",2)));
+    		daysFluctuateRates2 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",false)).where(WhereBuilder.b("TradeDays","=",2)));
+    		
+    		daysChangeRates3 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",true)).where(WhereBuilder.b("TradeDays","=",3)));
+    		daysFluctuateRates3 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",false)).where(WhereBuilder.b("TradeDays","=",3)));
+    		
+    		daysChangeRates5 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",true)).where(WhereBuilder.b("TradeDays","=",5)));
+    		daysFluctuateRates5 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",false)).where(WhereBuilder.b("TradeDays","=",5)));
+    		
+    		daysChangeRates10 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",true)).where(WhereBuilder.b("TradeDays","=",10)));
+    		daysFluctuateRates10 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",false)).where(WhereBuilder.b("TradeDays","=",10)));
+    		
+    		daysChangeRates15 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",true)).where(WhereBuilder.b("TradeDays","=",15)));
+    		daysFluctuateRates15 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",false)).where(WhereBuilder.b("TradeDays","=",15)));
+    		
+    		daysChangeRates30 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",true)).where(WhereBuilder.b("TradeDays","=",30)));
+    		daysFluctuateRates30 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",false)).where(WhereBuilder.b("TradeDays","=",30)));
+    		
+    		daysChangeRates45 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",true)).where(WhereBuilder.b("TradeDays","=",45)));
+    		daysFluctuateRates45 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",false)).where(WhereBuilder.b("TradeDays","=",45)));
+    		
+    		daysChangeRates60 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",true)).where(WhereBuilder.b("TradeDays","=",60)));
+    		daysFluctuateRates60 = db.findAll(Selector.from(DaysChangeRate.class).where(WhereBuilder.b("ChangerateMain","=",false)).where(WhereBuilder.b("TradeDays","=",60)));
+    	}
+    	catch (DbException e) 
+    	{  
+    		e.printStackTrace();  
+    	} 
     }
     
     public static void set_User(User u)
