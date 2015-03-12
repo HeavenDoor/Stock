@@ -66,7 +66,13 @@ namespace StockServiceUITest
             // All Test
             //---------------------------------------------------------------------------------------
             //LogManagerTest.testLogManager();
-            //HttpTest.testHttpGet();
+
+
+            //Test.SyncStockList();  // 同步股票列表
+            //SyncTest.SyncStockDataDetaileList();
+            SyncTest.SyncDailyTradeData();
+
+            HttpTest.testHttpGet("http://qt.gtimg.cn/q=sz000750");
             //DbUtilityTest.testSql();
             //ServiceProcessTest.testServe();
             //-------------------------------------------------------------------------------------------
@@ -79,9 +85,9 @@ namespace StockServiceUITest
 
             //Test.testlist();
 
-            //Test.SyncStockList();
-            Test.cc();
-            Test.kk();
+            
+            //Test.cc();
+            //Test.kk();
             // StockSync.StockDataSync.SyncStockList();
 // 
 //             DateTime currenttime = System.DateTime.Now;
@@ -110,7 +116,7 @@ namespace StockServiceUITest
 
             //SyncTest.test();
 
-            SyncTest.SyncStockDataDetaileListExt();
+            //SyncTest.SyncStockDataDetaileListExt();
 
             string yy = "2014/03/05";
             string strToday = yy.Replace("/", "");

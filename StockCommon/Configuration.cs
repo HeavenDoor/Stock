@@ -14,7 +14,8 @@ namespace StockCommon
         public static string StockCSVHeader { get; set; }
         public static string StockItemUrl { get; set; }
         public static string StockItemUrlEx { get; set; }
-        public static string ExValida { get;set; }
+        public static string ExValida { get; set; }
+        public static string StockItemJSUrl { get; set; }
         static Configuration()
         {
 

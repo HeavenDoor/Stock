@@ -29,6 +29,12 @@ namespace StockSync
             }
         }
 
+        public static string GetCodeString(CodeType Type)
+        {
+            if (Type == CodeType.ShangHai) return "sh";
+            else return "sz";
+        }
+
         public enum CodeType
         {   
             ShangHai = 0,
@@ -36,12 +42,25 @@ namespace StockSync
             UnKnown = 2,
         }
 
+        /// <summary>
+        /// 参数1 strStockCode  股票代码  如002560
+        /// </summary>
+        public static string GenerateStockItemJSUrl(string strStockCode)
+        {
+            string stockUrlFormat = Configuration.StockItemJSUrl;
+            string type = GetCodeString(GetCodeType(strStockCode));
+            stockUrlFormat += type + strStockCode;
+            return stockUrlFormat;
+        }
 
+
+
+        /// 
         /// <summary>
         /// 参数1 strStockCode  股票代码  如002560
         /// 参数2 是否同步3个月  默认同步当天
         /// </summary>
-        public static string GenetateStockUrl(string strStockCode, bool isSync = false)
+        public static string GenerateStockUrl(string strStockCode, bool isSync = false)
         {
             string stockUrlFormat = Configuration.StockItemUrl;
             CodeType type = GetCodeType(strStockCode);

@@ -50,11 +50,11 @@ namespace StockServiceUITest.TestCode
 
     public class HttpTest
     {
-        public static string testHttpGet()
+        public static string testHttpGet(string url)
         {
             string userName = "15528358573";
 
-            string url = "http://quotes.money.163.com/service/chddata.html?code=1000686&start=20140725&end=20140801&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP";
+           // string url = "http://quotes.money.163.com/service/chddata.html?code=1000686&start=20140725&end=20140801&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP";
 
             string tagUrl = Configuration.StockList; //"http://www.sina.com/";
             CookieCollection cookies = new CookieCollection();//如何从response.Headers["Set-Cookie"];中获取并设置CookieCollection的代码略  
@@ -64,6 +64,10 @@ namespace StockServiceUITest.TestCode
             stream.ReadTimeout = 15 * 1000; //读取超时
             StreamReader sr = new StreamReader(stream, Encoding.GetEncoding("gb2312"));
             string strWebData = sr.ReadToEnd();
+
+            string[] lines = strWebData.Split('~');
+
+
             return strWebData;
         }
 
@@ -152,6 +156,11 @@ namespace StockServiceUITest.TestCode
         public static void SyncStockDataDetaileList()
         {
             StockDataSync.SyncStockDataDetaileList();
+        }
+
+        public static void SyncDailyTradeData()
+        {
+            StockDataSync.SyncDailyTradeData();
         }
 
         public static void testQuery()
@@ -475,22 +484,22 @@ namespace StockServiceUITest.TestCode
     {
         public static void ReadAllRecords()
         {
-            string str = HttpTest.testHttpGet();
-            int m =  str.IndexOf("\r\n");
-            string a = str.Remove(0, m);
-            string b = Configuration.StockCSVHeader + a;
-            TextReader rea = new StreamReader(/*"E:\\Users\\shenghai\\Desktop\\600023.csv"*/StringToStream(b), System.Text.Encoding.UTF8);
-            using (var reader = new CsvReader(rea))
-            {
-                var records = reader.GetRecords<StockItem>();
-
-                foreach (StockItem s in records)//var record
-                {
-                    int k = 0;
-                    //Console.WriteLine( record );
-                }
-            }
-            Console.WriteLine();
+//             string str = HttpTest.testHttpGet();
+//             int m =  str.IndexOf("\r\n");
+//             string a = str.Remove(0, m);
+//             string b = Configuration.StockCSVHeader + a;
+//             TextReader rea = new StreamReader(/*"E:\\Users\\shenghai\\Desktop\\600023.csv"*/StringToStream(b), System.Text.Encoding.UTF8);
+//             using (var reader = new CsvReader(rea))
+//             {
+//                 var records = reader.GetRecords<StockItem>();
+// 
+//                 foreach (StockItem s in records)//var record
+//                 {
+//                     int k = 0;
+//                     //Console.WriteLine( record );
+//                 }
+//             }
+//             Console.WriteLine();
 
              
         }

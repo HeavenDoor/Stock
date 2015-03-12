@@ -147,6 +147,16 @@ namespace StockSync
             set { m_CirculationMarketCap = value; }
         }
 
+        /// <summary>
+        /// 是否停牌 
+        /// </summary>
+        private bool m_ISStopped;
+        public bool ISStopped
+        {
+            get { return m_ISStopped; }
+            set { m_ISStopped = value; }
+        }
+
         public bool Equals(StockItem o)
         {
             if (StockDate != o.StockDate)
@@ -202,6 +212,10 @@ namespace StockSync
                 return false;
             }
             if ((double)CirculationMarketCap != (double)o.CirculationMarketCap)
+            {
+                return false;
+            }
+            if ((bool)ISStopped != (bool)o.ISStopped)
             {
                 return false;
             }

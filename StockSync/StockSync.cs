@@ -134,6 +134,50 @@ namespace StockSync
 
         #region
         /// <summary>
+        /// 同步每天股票交易信息
+        /// 新增每日交易信息
+        /// </summary>
+        public static void SyncDailyTradeData()
+        {
+            InitDB(); 
+            string sql = string.Format("select * from STOCK");
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<Stock> _table = EntityReader.GetEntities<Stock>(table);
+            foreach (Stock stock in _table)
+            {
+                string jsUrl = StockLogic.GenerateStockItemJSUrl(stock.StockCode);
+                CookieCollection cookies = new CookieCollection();//如何从response.Headers["Set-Cookie"];中获取并设置CookieCollection的代码略  
+                HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(jsUrl, null, null, cookies);
+                Stream stream = response.GetResponseStream();
+                stream.ReadTimeout = 15 * 1000; //读取超时
+                StreamReader sr = new StreamReader(stream, Encoding.GetEncoding("gb2312"));
+                string strWebData = sr.ReadToEnd();
+                string[] lines = strWebData.Split('~');
+
+
+            }
+        }
+
+        /// <summary>
+        /// 根据js数据生成股票交易信息
+        /// </summary>
+        private static StockItem GenerateStockItem(ref string[] data)
+        {
+            StockItem item = new StockItem();
+            item.StockCode = data[1];
+            item.StockName = data[2];
+            item.ClosePrice = Convert.ToDouble(data[3]);
+            item.OpenPrice = Convert.ToDouble(data[5]);
+            item.LowestPrice = Convert.ToDouble(data[43]);
+            item.HighestPrice = Convert.ToDouble(data[42]);
+            return item;
+        }
+        #endregion
+
+
+
+        #region
+        /// <summary>
         /// 同步股票交易信息
         /// 新增每日交易信息
         /// 同步3个月 之内所有股票日交易详细信息
@@ -146,7 +190,7 @@ namespace StockSync
             List<Stock> _table = EntityReader.GetEntities<Stock>(table);
             foreach ( Stock stock in _table )
             {
-                string resUrl = StockLogic.GenetateStockUrl(stock.StockCode, sync3month);
+                string resUrl = StockLogic.GenerateStockUrl(stock.StockCode, sync3month);
                 string strHtml = GetHtmlString(resUrl);
                 int pos = strHtml.IndexOf("\r\n");
                 string strCsv = strHtml.Remove(0, pos);
