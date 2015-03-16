@@ -68,6 +68,15 @@ namespace StockServiceUITest
             //LogManagerTest.testLogManager();
 
 
+
+            {
+                string dateString = "20150316104908";
+                DateTime dt = DateTime.ParseExact(dateString, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
+
+                double v = 10;
+                double.TryParse("sss", out v);
+            }
+
             //Test.SyncStockList();  // 同步股票列表
             //SyncTest.SyncStockDataDetaileList();
             SyncTest.SyncDailyTradeData();

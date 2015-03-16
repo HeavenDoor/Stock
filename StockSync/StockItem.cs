@@ -133,8 +133,8 @@ namespace StockSync
         private double m_ToatlMarketCap;
         public double ToatlMarketCap
         {
-            get { return m_TradeMount; }
-            set { m_TradeMount = value; }
+            get { return m_ToatlMarketCap; }
+            set { m_ToatlMarketCap = value; }
         }
 
         /// <summary>

@@ -40,7 +40,7 @@ namespace DataCollector
             job = JobBuilder.Create<StockSyncJob>().WithIdentity("StockSyncJob", "StockSyncJobGroup").Build();
 
 
-            trigger = (ICronTrigger)TriggerBuilder.Create().WithIdentity("StockSyncJob", "StockSyncJobGroup").WithSchedule(CronScheduleBuilder.CronSchedule("0 04 17 ? * *")).Build();
+            trigger = (ICronTrigger)TriggerBuilder.Create().WithIdentity("StockSyncJob", "StockSyncJobGroup").WithSchedule(CronScheduleBuilder.CronSchedule("0 03 15 ? * *")).Build();
 
             //ISimpleTrigger trigger = TriggerUtils.MakeMinutelyTrigger(1)
             ft = sched.ScheduleJob(job, trigger);

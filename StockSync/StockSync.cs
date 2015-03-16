@@ -153,7 +153,39 @@ namespace StockSync
                 StreamReader sr = new StreamReader(stream, Encoding.GetEncoding("gb2312"));
                 string strWebData = sr.ReadToEnd();
                 string[] lines = strWebData.Split('~');
+                StockItem item = GenerateStockItem(ref lines);
 
+                StockItem dbItem = GetStockItemFromDB(item);
+                if (dbItem != null)  // update
+                {
+                    if (dbItem.Equals(item))
+                    {
+                        continue;
+                    }
+                    string sqlUpdate = string.Format("update STOCKITEM set STOCKCODE='{0}' , STOCKNAME='{1}' , OPENPRICE={2} , CLOSEPRICE={3} , HIGHESTPRICE={4} , LOWESTPRICE={5} , FLUCTUATEMOUNT={6} , FLUCTUATERATE={7} , CHANGERATE={8} , TRADEVOLUME={9} , TRADEMOUNT={10} , TOATLMARKETCAP={11} , CIRCULATIONMARKETCAP={12} , ISSTOPPED={13} where STOCKDATE='{14}'",
+                        item.StockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap, item.ISStopped, item.StockDate);
+                    try
+                    {
+                        int reCount = util.ExecuteNonQuery(sqlUpdate, null);
+                    }
+                    catch (System.Exception e)
+                    {
+                        LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <SyncStockDataDetaileList()>, MSG : {0} ", e.Message));
+                    }
+                }
+                else // insert
+                {
+                    string sqlInsert = string.Format("insert into STOCKITEM values('{0}','{1}','{2}',{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14})",
+                        item.StockDate, item.StockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap, item.ISStopped);
+                    try
+                    {
+                        int reCount = util.ExecuteNonQuery(sqlInsert, null);
+                    }
+                    catch (System.Exception e)
+                    {
+                        LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <SyncStockDataDetaileList()>, MSG : {0} ", e.Message));
+                    }
+                }
 
             }
         }
@@ -164,13 +196,32 @@ namespace StockSync
         private static StockItem GenerateStockItem(ref string[] data)
         {
             StockItem item = new StockItem();
-            item.StockCode = data[1];
-            item.StockName = data[2];
-            item.ClosePrice = Convert.ToDouble(data[3]);
-            item.OpenPrice = Convert.ToDouble(data[5]);
-            item.LowestPrice = Convert.ToDouble(data[43]);
-            item.HighestPrice = Convert.ToDouble(data[42]);
+            item.StockDate = DateTime.ParseExact(data[30], "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
+            item.StockCode = data[2];
+            item.StockName = data[1];
+            item.ClosePrice = getDoubleValue(data[3]);
+            item.OpenPrice = getDoubleValue(data[5]);
+            item.LowestPrice = getDoubleValue(data[34]);
+            item.HighestPrice = getDoubleValue(data[33]);
+            item.FluctuateMount = getDoubleValue(data[31]);  // 涨跌额
+            item.FluctuateRate = getDoubleValue(data[32]);  // 涨跌幅
+            item.ChangeRate = getDoubleValue(data[38]);  // 换手率
+            item.TradeVolume = getDoubleValue(data[6]);  // 成交量
+            item.TradeMount = getDoubleValue(data[37]);  // 成交金额
+            item.ToatlMarketCap = getDoubleValue(data[45]); // 总市值
+            item.CirculationMarketCap = getDoubleValue(data[44]); // 流通市值
+            item.ISStopped = item.OpenPrice == 0.0 ? true : false;
             return item;
+        }
+
+        /// <summary>
+        /// 根据string生成double数据
+        /// </summary>
+        private static double getDoubleValue(string value)
+        {
+            double v = 0.0;
+            double.TryParse(value, out v);
+            return v;
         }
         #endregion
 
