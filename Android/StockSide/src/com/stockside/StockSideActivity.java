@@ -109,7 +109,6 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 		{
 			//jobState.set_loadFinish();
 			autoLogin();
-			loadLastUpdate();
 		}
 		new LoadViewTask().execute();
 		
@@ -129,11 +128,12 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 	{
 		loadDailyChangeRate();
 		loadDailyFluctuateRate();
-		for(int trade : tradeDays)
+		loadAbsoluteRecentDaysData();
+		/*for(int trade : tradeDays)
 		{
 			loadDaysChangeRateAndFluctuateRate(trade, true);
 			loadDaysChangeRateAndFluctuateRate(trade, false);
-		}
+		}*/
 		
 	}
 	
@@ -207,9 +207,8 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
                     	else
                     	{
                     		loadDbData();
-                    		jobState.set_loadFinish();
+                    		progressDialog.dismiss();
                     	}
-                    	jobState.set_lastUpdateFinish(true);
                     }
 
                     @Override
@@ -222,7 +221,7 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 	
 	private void loadDaysChangeRateAndFluctuateRate(int days, boolean ischangerate)
 	{
-		HttpUtils http = new HttpUtils();
+		/*HttpUtils http = new HttpUtils();
 		final int tradedays = days;
 		final boolean changerate = ischangerate;
 		RequestParams params = new RequestParams();
@@ -387,7 +386,7 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
                     {
                     	//btn.setText(msg);
                     }
-                });
+                });*/
 	}
 	
 	private void clearDaysTradeData(int days, boolean ischangerate)
@@ -406,7 +405,93 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
     	} 
 	}
 	
-	private void loadDailyChangeRate()
+	private void clearDaysTradeData()
+	{
+		try
+		{
+			List<DaysChangeRate> list = db.findAll(Selector.from(DaysChangeRate.class));
+			if(list != null)
+			{
+				db.deleteAll(list);
+			}
+		}
+		catch (DbException e) 
+    	{  
+    		e.printStackTrace();  
+    	} 
+	}
+	
+	private void loadAbsoluteRecentDaysData()
+	{
+		HttpUtils http = new HttpUtils();
+
+		RequestParams params = new RequestParams();
+        params.addBodyParameter("email", email);
+        params.addBodyParameter("passWord", pwd);
+        String url = this.getString(R.string.service) + "GetAbsoluteRecentDaysData";
+        http.send(HttpRequest.HttpMethod.POST,
+                url,
+                params,
+                new RequestCallBack<String>() {
+                    @Override
+                    public synchronized void onStart() 
+                    {
+                    } 
+                    @Override
+                    public synchronized void onLoading(long total, long current, boolean isUploading) 
+                    {
+                    }
+                    @Override
+                    public synchronized void onSuccess(ResponseInfo<String> responseInfo) 
+                    {                    
+                    	String kkString = XmlDeal.DealXml(responseInfo.result);
+                    	//Log.i("days"+tradedays,kkString);
+                    	StockTradeEntity result = XmlUtil.toBean(kkString, StockTradeEntity.class);
+                    	if(result.get_StockTradeResult().get_ErrorID() != 0 || result.get_StockTradeResult().get_ErrorType() != 0 )
+                    	{
+                    		jobState.setFinish();
+                    		Intent intent = new Intent();  
+                		    intent.setClass(StockSideActivity.this, LoginActivity.class);  
+                		    startActivity(intent);  
+                		    finish();
+                    	}
+                    	clearDaysTradeData();
+                    	//Log.i("clearDaysTradeData "+tradedays,"changerate" + changerate );
+                    	
+                    	List<DaysChangeRate> changeRates = new ArrayList<DaysChangeRate>(); 
+                    	DaysChangeRate rate;
+                    	for( StockTradeEntity.StockTradeResult.StockTrade item : result.get_StockTradeResult().get_StockTradeitems() )
+                    	{
+                    		rate = DaysChangeRate.ConvertTo(item);
+                    		changeRates.add(rate);
+                    		try
+                	    	{
+                    			db.save(rate);
+                	    	}
+                    		catch (DbException e) 
+                	    	{  
+                	    		e.printStackTrace();  
+                	    	} 
+                    	}
+                    	DataControl.getInstance().set_AbsoluteRecentDaysData(changeRates);
+                    	loadDbData();
+                    	jobState.set_loadAbsoluteRecentDaysData(true);
+                    	
+                    	if(jobState.getFinish())
+                    	{
+                    		progressDialog.dismiss();
+                    	}
+                    }
+
+                    @Override
+                    public synchronized void onFailure(HttpException error, String msg) 
+                    {
+                    	//btn.setText(msg);
+                    }
+                });
+	}
+	
+ 	private void loadDailyChangeRate()
 	{
 		HttpUtils http = new HttpUtils();
 		RequestParams params = new RequestParams();
@@ -469,6 +554,10 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
                     	}
                     	DataControl.getInstance().set_DailyChangeRates(changeRates);
                     	jobState.set_loadDailyChangeRate(true);
+                    	if(jobState.getFinish())
+                    	{
+                    		progressDialog.dismiss();
+                    	}
                     }
 
                     @Override
@@ -540,6 +629,10 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
                     	}
                     	DataControl.getInstance().set_DailyFluctuateRates(fluctuateRates);
                     	jobState.set_loadDailyFluctuateRate(true);
+                    	if(jobState.getFinish())
+                    	{
+                    		progressDialog.dismiss();
+                    	}
                     }
 
                     @Override
@@ -586,7 +679,8 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
                 		    startActivity(intent);  
                 		    finish();
                     	}
-                    	jobState.set_loginFinish(true);
+                    	
+                    	loadLastUpdate();
                     }
 
                     @Override
@@ -618,7 +712,7 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 					int counter = 0;
 					
 					//boolean log = jobState.get_loginFinish();
-					while(!jobState.getFinish())//  !jobState.get_loginFinish()
+					while(true)//  !jobState.get_loginFinish()
 					{
 						this.wait(850);
 						counter++;
@@ -739,151 +833,35 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 		
 	private class JobState
 	{
-		private boolean loginFinish;
-		private boolean lastUpdateFinish;
 		private boolean loaddailychangerate;
 		private boolean loaddailyfluctuaterate;
-		private boolean loaddayschangerate2;
-		private boolean loaddayschangerate3;
-		private boolean loaddayschangerate5;
-		private boolean loaddayschangerate10;
-		private boolean loaddayschangerate15;
-		private boolean loaddayschangerate30;
-		private boolean loaddayschangerate45;
-		private boolean loaddayschangerate60;
-		
-		private boolean loaddaysfluctuaterate2;
-		private boolean loaddaysfluctuaterate3;
-		private boolean loaddaysfluctuaterate5;
-		private boolean loaddaysfluctuaterate10;
-		private boolean loaddaysfluctuaterate15;
-		private boolean loaddaysfluctuaterate30;
-		private boolean loaddaysfluctuaterate45;
-		private boolean loaddaysfluctuaterate60;
+		private boolean loadabsoluterecentdaysdata;
+
 		public JobState()
 		{
-			loginFinish = false;
-			lastUpdateFinish = false;
 			loaddailychangerate = false;
 			loaddailyfluctuaterate = false;
-			loaddayschangerate2 = false;
-			loaddayschangerate3 = false;
-			loaddayschangerate5 = false;
-			loaddayschangerate10 = false;
-			loaddayschangerate15 = false;
-			loaddayschangerate30 = false;
-			loaddayschangerate45 = false;
-			loaddayschangerate60 = false;
-			
-			loaddaysfluctuaterate2 = false;
-			loaddaysfluctuaterate3 = false;
-			loaddaysfluctuaterate5 = false;
-			loaddaysfluctuaterate10 = false;
-			loaddaysfluctuaterate15 = false;
-			loaddaysfluctuaterate30 = false;
-			loaddaysfluctuaterate45 = false;
-			loaddaysfluctuaterate60 = false;
+			loadabsoluterecentdaysdata = false;
 		}
 		
 		public void reset()
 		{
-			loginFinish = false;
-			lastUpdateFinish = false;
 			loaddailychangerate = false;
 			loaddailyfluctuaterate = false;
-			loaddayschangerate2 = false;
-			loaddayschangerate3 = false;
-			loaddayschangerate5 = false;
-			loaddayschangerate10 = false;
-			loaddayschangerate15 = false;
-			loaddayschangerate30 = false;
-			loaddayschangerate45 = false;
-			loaddayschangerate60 = false;
-			
-			loaddaysfluctuaterate2 = false;
-			loaddaysfluctuaterate3 = false;
-			loaddaysfluctuaterate5 = false;
-			loaddaysfluctuaterate10 = false;
-			loaddaysfluctuaterate15 = false;
-			loaddaysfluctuaterate30 = false;
-			loaddaysfluctuaterate45 = false;
-			loaddaysfluctuaterate60 = false;
+			loadabsoluterecentdaysdata = false;
 		}
 		
 		public boolean getFinish()
 		{
-			boolean finish = loginFinish&&lastUpdateFinish&&loaddailychangerate&&loaddailyfluctuaterate
-					&&loaddayschangerate2&&loaddayschangerate3&&loaddayschangerate5
-					&&loaddayschangerate10&&loaddayschangerate15&&loaddayschangerate30
-					&&loaddayschangerate45&&loaddayschangerate60
-					&&loaddaysfluctuaterate2&&loaddaysfluctuaterate3&&loaddaysfluctuaterate5
-					&&loaddaysfluctuaterate10&&loaddaysfluctuaterate15&&loaddaysfluctuaterate30
-					&&loaddaysfluctuaterate45&&loaddaysfluctuaterate60;
+			boolean finish = loaddailychangerate&&loaddailyfluctuaterate&&loadabsoluterecentdaysdata;
 			return finish;
 		}
 		
 		public void setFinish()
 		{
-			loginFinish = true;
-			lastUpdateFinish = true;
 			loaddailychangerate = true;
 			loaddailyfluctuaterate = true;
-			loaddayschangerate2 = true;
-			loaddayschangerate3 = true;
-			loaddayschangerate5 = true;
-			loaddayschangerate10 = true;
-			loaddayschangerate15 = true;
-			loaddayschangerate30 = true;
-			loaddayschangerate45 = true;
-			loaddayschangerate60 = true;
-			
-			loaddaysfluctuaterate2 = true;
-			loaddaysfluctuaterate3 = true;
-			loaddaysfluctuaterate5 = true;
-			loaddaysfluctuaterate10 = true;
-			loaddaysfluctuaterate15 = true;
-			loaddaysfluctuaterate30 = true;
-			loaddaysfluctuaterate45 = true;
-			loaddaysfluctuaterate60 = true;
-		}
-		
-		public void set_loadFinish()
-		{
-			loaddayschangerate2 = true;
-			loaddayschangerate3 = true;
-			loaddayschangerate5 = true;
-			loaddayschangerate10 = true;
-			loaddayschangerate15 = true;
-			loaddayschangerate30 = true;
-			loaddayschangerate45 = true;
-			loaddayschangerate60 = true;
-			
-			loaddaysfluctuaterate2 = true;
-			loaddaysfluctuaterate3 = true;
-			loaddaysfluctuaterate5 = true;
-			loaddaysfluctuaterate10 = true;
-			loaddaysfluctuaterate15 = true;
-			loaddaysfluctuaterate30 = true;
-			loaddaysfluctuaterate45 = true;
-			loaddaysfluctuaterate60 = true;
-		}
-		
-		public boolean get_loginFinish()
-		{
-			return loginFinish;
-		}
-		public void set_loginFinish(boolean value)
-		{
-			loginFinish = value;
-		}
-		
-		public boolean get_lastUpdateFinish()
-		{
-			return lastUpdateFinish;
-		}
-		public void set_lastUpdateFinish(boolean value)
-		{
-			lastUpdateFinish = value;
+			loadabsoluterecentdaysdata = true;
 		}
 		
 		public boolean get_loadDailyChangeRate()
@@ -904,150 +882,14 @@ public class StockSideActivity extends ActionBarActivity implements View.OnClick
 			loaddailyfluctuaterate = value;
 		}
 		
-		public boolean get_loadDaysChangeRate2()
+		public boolean get_loadAbsoluteRecentDaysData()
 		{
-			return loaddayschangerate2;
+			return loadabsoluterecentdaysdata;
 		}
-		public void set_loadDaysChangeRate2(boolean value)
+		public void set_loadAbsoluteRecentDaysData(boolean value)
 		{
-			loaddayschangerate2 = value;
+			loadabsoluterecentdaysdata = value;
 		}
-		
-		public boolean get_loadDaysChangeRate3()
-		{
-			return loaddayschangerate3;
-		}
-		public void set_loadDaysChangeRate3(boolean value)
-		{
-			loaddayschangerate3 = value;
-		}
-		
-		public boolean get_loadDaysChangeRate5()
-		{
-			return loaddayschangerate5;
-		}
-		public void set_loadDaysChangeRate5(boolean value)
-		{
-			loaddayschangerate5 = value;
-		}
-		
-		public boolean get_loadDaysChangeRate10()
-		{
-			return loaddayschangerate10;
-		}
-		public void set_loadDaysChangeRate10(boolean value)
-		{
-			loaddayschangerate10 = value;
-		}
-		
-		public boolean get_loadDaysChangeRate15()
-		{
-			return loaddayschangerate15;
-		}
-		public void set_loadDaysChangeRate15(boolean value)
-		{
-			loaddayschangerate15 = value;
-		}
-		
-		public boolean get_loadDaysChangeRate30()
-		{
-			return loaddayschangerate30;
-		}
-		public void set_loadDaysChangeRate30(boolean value)
-		{
-			loaddayschangerate30 = value;
-		}
-		
-		public boolean get_loadDaysChangeRate45()
-		{
-			return loaddayschangerate45;
-		}
-		public void set_loadDaysChangeRate45(boolean value)
-		{
-			loaddayschangerate45 = value;
-		}
-		
-		public boolean get_loadDaysChangeRate60()
-		{
-			return loaddayschangerate60;
-		}
-		public void set_loadDaysChangeRate60(boolean value)
-		{
-			loaddayschangerate60 = value;
-		}
-		
-		public boolean get_loadDaysFluctuateRate2()
-		{
-			return loaddaysfluctuaterate2;
-		}
-		public void set_loadDaysFluctuateRate2(boolean value)
-		{
-			loaddaysfluctuaterate2 = value;
-		}
-		
-		public boolean get_loadDaysFluctuateRate3()
-		{
-			return loaddaysfluctuaterate3;
-		}
-		public void set_loadDaysFluctuateRate3(boolean value)
-		{
-			loaddaysfluctuaterate3 = value;
-		}
-		
-		public boolean get_loadDaysFluctuateRate5()
-		{
-			return loaddaysfluctuaterate5;
-		}
-		public void set_loadDaysFluctuateRate5(boolean value)
-		{
-			loaddaysfluctuaterate5 = value;
-		}
-		
-		public boolean get_loadDaysFluctuateRate10()
-		{
-			return loaddaysfluctuaterate10;
-		}
-		public void set_loadDaysFluctuateRate10(boolean value)
-		{
-			loaddaysfluctuaterate10 = value;
-		}
-		
-		public boolean get_loadDaysFluctuateRate15()
-		{
-			return loaddaysfluctuaterate15;
-		}
-		public void set_loadDaysFluctuateRate15(boolean value)
-		{
-			loaddaysfluctuaterate15 = value;
-		}
-		
-		public boolean get_loadDaysFluctuateRate30()
-		{
-			return loaddaysfluctuaterate30;
-		}
-		public void set_loadDaysFluctuateRate30(boolean value)
-		{
-			loaddaysfluctuaterate30 = value;
-		}
-		
-		public boolean get_loadDaysFluctuateRate45()
-		{
-			return loaddaysfluctuaterate45;
-		}
-		public void set_loadDaysFluctuateRate45(boolean value)
-		{
-			loaddaysfluctuaterate45 = value;
-		}
-		
-		public boolean get_loadDaysFluctuateRate60()
-		{
-			return loaddaysfluctuaterate60;
-		}
-		public void set_loadDaysFluctuateRate60(boolean value)
-		{
-			loaddaysfluctuaterate60 = value;
-		}
-		
 	}
 
 }

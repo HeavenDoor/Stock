@@ -53,6 +53,8 @@ public class DailyFluctuateRate
 	@Column(column = "CirculationMarketCap")
 	private double CirculationMarketCap;
 	
+	@Column(column = "ISStopped")
+	private boolean ISStopped;
 	
 	public String getStockCode()
 	{
@@ -179,6 +181,15 @@ public class DailyFluctuateRate
 	{
 		CirculationMarketCap = circulationmarketcap;
 	}
+	
+	public boolean getISStopped()
+	{
+		return ISStopped;
+	}	
+	public void setISStopped(boolean isstopped)
+	{
+		ISStopped = isstopped;
+	}
 
 	public static DailyFluctuateRate ConvertTo(StockItemEntity.StockItemResult.StockItem item)
 	{
@@ -197,6 +208,7 @@ public class DailyFluctuateRate
 		rate.setTradeMount(item.get_TradeMount());
 		rate.setToatlMarketCap(item.get_ToatlMarketCap());
 		rate.setCirculationMarketCap(item.get_CirculationMarketCap());
+		rate.setISStopped(item.get_IsStoppedp());
 		return rate;
 	}
 }

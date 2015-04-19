@@ -17,9 +17,6 @@ public class DaysChangeRate extends EntityBase
 	@Column(column = "StockName")
 	private String StockName;
 	
-	@Column(column = "ClosePrice")
-	private double ClosePrice;
-	
 	@Column(column = "FluctuateRate")
 	private double FluctuateRate;
 	
@@ -48,15 +45,6 @@ public class DaysChangeRate extends EntityBase
 	public void setStockName(String stockname)
 	{
 		StockName = stockname;
-	}
-	
-	public double getClosePrice()
-	{
-		return ClosePrice;
-	}	
-	public void setClosePrice(double closeprice)
-	{
-		ClosePrice = closeprice;
 	}
 	
 	public double getFluctuateRate()
@@ -100,7 +88,6 @@ public class DaysChangeRate extends EntityBase
 		DaysChangeRate rate = new DaysChangeRate();
 		rate.setStockCode(item.get_StockCode());
 		rate.setStockName(item.get_StockName());
-		rate.setClosePrice(item.get_ClosePrice());
 		rate.setFluctuateRate(item.get_FluctuateRate());
 		rate.setChangeRate(item.get_ChangeRate());
 		rate.setChangerateMain(item.get_ChangerateMain());

@@ -97,18 +97,7 @@ public class StockTradeEntity
 		    {
 		    	this.StockName = value;
 		    }
-		    
-		    @XStreamAlias("ClosePrice")
-		    private double ClosePrice;
-		    public double get_ClosePrice()
-		    {
-		    	return ClosePrice;
-		    }
-		    public void set_ClosePrice(double value)
-		    {
-		    	this.ClosePrice = value;
-		    }
-		    
+		     
 		    @XStreamAlias("FluctuateRate")
 		    private double FluctuateRate;
 		    public double get_FluctuateRate()

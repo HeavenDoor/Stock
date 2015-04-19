@@ -112,6 +112,12 @@ public class DataControl
     	return dailyFluctuateRates;
     }
     
+    
+    public static void set_AbsoluteRecentDaysData(List<DaysChangeRate> rates)
+    {
+    	
+    }
+    
     public static void set_DaysChangeRates2(List<DaysChangeRate> rates)
     {
     	daysChangeRates2 = rates;

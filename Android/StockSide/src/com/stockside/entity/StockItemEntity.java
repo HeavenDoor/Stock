@@ -228,6 +228,17 @@ public class StockItemEntity
 		    {
 		    	this.CirculationMarketCap = value;
 		    }
+		    
+		    @XStreamAlias("ISStopped")
+		    private boolean ISStopped;
+		    public boolean get_IsStoppedp()
+		    {
+		    	return ISStopped;
+		    }
+		    public void set_IsStopped(boolean value)
+		    {
+		    	this.ISStopped = value;
+		    }
 		}
     }
 }

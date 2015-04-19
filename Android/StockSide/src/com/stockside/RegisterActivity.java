@@ -88,9 +88,10 @@ public class RegisterActivity extends Activity implements View.OnClickListener
 		image = (ImageView)this.findViewById(R.id.register_img);
 		errorText = (TextView)this.findViewById(R.id.error_register);
 		wait = true;
-		onNextImgClicked(null); // 获得验证码
+		
 		
 		new LoadViewTask().execute();
+		onNextImgClicked(null); // 获得验证码
 	}
 	
 	@Override
@@ -206,6 +207,13 @@ public class RegisterActivity extends Activity implements View.OnClickListener
 
         String url = this.getString(R.string.service) + "GetValidationCode";
         http.send(HttpRequest.HttpMethod.POST,
+		
+  /*      String app_name = this.getString(R.string.app_name);
+
+        params.addBodyParameter("Name", app_name);
+
+        String url = this.getString(R.string.service) + "TestService";
+        http.send(HttpRequest.HttpMethod.GET,*/
                 url,
                 params,
                 new RequestCallBack<String>() {
@@ -233,7 +241,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener
                     	wait = false;
                     	
                     	
-                    	//progressDialog.dismiss();
+                    	progressDialog.dismiss();
             			//initialize the View
             			//setContentView(R.layout.activity_register);
             			//wait = true;
@@ -251,6 +259,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener
                     {
                     	//btn.setText(msg);
                     	//btn.setText(phoneNumber);
+                    	
                     	int m = 0; 
                     	m++;
                     }
@@ -279,7 +288,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener
 					//Initialize an integer (that will act as a counter) to zero
 					int counter = 0;
 					//While the counter is smaller than four
-					while(wait)
+					while(wait == true)
 					{
 						//Wait 850 milliseconds
 						this.wait(850);
