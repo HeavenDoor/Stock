@@ -29,16 +29,6 @@ namespace DataDispacher.Logic
         }
 
         /// <summary>
-        /// 收盘价 
-        /// </summary>
-        private double m_ClosePrice;
-        public double ClosePrice
-        {
-            get { return m_ClosePrice; }
-            set { m_ClosePrice = value; }
-        }
-
-        /// <summary>
         /// 涨跌幅 
         /// </summary>
         private double m_FluctuateRate;

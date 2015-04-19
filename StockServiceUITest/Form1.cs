@@ -67,7 +67,7 @@ namespace StockServiceUITest
             //---------------------------------------------------------------------------------------
             //LogManagerTest.testLogManager();
 
-
+            HttpTest.testHttpPost();
 
             {
                 string dateString = "20150316104908";
@@ -79,9 +79,11 @@ namespace StockServiceUITest
 
             //Test.SyncStockList();  // 同步股票列表
             //SyncTest.SyncStockDataDetaileList();
-            SyncTest.SyncDailyTradeData();
+           // SyncTest.SyncDailyTradeData();
 
-            HttpTest.testHttpGet("http://qt.gtimg.cn/q=sz000750");
+
+            SyncTest.ComputeStockSide();
+            //HttpTest.testHttpGet("http://qt.gtimg.cn/q=sh600027");
             //DbUtilityTest.testSql();
             //ServiceProcessTest.testServe();
             //-------------------------------------------------------------------------------------------
@@ -89,7 +91,7 @@ namespace StockServiceUITest
             //ConfigTest.testConfig();
             //string ss = Configuration.StockList;
 
-            //HttpTest.testHttpGet();
+           // HttpTest.testHttpGet("123");
             //------------------------------------------------------------------------------------
 
             //Test.testlist();
@@ -108,7 +110,7 @@ namespace StockServiceUITest
 //             DateTime dt = DateTime.Now;
 //             string day = dt.DayOfWeek.ToString();
 
-            //HttpTest.testHttpPost();
+  
             //Test.testEqual();
 
             //SyncTest.SyncLastUpdate();

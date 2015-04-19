@@ -136,6 +136,7 @@ namespace StockSync
         /// <summary>
         /// 同步每天股票交易信息
         /// 新增每日交易信息
+        /// 腾讯js接口
         /// </summary>
         public static void SyncDailyTradeData()
         {
@@ -153,8 +154,14 @@ namespace StockSync
                 StreamReader sr = new StreamReader(stream, Encoding.GetEncoding("gb2312"));
                 string strWebData = sr.ReadToEnd();
                 string[] lines = strWebData.Split('~');
+                if (lines.Length != 50)
+                {
+                    StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "lines.Length != 50");
+                    continue;
+                }
                 StockItem item = GenerateStockItem(ref lines);
 
+                string date = string.Format("{0}/{1}/{2} {3}:{4}:{5}", item.StockDate.Year, item.StockDate.Month, item.StockDate.Day, item.StockDate.Hour, item.StockDate.Minute, item.StockDate.Second);
                 StockItem dbItem = GetStockItemFromDB(item);
                 if (dbItem != null)  // update
                 {
@@ -162,10 +169,12 @@ namespace StockSync
                     {
                         continue;
                     }
-                    string sqlUpdate = string.Format("update STOCKITEM set STOCKCODE='{0}' , STOCKNAME='{1}' , OPENPRICE={2} , CLOSEPRICE={3} , HIGHESTPRICE={4} , LOWESTPRICE={5} , FLUCTUATEMOUNT={6} , FLUCTUATERATE={7} , CHANGERATE={8} , TRADEVOLUME={9} , TRADEMOUNT={10} , TOATLMARKETCAP={11} , CIRCULATIONMARKETCAP={12} , ISSTOPPED={13} where STOCKDATE='{14}'",
-                        item.StockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap, item.ISStopped, item.StockDate);
+                    string dbdate = string.Format("{0}/{1}/{2} {3}:{4}:{5}", dbItem.StockDate.Year, dbItem.StockDate.Month, dbItem.StockDate.Day, dbItem.StockDate.Hour, dbItem.StockDate.Minute, dbItem.StockDate.Second);
+                    string sqlUpdate = string.Format("update STOCKITEM set STOCKDATE='{0}', STOCKNAME='{1}' , OPENPRICE={2} , CLOSEPRICE={3} , HIGHESTPRICE={4} , LOWESTPRICE={5} , FLUCTUATEMOUNT={6} , FLUCTUATERATE={7} , CHANGERATE={8} , TRADEVOLUME={9} , TRADEMOUNT={10} , TOATLMARKETCAP={11} , CIRCULATIONMARKETCAP={12} , ISSTOPPED={13}  where STOCKDATE='{14}' and STOCKCODE='{15}'",
+                        date, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap, item.ISStopped, dbdate, dbItem.StockCode);
                     try
                     {
+                        //StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "sqlUpdate");
                         int reCount = util.ExecuteNonQuery(sqlUpdate, null);
                     }
                     catch (System.Exception e)
@@ -176,9 +185,10 @@ namespace StockSync
                 else // insert
                 {
                     string sqlInsert = string.Format("insert into STOCKITEM values('{0}','{1}','{2}',{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14})",
-                        item.StockDate, item.StockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap, item.ISStopped);
+                        date, item.StockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap, item.ISStopped);
                     try
                     {
+                        //StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "sqlInsert");
                         int reCount = util.ExecuteNonQuery(sqlInsert, null);
                     }
                     catch (System.Exception e)
@@ -186,7 +196,6 @@ namespace StockSync
                         LogManager.WriteLog(LogManager.LogFile.Trace, string.Format("Exception : <SyncStockDataDetaileList()>, MSG : {0} ", e.Message));
                     }
                 }
-
             }
         }
 
@@ -268,7 +277,7 @@ namespace StockSync
                         
                         /*{
                             if (m == 0 && date != "2014/9/24")
-                            {
+                            {777
                                 string cc = _strCsv;
                                 int yy = 0;
                                 yy++;
@@ -338,8 +347,11 @@ namespace StockSync
             InitDB();
             DateTime datetime = item.StockDate;
             string date = string.Format("{0}/{1}/{2}", datetime.Year, datetime.Month, datetime.Day);
-            string sql = string.Format("select * from STOCKITEM where STOCKDATE='{0}' and STOCKCODE='{1}'", date, item.StockCode);
+            string sql = string.Format("select * from STOCKITEM where STOCKCODE='{0}' and (DATE(STOCKDATE)='{1}')", item.StockCode, date);
+
+           // SELECT * FROM stockitem WHERE STOCKCODE = '000001' AND (DATE(STOCKDATE)='2015-03-25')
             StockItem _item = util.QueryForObject<StockItem>(sql, null);
+
             return _item;
         }
         #endregion
@@ -398,12 +410,9 @@ namespace StockSync
         /// </summary>
         public static void ComputeStockSide()
         {
-           // GetLastClosePrice("300389");
-           // SyncRecentDaysFluctuateRate(15);
 
-
-            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, string.Format("path {0}", StockCommon.LogManager.LogPath));
-            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "ComputeStockSide start");
+//             StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, string.Format("path {0}", StockCommon.LogManager.LogPath));
+//             StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "ComputeStockSide start");
             SyncTodayFluctuateRate();
             StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "SyncTodayFluctuateRate");
 
@@ -454,14 +463,14 @@ namespace StockSync
         {
             StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "计算股票当天涨跌幅 ");
             InitDB();//
-            string recentday = TransactionDate.GetRecentDay();
+            string recentday = TransactionDate.GetRecentDay();  // (DATE(STOCKDATE)='2015-03-25')
             string tableName = "STOCKITEM_DAILYFLUCTUATERATE";
-            string sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='{0}' ORDER BY FLUCTUATERATE DESC LIMIT 0,{1}", recentday, ItemCount);
+            string sql = string.Format("SELECT * FROM STOCKITEM WHERE DATE(STOCKDATE)='{0}' ORDER BY FLUCTUATERATE DESC LIMIT 0,{1}", recentday, ItemCount);
             DataTable table = util.ExecuteDataTable(sql, null);
             List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
             StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, string.Format("涨幅最大 _Table.count{0} ", _table.Count));
 
-            string _sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='{0}' ORDER BY FLUCTUATERATE ASC LIMIT 0,{1}", recentday, ItemCount);
+            string _sql = string.Format("SELECT * FROM STOCKITEM WHERE DATE(STOCKDATE)='{0}' ORDER BY FLUCTUATERATE ASC LIMIT 0,{1}", recentday, ItemCount);
             DataTable table_E = util.ExecuteDataTable(_sql, null);
             List<StockItem> _table_E = EntityReader.GetEntities<StockItem>(table_E);
             StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, string.Format("跌幅最大 _Table_E.count{0} ", _table_E.Count));
@@ -484,7 +493,7 @@ namespace StockSync
             InitDB();
             string recentday = TransactionDate.GetRecentDay();
             string tableName = "STOCKITEM_DAILYCHANGERATE";
-            string sql = string.Format("SELECT * FROM STOCKITEM WHERE STOCKDATE='{0}' ORDER BY CHANGERATE DESC LIMIT 0,{1}", recentday, ItemCount * 2);
+            string sql = string.Format("SELECT * FROM STOCKITEM WHERE DATE(STOCKDATE)='{0}' ORDER BY CHANGERATE DESC LIMIT 0,{1}", recentday, ItemCount * 2);
             DataTable table = util.ExecuteDataTable(sql, null);
             List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
 
@@ -510,9 +519,12 @@ namespace StockSync
             InitDB();
             bool IsChangerateMain = true;
             string tableName = "STOCKITEM_CHANGERATE_FLUCTUATERATE";
-            string recentDay = TransactionDate.GetRecentDay();
-            string destDay = TransactionDate.GetDatesOfTransaction(days);
-            string sql = string.Format("SELECT B.STOCKCODE, B.STOCKNAME,(SELECT S.CLOSEPRICE FROM STOCKITEM S WHERE S.STOCKDATE='{0}' AND S.STOCKCODE=B.STOCKCODE) AS CLOSEPRICE,SUM(CHANGERATE) AS CHANGERATE, SUM(FLUCTUATERATE) AS FLUCTUATERATE FROM STOCKITEM B WHERE B.STOCKDATE >='{1}' GROUP BY B.STOCKCODE ORDER BY CHANGERATE DESC LIMIT 0,{2}", recentDay, destDay, ItemCount * 2);
+            string recentDay = "2014-8-8";
+            string destDay = "2014-8-7";
+
+//          string recentDay = TransactionDate.GetRecentDay();
+//          string destDay = TransactionDate.GetDatesOfTransaction(days);
+            string sql = string.Format("SELECT B.STOCKCODE, B.STOCKNAME, SUM(CHANGERATE) AS CHANGERATE, SUM(FLUCTUATERATE) AS FLUCTUATERATE FROM STOCKITEM B WHERE DATE(B.STOCKDATE) >='{0}' GROUP BY B.STOCKCODE ORDER BY CHANGERATE DESC LIMIT 0,{1}", destDay, ItemCount * 2);
             DataTable table = util.ExecuteDataTable(sql, null);
             List<TEMP_Stockitem_Changerate_Fluctuaterate> _table = EntityReader.GetEntities<TEMP_Stockitem_Changerate_Fluctuaterate>(table);
 
@@ -520,10 +532,10 @@ namespace StockSync
             foreach (TEMP_Stockitem_Changerate_Fluctuaterate item in _table)
             {
                 Stockitem_Changerate_Fluctuaterate _item = new Stockitem_Changerate_Fluctuaterate(item);
-                if (_item.ClosePrice == 0)
-                {
-                    _item.ClosePrice = GetLastClosePrice(_item.StockCode);
-                }
+//                 if (_item.ClosePrice == 0)
+//                 {
+//                     _item.ClosePrice = GetLastClosePrice(_item.StockCode);
+//                 }
                 _item.ChangerateMain = IsChangerateMain;
                 _item.TradeDays = days;
                 UpStockitems.Add(_item);
@@ -543,9 +555,12 @@ namespace StockSync
             InitDB();
             bool IsChangerateMain = false;
             string tableName = "STOCKITEM_CHANGERATE_FLUCTUATERATE";
-            string recentDay = TransactionDate.GetRecentDay();
-            string destDay = TransactionDate.GetDatesOfTransaction(days);
-            string sql = string.Format("SELECT B.STOCKCODE, B.STOCKNAME,(SELECT S.CLOSEPRICE FROM STOCKITEM S WHERE S.STOCKDATE='{0}' AND S.STOCKCODE=B.STOCKCODE) AS CLOSEPRICE,SUM(CHANGERATE) AS CHANGERATE, SUM(FLUCTUATERATE) AS FLUCTUATERATE FROM STOCKITEM B WHERE B.STOCKDATE >='{1}' GROUP BY B.STOCKCODE ORDER BY FLUCTUATERATE DESC LIMIT 0,{2}", recentDay, destDay, ItemCount);
+            string recentDay = "2014-8-8";
+            string destDay = "2014-8-7";
+
+            //          string recentDay = TransactionDate.GetRecentDay();
+            //          string destDay = TransactionDate.GetDatesOfTransaction(days);
+            string sql = string.Format("SELECT B.STOCKCODE, B.STOCKNAME, SUM(CHANGERATE) AS CHANGERATE, SUM(FLUCTUATERATE) AS FLUCTUATERATE FROM STOCKITEM B WHERE DATE(B.STOCKDATE) >='{0}' GROUP BY B.STOCKCODE ORDER BY FLUCTUATERATE DESC LIMIT 0,{1}", destDay, ItemCount);
             DataTable table = util.ExecuteDataTable(sql, null);
             List<TEMP_Stockitem_Changerate_Fluctuaterate> _table = EntityReader.GetEntities<TEMP_Stockitem_Changerate_Fluctuaterate>(table);
 
@@ -553,16 +568,16 @@ namespace StockSync
             foreach(TEMP_Stockitem_Changerate_Fluctuaterate item in _table)
             {
                 Stockitem_Changerate_Fluctuaterate _item = new Stockitem_Changerate_Fluctuaterate(item);
-                if (_item.ClosePrice == 0)
-                {
-                    _item.ClosePrice = GetLastClosePrice(_item.StockCode);
-                }
+//                 if (_item.ClosePrice == 0)
+//                 {
+//                     _item.ClosePrice = GetLastClosePrice(_item.StockCode);
+//                 }
                 _item.ChangerateMain = IsChangerateMain;
                 _item.TradeDays = days;
                 UpStockitems.Add(_item);
             }
 
-            string _sql = string.Format("SELECT B.STOCKCODE, B.STOCKNAME,(SELECT S.CLOSEPRICE FROM STOCKITEM S WHERE S.STOCKDATE='{0}' AND S.STOCKCODE=B.STOCKCODE) AS CLOSEPRICE,SUM(CHANGERATE) AS CHANGERATE, SUM(FLUCTUATERATE) AS FLUCTUATERATE FROM STOCKITEM B WHERE B.STOCKDATE >='{1}' GROUP BY B.STOCKCODE ORDER BY FLUCTUATERATE ASC LIMIT 0,{2}", recentDay, destDay, ItemCount);
+            string _sql = string.Format("SELECT B.STOCKCODE, B.STOCKNAME, SUM(CHANGERATE) AS CHANGERATE, SUM(FLUCTUATERATE) AS FLUCTUATERATE FROM STOCKITEM B WHERE DATE(B.STOCKDATE) >='{0}' GROUP BY B.STOCKCODE ORDER BY FLUCTUATERATE ASC LIMIT 0,{1}", destDay, ItemCount);
             DataTable table_E = util.ExecuteDataTable(_sql, null);
             List<TEMP_Stockitem_Changerate_Fluctuaterate> _table_E = EntityReader.GetEntities<TEMP_Stockitem_Changerate_Fluctuaterate>(table_E);
 
@@ -570,10 +585,10 @@ namespace StockSync
             foreach (TEMP_Stockitem_Changerate_Fluctuaterate item in _table_E)
             {
                 Stockitem_Changerate_Fluctuaterate _item = new Stockitem_Changerate_Fluctuaterate(item);
-                if (_item.ClosePrice == 0)
-                {
-                    _item.ClosePrice = GetLastClosePrice(_item.StockCode);
-                }
+//                 if (_item.ClosePrice == 0)
+//                 {
+//                     _item.ClosePrice = GetLastClosePrice(_item.StockCode);
+//                 }
                 _item.ChangerateMain = IsChangerateMain;
                 _item.TradeDays = days;
                 DownStockitems.Add(_item);
@@ -647,8 +662,8 @@ namespace StockSync
         {
             foreach (Stockitem_Changerate_Fluctuaterate item in items)
             {
-                string sqlInsert = string.Format("insert into {0} values('{1}','{2}','{3}',{4},{5},{6},{7})",
-                                    tableName, item.StockCode, item.StockName, item.ClosePrice, item.FluctuateRate, item.ChangeRate, IsChangerateMain, Days);
+                string sqlInsert = string.Format("insert into {0} values('{1}','{2}','{3}',{4},{5},{6})",
+                                    tableName, item.StockCode, item.StockName, item.FluctuateRate, item.ChangeRate, IsChangerateMain, Days);
                 try
                 {
                     int reCount = util.ExecuteNonQuery(sqlInsert, null);
@@ -665,9 +680,9 @@ namespace StockSync
         {
             foreach (StockItem item in items)
             {
-                string date = string.Format("{0}/{1}/{2}", item.StockDate.Year, item.StockDate.Month, item.StockDate.Day);
-                string sqlInsert = string.Format("insert into {0} values('{1}','{2}','{3}',{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14})",
-                                    tableName, date, item.StockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap);
+                string date = string.Format("{0}/{1}/{2} {3}:{4}:{5}", item.StockDate.Year, item.StockDate.Month, item.StockDate.Day, item.StockDate.Hour, item.StockDate.Minute, item.StockDate.Second);
+                string sqlInsert = string.Format("insert into {0} values('{1}','{2}','{3}',{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15})",
+                                    tableName, date, item.StockCode, item.StockName, item.OpenPrice, item.ClosePrice, item.HighestPrice, item.LowestPrice, item.FluctuateMount, item.FluctuateRate, item.ChangeRate, item.TradeVolume, item.TradeMount, item.ToatlMarketCap, item.CirculationMarketCap, item.ISStopped);
                 try
                 {
                     int reCount = util.ExecuteNonQuery(sqlInsert, null);
@@ -694,7 +709,7 @@ namespace StockSync
             if (values.Count == 0)  // insert 
             {
                 DateTime today = DateTime.Now;
-                string date = string.Format("{0}/{1}/{2}", today.Year, today.Month, today.Day);
+                string date = string.Format("{0}/{1}/{2} {3}:{4}:{5}", today.Year, today.Month, today.Day, today.Hour, today.Minute, today.Second);
                 string sqlInsert = string.Format("INSERT INTO LASTUPDATE VALUES('{0}')", date);
                 try
                 {
@@ -718,7 +733,7 @@ namespace StockSync
                 }
 
                 DateTime today = DateTime.Now;
-                string date = string.Format("{0}/{1}/{2}", today.Year, today.Month, today.Day);
+                string date = string.Format("{0}/{1}/{2} {3}:{4}:{5}", today.Year, today.Month, today.Day, today.Hour, today.Minute, today.Second);
                 string sqlInsert = string.Format("INSERT INTO LASTUPDATE VALUES('{0}')", date);
                 try
                 {
@@ -732,7 +747,7 @@ namespace StockSync
             else // update
             {
                 DateTime today = DateTime.Now;
-                string date = string.Format("{0}/{1}/{2}", today.Year, today.Month, today.Day);
+                string date = string.Format("{0}/{1}/{2} {3}:{4}:{5}", today.Year, today.Month, today.Day, today.Hour, today.Minute, today.Second);
                 string sqlUpdate = string.Format("update LASTUPDATE set LASTUPDATETIME='{0}'", date);
                 try
                 {

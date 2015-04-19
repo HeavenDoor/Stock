@@ -88,9 +88,9 @@ namespace DataDispacher
             DataTable table = util.ExecuteDataTable(sql, null);
             List<LastUpdate> _table = EntityReader.GetEntities<LastUpdate>(table);
 
-            string dt = _table[0].LASTUPDATETIME;
-            DateTime dateEx = Convert.ToDateTime(dt);
-            string date = string.Format("{0}/{1}/{2}", dateEx.Year, dateEx.Month, dateEx.Day);
+            string date = _table[0].LASTUPDATETIME;
+//             DateTime dateEx = Convert.ToDateTime(dt);
+//             string date = string.Format("{0}/{1}/{2} {3}:{4}:{5}", dateEx.Year, dateEx.Month, dateEx.Day);
             
             response.ErrorType = (int)Logic.ErrorType.NoException;
             response.ErrorID = (int)Logic.ErrorID.NoError;
@@ -264,17 +264,7 @@ namespace DataDispacher
             string sql = string.Format("SELECT * FROM STOCKITEM_DAILYFLUCTUATERATE");
             DataTable table = util.ExecuteDataTable(sql, null);
             List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
-            List<StockItem> _tableEx = new List<StockItem>();
-            foreach (StockItem item in _table)
-            {
-                StockItem tmp = item;
-                string dt = item.StockDate;
-                DateTime dateEx = Convert.ToDateTime(dt);
-                string date = string.Format("{0}/{1}/{2}", dateEx.Year, dateEx.Month, dateEx.Day);
-                tmp.StockDate = date;
-                _tableEx.Add(tmp);
-            }
-            stockItemR.StockItems = _tableEx;
+            stockItemR.StockItems = _table;
             stockItemR.ErrorID = (int)ErrorID.NoError;
             stockItemR.ErrorType = (int)ErrorType.NoException;
             stockItemR.ReturnMessage = "success";
@@ -305,17 +295,7 @@ namespace DataDispacher
             string sql = string.Format("SELECT * FROM STOCKITEM_DAILYCHANGERATE");
             DataTable table = util.ExecuteDataTable(sql, null);
             List<StockItem> _table = EntityReader.GetEntities<StockItem>(table);
-            List<StockItem> _tableEx = new List<StockItem>();
-            foreach (StockItem item in _table)
-            {
-                StockItem tmp = item;
-                string dt = item.StockDate;
-                DateTime dateEx = Convert.ToDateTime(dt);
-                string date = string.Format("{0}/{1}/{2}", dateEx.Year, dateEx.Month, dateEx.Day);
-                tmp.StockDate = date;
-                _tableEx.Add(tmp);
-            }
-            stockItemR.StockItems = _tableEx;
+            stockItemR.StockItems = _table;
             stockItemR.ErrorID = (int)ErrorID.NoError;
             stockItemR.ErrorType = (int)ErrorType.NoException;
             stockItemR.ReturnMessage = "success";
@@ -387,6 +367,41 @@ namespace DataDispacher
             return result;
         }
         #endregion
+
+
+        #region [WebMethod] GetAbsoluteRecentDaysData
+        /// <summary>
+        /// 获取股票涨跌幅 换手率所有数据
+        /// </summary>
+        [WebMethod]
+        public string GetAbsoluteRecentDaysData(string email, string passWord)
+        {
+            string result = string.Empty;
+            bool IsChangerateMain = false;
+            Stockitem_Changerate_FluctuaterateResult ItemResult = new Stockitem_Changerate_FluctuaterateResult();
+            if (!VerifyUser(email, passWord))
+            {
+                ItemResult.ErrorID = (int)ErrorID.ValidateUserFailure;
+                ItemResult.ErrorType = (int)ErrorType.UserNameOrPWDError;
+                ItemResult.ReturnMessage = "User OR Password Error";
+                ItemResult.Stockitem_Changerate_Fluctuaterates = null;
+                result = SerializationHelper<Stockitem_Changerate_FluctuaterateResult>.Serialize(ItemResult);
+                return result;
+            }
+            string sql = string.Format("SELECT * FROM STOCKITEM_CHANGERATE_FLUCTUATERATE");
+
+            DataTable table = util.ExecuteDataTable(sql, null);
+            List<Stockitem_Changerate_Fluctuaterate> _table = EntityReader.GetEntities<Stockitem_Changerate_Fluctuaterate>(table);
+            ItemResult.Stockitem_Changerate_Fluctuaterates = _table;
+            ItemResult.ErrorID = (int)ErrorID.NoError;
+            ItemResult.ErrorType = (int)ErrorType.NoException;
+            ItemResult.ReturnMessage = "success";
+            result = SerializationHelper<Stockitem_Changerate_FluctuaterateResult>.Serialize(ItemResult);
+            return result;
+        }
+        #endregion
+
+
 
         private bool VerifyUser(string email, string passWord)
         {

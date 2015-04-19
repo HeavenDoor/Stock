@@ -11,7 +11,7 @@ namespace StockSync
         {
             StockCode = tmp.StockCode;
             StockName = tmp.StockName;
-            ClosePrice = tmp.ClosePrice;
+//            ClosePrice = tmp.ClosePrice;
             FluctuateRate = tmp.FluctuateRate;
             ChangeRate = tmp.ChangeRate;
         }
@@ -37,15 +37,15 @@ namespace StockSync
             set { m_StockName = value; }
         }
 
-        /// <summary>
-        /// 收盘价 
-        /// </summary>
-        private double m_ClosePrice;
-        public double ClosePrice
-        {
-            get { return m_ClosePrice; }
-            set { m_ClosePrice = value; }
-        }
+//         /// <summary>
+//         /// 收盘价 
+//         /// </summary>
+//         private double m_ClosePrice;
+//         public double ClosePrice
+//         {
+//             get { return m_ClosePrice; }
+//             set { m_ClosePrice = value; }
+//         }
 
         /// <summary>
         /// 涨跌幅 
@@ -116,15 +116,15 @@ namespace StockSync
             set { m_StockName = value; }
         }
 
-        /// <summary>
-        /// 收盘价 
-        /// </summary>
-        private double m_ClosePrice;
-        public double ClosePrice
-        {
-            get { return m_ClosePrice; }
-            set { m_ClosePrice = value; }
-        }
+//         /// <summary>
+//         /// 收盘价 
+//         /// </summary>
+//         private double m_ClosePrice;
+//         public double ClosePrice
+//         {
+//             get { return m_ClosePrice; }
+//             set { m_ClosePrice = value; }
+//         }
 
         /// <summary>
         /// 涨跌幅 

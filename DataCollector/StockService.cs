@@ -23,14 +23,14 @@ namespace DataCollector
         public DateTimeOffset startTime;
         public IJobDetail job;
         public ICronTrigger trigger;
-        //public ISimpleTrigger trigger;
         public DateTimeOffset? ft;
+
         public StockService()
         {
             
             InitializeComponent();
-            StockCommon.LogManager.LogPath = System.AppDomain.CurrentDomain.BaseDirectory;  //"E:\\Users\\shenghai\\Desktop\\hrer\\";
-
+             StockCommon.LogManager.LogPath = System.AppDomain.CurrentDomain.BaseDirectory;  //"E:\\Users\\shenghai\\Desktop\\hrer\\";
+// 
 
             sf = new StdSchedulerFactory();
             sched = sf.GetScheduler();
@@ -40,30 +40,21 @@ namespace DataCollector
             job = JobBuilder.Create<StockSyncJob>().WithIdentity("StockSyncJob", "StockSyncJobGroup").Build();
 
 
-            trigger = (ICronTrigger)TriggerBuilder.Create().WithIdentity("StockSyncJob", "StockSyncJobGroup").WithSchedule(CronScheduleBuilder.CronSchedule("0 03 15 ? * *")).Build();
-
-            //ISimpleTrigger trigger = TriggerUtils.MakeMinutelyTrigger(1)
+           // trigger = (ICronTrigger)TriggerBuilder.Create().WithIdentity("StockSyncJob", "StockSyncJobGroup").WithSchedule(CronScheduleBuilder.CronSchedule("0 41 11 ? * *")).Build();
+            trigger = (ICronTrigger)TriggerBuilder.Create().WithIdentity("StockSyncJob", "StockSyncJobGroup").WithSchedule(CronScheduleBuilder.CronSchedule("0 0/5 * * * ?")).Build();
+            //ISimpleTrigger trigger = TriggerUtils.MakeMinutelyTrigger(1)   15 0/2 * * * ?
             ft = sched.ScheduleJob(job, trigger);
-
-            StockDataSync.SyncTradeAllDate();
+// 
+//            StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "0000000000");
+             StockDataSync.SyncTradeAllDate();
+//             StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "3333333333");
         
         }
 
         protected override void OnStart(string[] args)
         {
-//             while(true)
-//             {
-//                 int m = 0;
-//             }
-
-
-            sched.Start();
-
-//              TimeListenerThread thread = new TimeListenerThread();
-//              thread.start();
-
-
              StockCommon.LogManager.WriteLog(StockCommon.LogManager.LogFile.Trace, "server start");
+             sched.Start();
         }
 
         protected override void OnStop()

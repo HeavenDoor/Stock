@@ -94,10 +94,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="C5">
-      <HintPath>..\..\..\build\4.0\Debug\Quartz\C5.dll</HintPath>
+      <HintPath>..\..\StockServiceUITest\bin\Debug\StockService\C5.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging">
-      <HintPath>..\..\..\build\4.0\Debug\Quartz\Common.Logging.dll</HintPath>
+      <HintPath>..\build\net40\Common.Logging\Release\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

@@ -137,11 +137,28 @@ namespace StockSync
         public static void SyncTradeAllDate()
         {
             DateTime today = DateTime.Now;
-            if (today.Hour < 17) // 17点开始更新
-            {
-                today = today.AddDays(-1);
-            }
-            DbUtility util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+//             if (today.Hour < 17) // 17点开始更新
+//             {
+//                 today = today.AddDays(-1);
+//             }
+//             LogManager.WriteLog(LogManager.LogFile.Trace,
+//                  "*****************************************  SyncTradeAllDate  *****************************************");
+// 
+//             LogManager.WriteLog(LogManager.LogFile.Trace, Configuration.SqlConnectStr);
+            DbUtility util = null;
+           
+             try
+             {
+                util = new DbUtility(Configuration.SqlConnectStr, DbProviderType.MySql);
+             }
+             catch (System.Exception e)
+             {
+                 LogManager.WriteLog(LogManager.LogFile.Trace, e.Message);
+             }
+            
+// 
+//             LogManager.WriteLog(LogManager.LogFile.Trace,
+//                 "*****************************************  111111111111111  *****************************************");
             string sqlDelete = string.Format("DELETE FROM TRADEDATE");
             try
             {

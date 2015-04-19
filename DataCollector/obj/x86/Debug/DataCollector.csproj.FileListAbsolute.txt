@@ -25,3 +25,16 @@ C:\Users\Administrator\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.a
 C:\Users\Administrator\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.exe
 C:\Users\Administrator\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.pdb
 C:\Users\Administrator\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.csprojResolveAssemblyReference.cache
+C:\Users\shenghai\Desktop\Stock\StockServiceUITest\bin\Debug\StockService\DataCollector.exe.config
+C:\Users\shenghai\Desktop\Stock\StockServiceUITest\bin\Debug\StockService\DataCollector.exe.manifest
+C:\Users\shenghai\Desktop\Stock\StockServiceUITest\bin\Debug\StockService\DataCollector.application
+C:\Users\shenghai\Desktop\Stock\StockServiceUITest\bin\Debug\StockService\DataCollector.exe
+C:\Users\shenghai\Desktop\Stock\StockServiceUITest\bin\Debug\StockService\DataCollector.pdb
+C:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.ProjectInstaller.resources
+C:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.StockService.resources
+C:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.csproj.GenerateResource.Cache
+C:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.exe.manifest
+C:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.application
+C:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.exe
+C:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.pdb
+C:\Users\shenghai\Desktop\Stock\DataCollector\obj\x86\Debug\DataCollector.csprojResolveAssemblyReference.cache

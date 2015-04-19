@@ -18,21 +18,22 @@ namespace DataCollector
 //             {
 //                 int m = 0;
 //             }
-            DateTime currenttime = System.DateTime.Now;
-
+//             DateTime currenttime = System.DateTime.Now;
+// 
             LogManager.WriteLog(LogManager.LogFile.Trace,
                 "*****************************************  Start Sync  *****************************************");
-
+// 
             StockDataSync.SyncTradeCurrentDate(); // 更新同步交易日期
             LogManager.WriteLog(LogManager.LogFile.Trace, "********** finish SyncTradeCurrentDate ***************");
 
             StockDataSync.SyncStockList(); // 更新同步股票列表
             LogManager.WriteLog(LogManager.LogFile.Trace, "********** finish SyncStockList ***************");
-
+// 
             StockDataSync.SyncDailyTradeData();  // 更新每日股票交易数据
             LogManager.WriteLog(LogManager.LogFile.Trace, "********** finish SyncDailyTradeData ***************");
-
-
+// 
+            StockDataSync.ComputeStockSide(); // 统计股票边界值
+            LogManager.WriteLog(LogManager.LogFile.Trace, "********** finish ComputeStockSide ***************");
 
 
 //             StockDataSync.SyncStockDataDetaileList(true); // 更新同步3个月股票日交易数据

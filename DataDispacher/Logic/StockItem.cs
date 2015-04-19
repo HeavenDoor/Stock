@@ -139,8 +139,8 @@ namespace DataDispacher.Logic
         private double m_ToatlMarketCap;
         public double ToatlMarketCap
         {
-            get { return m_TradeMount; }
-            set { m_TradeMount = value; }
+            get { return m_ToatlMarketCap; }
+            set { m_ToatlMarketCap = value; }
         }
 
         /// <summary>
@@ -151,6 +151,16 @@ namespace DataDispacher.Logic
         {
             get { return m_CirculationMarketCap; }
             set { m_CirculationMarketCap = value; }
+        }
+
+        /// <summary>
+        /// 是否停牌 
+        /// </summary>
+        private bool m_ISStopped;
+        public bool ISStopped
+        {
+            get { return m_ISStopped; }
+            set { m_ISStopped = value; }
         }
 
         public bool Equals(StockItem o)
@@ -208,6 +218,10 @@ namespace DataDispacher.Logic
                 return false;
             }
             if ((double)CirculationMarketCap != (double)o.CirculationMarketCap)
+            {
+                return false;
+            }
+            if ((bool)ISStopped != (bool)o.ISStopped)
             {
                 return false;
             }

@@ -74,25 +74,26 @@ namespace StockServiceUITest.TestCode
         public static void testHttpPost()
         {
             //string loginUrl = "http://192.168.22.205:8089/DataDispacher.asmx/TestService";
-            string loginUrl = "http://www.cuit.edu.cn/PassPort/Login.asp";
+            string loginUrl = "http://www.stockside.cn:8080/DataDispacher.asmx/GetValidationCode";
             //string loginUrl = "https://passport.baidu.com/v2/?login&fr=old";
             Encoding encoding = Encoding.GetEncoding("gb2312");
 
             IDictionary<string, string> parameters = new Dictionary<string, string>();
 
-            parameters.Add("txtId", "2008081208");
-            parameters.Add("txtMM", "Aa123456789");
-            parameters.Add("x", "16");
-            parameters.Add("y", "15");
-            parameters.Add("WinW", "1280");
-            parameters.Add("WinH", "984");
-            parameters.Add("Login", "Check"); 
+            parameters.Add("phoneID", "2008081208");
+            parameters.Add("password", "2008081208");
+//             parameters.Add("txtMM", "Aa123456789");
+//             parameters.Add("x", "16");
+//             parameters.Add("y", "15");
+//             parameters.Add("WinW", "1280");
+//             parameters.Add("WinH", "984");
+//             parameters.Add("Login", "Check"); 
             //parameters.Add("Login", "Check&txtId=2008081208&txtMM=Aa123456789&WinW=1280&WinH=984&x=14&y=17");
            // parameters.Add("Name", "aaa");
 
             /*parameters.Add("tpl", "fa");
             parameters.Add("tpl_reg", "fa");
-            parameters.Add("u", "https://passport.baidu.com/");
+  //          parameters.Add("u", "https://passport.baidu.com/");
             parameters.Add("psp_tt", "0");
             parameters.Add("username", "15528358573");
             parameters.Add("password", "jWe10Yrbw9FBVNHFvo8GwAEqf4i1jt8DEWeVPaHJDH3Qp9atFcffLvnQid1HuJA36SsFuT47q/B5kWduv41VRpI3PUWfb1A9H1vmgg9s3jNxOKTE6Xh8+dZIL8G905ryVzF4Ara2r/sCVhmr/hk4pyKsgdSj8mv9yLlC0fnXjHQ=");
